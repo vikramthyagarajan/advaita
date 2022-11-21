@@ -1,4 +1,7 @@
+import { RECT_H, RECT_W } from "modules/core/constants";
 import { CanvasPosition, Position } from "modules/core/foundation";
+import { inBounds } from "modules/core/math-utils";
+import CanvasStore from "modules/state/CanvasStore";
 
 interface TextBlockProps extends CanvasPosition {
   text: string;
@@ -16,7 +19,7 @@ const TextBlock = ({
   height,
 }: TextBlockProps) => {
   return (
-    <Position left={left} top={top}>
+    <Position left={left} top={top} width={width} height={height}>
       <div
         className="flex items-center justify-center"
         style={{
@@ -55,8 +58,8 @@ const InfiniteCanvas = () => {
     "#9c92a3",
     "#c6b9cd",
   ];
-  const rectW = 1000;
-  const rectH = 1000;
+  const rectW = RECT_W;
+  const rectH = RECT_H;
 
   return (
     <div>
