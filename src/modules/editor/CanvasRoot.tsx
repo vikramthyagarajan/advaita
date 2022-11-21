@@ -1,12 +1,10 @@
 import CanvasStore from "modules/state/CanvasStore";
-import { useEffect, useRef, WheelEvent } from "react";
+import { PointerEvent, useEffect, useRef, WheelEvent } from "react";
 import useSize from "@react-hook/size";
 import InfiniteCanvas from "./InfiniteCanvas";
 import useRenderLoop from "modules/core/RenderLoop";
 
 const wheelListener = (e: WheelEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
   const friction = 1;
   const event = e as WheelEvent;
   const deltaX = event.deltaX * friction;
@@ -19,9 +17,7 @@ const wheelListener = (e: WheelEvent) => {
 };
 
 const pointerListener = (event: PointerEvent) => {
-  event.preventDefault();
-  event.stopPropagation();
-  CanvasStore.movePointer(event.offsetX, event.offsetY);
+  CanvasStore.movePointer(event.clientX, event.clientY);
 };
 
 const CanvasRoot = () => {
@@ -35,9 +31,10 @@ const CanvasRoot = () => {
   return (
     <div className="w-full h-full">
       <div
-        className="w-full h-full relative overflow-hidden"
+        className="w-full h-full relative overflow-hidden overscroll-none"
         ref={canvas}
         onWheel={wheelListener}
+        onPointerMove={pointerListener}
       >
         <InfiniteCanvas frame={frame}></InfiniteCanvas>
       </div>

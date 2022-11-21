@@ -65,7 +65,10 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
   return (
     <div
       className="w-full h-full"
-      style={{ transform: `scale(${(scale.x, scale.y)})` }}
+      style={{
+        transform: `scale(${(scale.x, scale.y)})`,
+        transformOrigin: "top left",
+      }}
     >
       {texts.map((text, index) => (
         <TextBlock

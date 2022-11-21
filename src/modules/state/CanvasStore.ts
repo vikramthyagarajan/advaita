@@ -78,7 +78,7 @@ export default class CanvasStore {
     canvasData.container.height = containerHeight;
     canvasData.camera.x = 1.5 * RECT_W;
     canvasData.camera.y = 1.5 * RECT_H;
-    canvasData.camera.z = 1000; //containerWidth / (2 * Math.tan(CAMERA_ANGLE));
+    canvasData.camera.z = containerWidth / (2 * Math.tan(CAMERA_ANGLE));
   }
   public static get screen() {
     const { x, y, z } = this.camera;
@@ -138,10 +138,10 @@ export default class CanvasStore {
       deltaY = my * scrollFactor;
     const { x, y, z } = this.camera;
     if (this.isCameraInBounds(x + deltaX, y + deltaY, z)) {
-      console.log("camera up", deltaX, deltaY);
       this.data.camera.x += deltaX;
       this.data.camera.y += deltaY;
       // move pointer by the same amount
+      this.shouldRender = true;
       this.movePointer(deltaY, deltaY);
     }
   }
@@ -174,6 +174,7 @@ export default class CanvasStore {
       newScaleY
     );
     const newZ = oldZ + deltaAmount;
+    this.shouldRender = true;
     if (this.isCameraInBounds(oldX, oldY, newZ)) {
       this.data.camera = {
         x: newX,
