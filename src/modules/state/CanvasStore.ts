@@ -3,6 +3,7 @@ import { CAMERA_ANGLE, RECT_H, RECT_W } from "../core/constants";
 import { radians } from "../core/math-utils";
 
 export interface CanvasState {
+  shouldRender: boolean;
   pixelRatio: number; // our resolution for dip calculations
   container: {
     //holds information related to our screen container
@@ -22,6 +23,7 @@ export interface CanvasState {
 }
 const getInitialCanvasState = (): CanvasState => {
   return {
+    shouldRender: false,
     pixelRatio: window.devicePixelRatio || 1,
     container: {
       width: 0,
@@ -45,6 +47,7 @@ export default class CanvasStore {
   private static get data() {
     if (!canvasData)
       canvasData = {
+        shouldRender: true,
         pixelRatio: window.devicePixelRatio || 1,
         container: {
           width: 0,
@@ -77,7 +80,7 @@ export default class CanvasStore {
   public static get screen() {
     const { x, y, z } = this.camera;
     const aspect = this.aspect;
-    const angle = radians(30);
+    const angle = CAMERA_ANGLE;
     return cameraToScreenCoordinates(x, y, z, angle, aspect);
   }
   public static get camera() {
@@ -87,6 +90,12 @@ export default class CanvasStore {
     const { width: w, height: h } = CanvasStore.screen;
     const { width: cw, height: ch } = CanvasStore.container;
     return { x: cw / w, y: ch / h };
+  }
+  public static get shouldRender() {
+    return canvasData.shouldRender;
+  }
+  public static set shouldRender(value: boolean) {
+    canvasData.shouldRender = value;
   }
 
   private static get container() {
