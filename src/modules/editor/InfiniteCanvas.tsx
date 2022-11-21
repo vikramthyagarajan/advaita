@@ -1,7 +1,7 @@
 import { RECT_H, RECT_W } from "modules/core/constants";
 import { CanvasPosition, Position } from "modules/core/foundation";
-import { inBounds } from "modules/core/math-utils";
 import CanvasStore from "modules/state/CanvasStore";
+import { memo } from "react";
 
 interface TextBlockProps extends CanvasPosition {
   text: string;
@@ -34,7 +34,7 @@ const TextBlock = ({
   );
 };
 
-const InfiniteCanvas = () => {
+const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const texts = [
     "Infinite",
     "Canvases",
@@ -60,9 +60,13 @@ const InfiniteCanvas = () => {
   ];
   const rectW = RECT_W;
   const rectH = RECT_H;
+  const scale = CanvasStore.scale;
 
   return (
-    <div className="w-full h-full">
+    <div
+      className="w-full h-full"
+      style={{ transform: `scale(${(scale.x, scale.y)})` }}
+    >
       {texts.map((text, index) => (
         <TextBlock
           key={index}
@@ -78,4 +82,4 @@ const InfiniteCanvas = () => {
   );
 };
 
-export default InfiniteCanvas;
+export default memo(InfiniteCanvas);

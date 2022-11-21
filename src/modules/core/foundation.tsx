@@ -17,7 +17,6 @@ export const Position = ({
   children,
 }: PropsWithChildren<CanvasPosition>) => {
   const screen = CanvasStore.screen;
-  const scale = CanvasStore.scale;
   if (
     inBounds(
       { left, top, height, width },
@@ -32,7 +31,10 @@ export const Position = ({
     return (
       <div
         className="absolute inline-block"
-        style={{ left: `${left - screen.x}px`, top: `${top - screen.y}px` }}
+        style={{
+          left: `${left - screen.x}px`,
+          top: `${top - screen.y}px`,
+        }}
       >
         {children}
       </div>
