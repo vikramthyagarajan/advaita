@@ -14,7 +14,7 @@ const CanvasRoot = () => {
   useRenderLoop(15);
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full" ref={canvas}>
+      <div className="w-full h-full relative overflow-hidden" ref={canvas}>
         <InfiniteCanvas></InfiniteCanvas>
       </div>
     </div>

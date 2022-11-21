@@ -62,9 +62,10 @@ const InfiniteCanvas = () => {
   const rectH = RECT_H;
 
   return (
-    <div>
+    <div className="w-full h-full">
       {texts.map((text, index) => (
         <TextBlock
+          key={index}
           text={text}
           color={colors[index]}
           left={(index % 3) * rectW}
