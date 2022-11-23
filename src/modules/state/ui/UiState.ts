@@ -10,3 +10,14 @@ export const getInitialUiState = (): UiState => {
     selected: null,
   };
 };
+
+interface UiInitialized {
+  type: "uiInitialized";
+}
+
+interface WidgetUpdated {
+  type: "widgetUpdated";
+  widget: Widget;
+}
+
+export type UiActions = UiInitialized | WidgetUpdated;

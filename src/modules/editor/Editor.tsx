@@ -1,9 +1,9 @@
-import AppStore from "modules/state/AppStore";
+import { useUiStore } from "modules/state/ui/UiStore";
 import CanvasRoot from "./CanvasRoot";
 import WidgetDock from "./widgets/WidgetDock";
 
 const Editor = () => {
-  const widget = AppStore.ui.widget;
+  const { widget } = useUiStore();
   return (
     <div className="w-full h-full">
       <CanvasRoot />
