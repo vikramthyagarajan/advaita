@@ -1,6 +1,6 @@
 import { RECT_H, RECT_W } from "modules/core/constants";
 import { CanvasPosition, Position } from "modules/core/foundation";
-import CanvasStore from "modules/state/CanvasStore";
+import CanvasStore from "modules/state/canvas/CanvasStore";
 import { memo } from "react";
 
 interface TextBlockProps extends CanvasPosition {

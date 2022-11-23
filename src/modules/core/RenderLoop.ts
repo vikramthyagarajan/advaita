@@ -1,4 +1,4 @@
-import CanvasStore from "modules/state/CanvasStore";
+import CanvasStore from "modules/state/canvas/CanvasStore";
 import { useEffect, useRef, useState } from "react";
 
 class RenderLoop {

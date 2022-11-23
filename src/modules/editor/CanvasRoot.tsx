@@ -1,4 +1,4 @@
-import CanvasStore from "modules/state/CanvasStore";
+import CanvasStore from "modules/state/canvas/CanvasStore";
 import { PointerEvent, useEffect, useRef, WheelEvent } from "react";
 import useSize from "@react-hook/size";
 import InfiniteCanvas from "./InfiniteCanvas";
