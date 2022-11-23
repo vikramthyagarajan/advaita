@@ -1,9 +1,9 @@
 import {
   cameraToScreenCoordinates,
   scaleWithAnchorPoint,
-} from "../core/camera-utils";
-import { CAMERA_ANGLE, RECT_H, RECT_W } from "../core/constants";
-import { radians } from "../core/math-utils";
+} from "../../core/camera-utils";
+import { CAMERA_ANGLE, RECT_H, RECT_W } from "../../core/constants";
+import { radians } from "../../core/math-utils";
 
 export interface CanvasState {
   shouldRender: boolean;
