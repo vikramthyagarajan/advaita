@@ -34,6 +34,8 @@ export const Position = ({
         style={{
           left: `${left - screen.x}px`,
           top: `${top - screen.y}px`,
+          width: `${width}px`,
+          height: `${height}px`,
         }}
       >
         {children}

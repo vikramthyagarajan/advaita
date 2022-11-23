@@ -1,6 +1,8 @@
 import { RECT_H, RECT_W } from "modules/core/constants";
 import { CanvasPosition, Position } from "modules/core/foundation";
+import AppStore from "modules/state/AppStore";
 import CanvasStore from "modules/state/canvas/CanvasStore";
+import { Node } from "modules/state/project/ProjectRegistry";
 import { memo } from "react";
 
 interface TextBlockProps extends CanvasPosition {
@@ -34,6 +36,19 @@ const TextBlock = ({
   );
 };
 
+const ProjectNode = (node: Node) => {
+  if (node.type === "textbox") {
+    return (
+      <Position {...node.position}>
+        <div className="flex items-center justify-center border-2 rounded-lg w-full h-full">
+          <div>{node.text}</div>
+        </div>
+      </Position>
+    );
+  }
+  return null;
+};
+
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const texts = [
     "Infinite",
@@ -61,6 +76,8 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const rectW = RECT_W;
   const rectH = RECT_H;
   const scale = CanvasStore.scale;
+  const nodes = AppStore.project.root.nodes;
+  console.log("nodes", nodes);
 
   return (
     <div
@@ -70,16 +87,8 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
         transformOrigin: "top left",
       }}
     >
-      {texts.map((text, index) => (
-        <TextBlock
-          key={index}
-          text={text}
-          color={colors[index]}
-          left={(index % 3) * rectW}
-          top={Math.floor(index / 3) * rectH}
-          width={rectW}
-          height={rectH}
-        />
+      {nodes.map((node, index) => (
+        <ProjectNode key={index} {...node}></ProjectNode>
       ))}
     </div>
   );
