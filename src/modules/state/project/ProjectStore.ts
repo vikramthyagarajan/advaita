@@ -1,7 +1,5 @@
 import { CanvasPosition } from "modules/core/foundation";
-import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
-import CanvasStore from "../canvas/CanvasStore";
 import { Node, ProjectRegistry } from "./ProjectRegistry";
 
 export default class ProjectStore {
@@ -15,7 +13,6 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
-      console.log("added");
       this.registry.addNode({ id, position, type: "textbox", text: "" });
     }
     AppStore.canvas.shouldRender = true;
