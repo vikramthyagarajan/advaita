@@ -1,6 +1,6 @@
 import { generateId } from "modules/core/project-utils";
 import AppStore from "modules/state/AppStore";
-import { getUiState } from "modules/state/ui/UiStore";
+import { getUiDispatch, getUiState } from "modules/state/ui/UiStore";
 import { RefObject, useEffect } from "react";
 
 const wheelListener = (e: WheelEvent) => {
@@ -65,6 +65,9 @@ const pointerUpListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
   if (widget === "textbox" && pointerState.started) {
     AppStore.project.editTextbox(pointerState.id, { text: "Textbox" });
+    const dispatch = getUiDispatch();
+    dispatch({ type: "widgetUpdated", widget: "pointer" });
+    dispatch({ type: "nodeSelected", id: pointerState.id });
   }
   pointerState.started = false;
   pointerState.x = 0;

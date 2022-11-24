@@ -6,6 +6,10 @@ const UiReducer = (state: UiState, action: UiActions) => {
     case "widgetUpdated":
       state = { ...state, widget: action.widget };
       break;
+
+    case "nodeSelected":
+      state = { ...state, selected: action.id };
+      break;
   }
   return state;
 };

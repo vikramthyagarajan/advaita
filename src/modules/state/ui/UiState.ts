@@ -1,7 +1,7 @@
 export type Widget = "pointer" | "textbox" | "image" | "video";
 export interface UiState {
   widget: Widget;
-  selected: null;
+  selected: string | null;
 }
 
 export const getInitialUiState = (): UiState => {
@@ -20,4 +20,9 @@ interface WidgetUpdated {
   widget: Widget;
 }
 
-export type UiActions = UiInitialized | WidgetUpdated;
+interface NodeSelected {
+  type: "nodeSelected";
+  id: string;
+}
+
+export type UiActions = UiInitialized | WidgetUpdated | NodeSelected;
