@@ -76,7 +76,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const rectW = RECT_W;
   const rectH = RECT_H;
   const scale = CanvasStore.scale;
-  const nodes = AppStore.project.root.nodes;
+  const nodes = AppStore.project.rootNodes;
   console.log("nodes", nodes);
 
   return (

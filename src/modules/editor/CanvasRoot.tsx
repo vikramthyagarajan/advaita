@@ -5,6 +5,7 @@ import InfiniteCanvas from "./InfiniteCanvas";
 import useRenderLoop from "modules/core/RenderLoop";
 import { getUiState } from "modules/state/ui/UiStore";
 import AppStore from "modules/state/AppStore";
+import { generateId } from "modules/core/project-utils";
 
 const wheelListener = (e: WheelEvent) => {
   const friction = 1;
@@ -18,10 +19,28 @@ const wheelListener = (e: WheelEvent) => {
   }
 };
 const pointerListener = (event: PointerEvent) => {
+  const widget = getUiState().widget;
+  const screen = AppStore.canvas.screen;
+  if (pointerState.started && widget === "textbox") {
+    const localStart = { x: event.clientX, y: event.clientY };
+    const globalStart = {
+      x: localStart.x + screen.x,
+      y: localStart.y + screen.y,
+    };
+    AppStore.project.addTextbox(pointerState.id, {
+      position: {
+        left: pointerState.x,
+        top: pointerState.y,
+        width: globalStart.x - pointerState.x,
+        height: globalStart.y - pointerState.y,
+      },
+    });
+  }
   CanvasStore.movePointer(event.clientX, event.clientY);
 };
 
 let pointerState = {
+  id: "",
   started: false,
   x: 0,
   y: 0,
@@ -35,6 +54,7 @@ const pointerDownListener = (event: PointerEvent) => {
       x: localStart.x + screen.x,
       y: localStart.y + screen.y,
     };
+    pointerState.id = generateId();
     pointerState.x = globalStart.x;
     pointerState.y = globalStart.y;
     pointerState.started = true;
@@ -50,14 +70,7 @@ const pointerUpListener = (event: PointerEvent) => {
       x: localStart.x + screen.x,
       y: localStart.y + screen.y,
     };
-    AppStore.project.addTextbox({
-      position: {
-        left: pointerState.x,
-        top: pointerState.y,
-        width: globalStart.x - pointerState.x,
-        height: globalStart.y - pointerState.y,
-      },
-    });
+    AppStore.project.editTextbox(pointerState.id, { text: "Textbox" });
     console.log("drawing from", pointerState, globalStart);
   }
   pointerState.started = false;
