@@ -6,12 +6,24 @@ import { getUiState } from "modules/state/ui/UiStore";
 import { memo } from "react";
 import TextboxNode from "./nodes/TextboxNode";
 
-const ProjectNode = ({ node, selected }: { node: Node; selected: boolean }) => {
-  if (node.type === "textbox") {
-    return <TextboxNode node={node} selected={selected} />;
+const ProjectNode = memo(
+  ({
+    node,
+    selected,
+    cacheKey,
+  }: {
+    node: Node;
+    selected: boolean;
+    cacheKey: string;
+  }) => {
+    if (node.type === "textbox") {
+      return (
+        <TextboxNode node={node} selected={selected} cacheKey={cacheKey} />
+      );
+    }
+    return null;
   }
-  return null;
-};
+);
 
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
@@ -30,6 +42,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
         <ProjectNode
           key={index}
           node={node}
+          cacheKey={node.cacheKey}
           selected={node.id === selected}
         ></ProjectNode>
       ))}

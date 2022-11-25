@@ -4,6 +4,7 @@ type NodeType = "textbox" | "image" | "video" | "graphics";
 
 export interface Node {
   id: string;
+  cacheKey: string;
   type: NodeType;
   position: CanvasPosition;
   text: string;
@@ -39,10 +40,18 @@ export class ProjectRegistry {
   public patchNodePosition(id: string, position: CanvasPosition) {
     const node = this.getNode(id);
     node.position = position;
+    this.touch(id);
+  }
+
+  private touch(id: string) {
+    const node = this.getNode(id);
+    const tNow = performance.now();
+    node.cacheKey = `${tNow}-${node.id}`;
   }
 
   patchNodeText(id: string, text: string) {
     this.getNode(id).text = text;
+    this.touch(id);
   }
 
   public getNode(id: string) {

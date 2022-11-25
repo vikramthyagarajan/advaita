@@ -3,7 +3,15 @@ import { Position } from "modules/core/foundation";
 import { Node } from "modules/state/project/ProjectRegistry";
 import { memo } from "react";
 
-const TextboxNode = ({ node, selected }: { node: Node; selected: boolean }) => {
+const TextboxNode = ({
+  node,
+  selected,
+  cacheKey,
+}: {
+  node: Node;
+  selected: boolean;
+  cacheKey: string;
+}) => {
   return (
     <Position {...node.position}>
       <div
@@ -26,4 +34,4 @@ const TextboxNode = ({ node, selected }: { node: Node; selected: boolean }) => {
   );
 };
 
-export default TextboxNode;
+export default memo(TextboxNode);

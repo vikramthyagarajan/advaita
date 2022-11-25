@@ -13,7 +13,13 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
-      this.registry.addNode({ id, position, type: "textbox", text: "" });
+      this.registry.addNode({
+        id,
+        position,
+        type: "textbox",
+        text: "",
+        cacheKey: "",
+      });
     }
     AppStore.canvas.shouldRender = true;
   }
