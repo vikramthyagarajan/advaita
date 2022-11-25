@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Position } from "modules/core/foundation";
 import { Node } from "modules/state/project/ProjectRegistry";
 import { memo } from "react";
+import { BoxNode } from "./BoxNode";
 
 const TextboxNode = ({
   node,
@@ -13,7 +14,7 @@ const TextboxNode = ({
   cacheKey: string;
 }) => {
   return (
-    <Position {...node.position}>
+    <BoxNode position={node.position}>
       <div
         className={clsx(
           "flex items-center justify-center border-2 rounded-lg w-full h-full select-none",
@@ -30,7 +31,7 @@ const TextboxNode = ({
           {node.text}
         </div>
       </div>
-    </Position>
+    </BoxNode>
   );
 };
 
