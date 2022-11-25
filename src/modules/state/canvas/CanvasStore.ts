@@ -174,7 +174,6 @@ export default class CanvasStore {
       newScaleY
     );
     const newZ = oldZ + deltaAmount;
-    this.shouldRender = true;
     if (this.isCameraInBounds(oldX, oldY, newZ)) {
       this.data.camera = {
         x: newX,
@@ -182,6 +181,7 @@ export default class CanvasStore {
         z: newZ,
       };
     }
+    this.shouldRender = true;
   }
 
   // pointer position from top left of the screen

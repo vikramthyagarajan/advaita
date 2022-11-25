@@ -20,6 +20,7 @@ const pointerMoveListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
   const screen = AppStore.canvas.screen;
   const scale = AppStore.canvas.scale;
+  AppStore.canvas.movePointer(event.clientX, event.clientY);
   if (pointerState.started && widget === "textbox") {
     const localStart = { x: event.clientX, y: event.clientY };
     const globalStart = {
@@ -35,7 +36,6 @@ const pointerMoveListener = (event: PointerEvent) => {
       },
     });
   }
-  AppStore.canvas.movePointer(event.clientX, event.clientY);
 };
 
 let pointerState = {

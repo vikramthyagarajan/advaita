@@ -1,4 +1,4 @@
-import { Position } from "modules/core/foundation";
+import { ScreenPosition } from "modules/core/foundation";
 import AppStore from "modules/state/AppStore";
 import CanvasStore from "modules/state/canvas/CanvasStore";
 import { Node } from "modules/state/project/ProjectRegistry";
@@ -11,14 +11,21 @@ const ProjectNode = memo(
     node,
     selected,
     cacheKey,
+    screen,
   }: {
     node: Node;
     selected: boolean;
     cacheKey: string;
+    screen: ScreenPosition;
   }) => {
     if (node.type === "textbox") {
       return (
-        <TextboxNode node={node} selected={selected} cacheKey={cacheKey} />
+        <TextboxNode
+          node={node}
+          selected={selected}
+          cacheKey={cacheKey}
+          screen={screen}
+        />
       );
     }
     return null;
@@ -27,6 +34,7 @@ const ProjectNode = memo(
 
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
+  const screen = CanvasStore.screen;
   const nodes = AppStore.project.rootNodes;
   const { selected } = getUiState();
 
@@ -40,6 +48,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
     >
       {nodes.map((node, index) => (
         <ProjectNode
+          screen={screen}
           key={index}
           node={node}
           cacheKey={node.cacheKey}

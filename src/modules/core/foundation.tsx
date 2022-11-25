@@ -9,14 +9,25 @@ export interface CanvasPosition {
   height: number;
 }
 
+export interface ScreenPosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface PositionProps extends CanvasPosition {
+  screen: ScreenPosition;
+}
+
 export const Position = ({
   left,
   top,
   width,
   height,
+  screen,
   children,
-}: PropsWithChildren<CanvasPosition>) => {
-  const screen = CanvasStore.screen;
+}: PropsWithChildren<PositionProps>) => {
   if (
     inBounds(
       { left, top, height, width },

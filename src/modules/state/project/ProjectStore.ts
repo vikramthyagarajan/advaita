@@ -9,6 +9,16 @@ export default class ProjectStore {
     return this._registry;
   }
 
+  public getNode(id: string) {
+    return this.registry.getNode(id);
+  }
+
+  public moveBox(id: string, position: Partial<CanvasPosition>) {
+    const node = this.registry.getNode(id);
+    this.registry.patchNodePosition(id, { ...node.position, ...position });
+    AppStore.canvas.shouldRender = true;
+  }
+
   public addTextbox(id: string, { position }: { position: CanvasPosition }) {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);

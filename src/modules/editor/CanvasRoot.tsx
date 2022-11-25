@@ -14,6 +14,7 @@ const CanvasRoot = () => {
   }, [width, height]);
   const frame = useRenderLoop(60);
   useCanvasHandlers(canvas);
+
   return (
     <div className="w-full h-full">
       <div
