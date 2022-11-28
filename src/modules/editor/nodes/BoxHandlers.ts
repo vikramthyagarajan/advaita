@@ -60,7 +60,6 @@ const useResizeCorner = (
   return useDrag(({ down, delta: [x, y], direction }) => {
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
-    // console.log("check del", deltaX, deltaY, delta);
     switch (edge) {
       case "top-right": {
         const delta = direction[0] === 0 ? -1 * deltaY : deltaX;
