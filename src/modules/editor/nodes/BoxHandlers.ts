@@ -104,6 +104,20 @@ const useResizeCorner = (
   });
 };
 
+const useDragBox = (id: string) => {
+  return useDrag(({ down, delta: [x, y] }) => {
+    const node = AppStore.project.getNode(id);
+    const scale = AppStore.canvas.scale;
+    const deltaX = x / scale.x;
+    const deltaY = y / scale.y;
+
+    AppStore.project.moveBox(id, {
+      left: node.position.left + deltaX,
+      top: node.position.top + deltaY,
+    });
+  });
+};
+
 export const useBoxHandlers = ({ id, position }: BoxHandlerProps) => {
   return {
     edges: {
@@ -117,6 +131,9 @@ export const useBoxHandlers = ({ id, position }: BoxHandlerProps) => {
       topRight: useResizeCorner(id, "top-right"),
       bottomLeft: useResizeCorner(id, "bottom-left"),
       bottomRight: useResizeCorner(id, "bottom-right"),
+    },
+    group: {
+      box: useDragBox(id),
     },
   };
 };

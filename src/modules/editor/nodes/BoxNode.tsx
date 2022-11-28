@@ -1,11 +1,9 @@
-import clsx from "clsx";
 import {
   CanvasPosition,
   Position,
   ScreenPosition,
 } from "modules/core/foundation";
-import AppStore from "modules/state/AppStore";
-import { memo, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { useBoxHandlers } from "./BoxHandlers";
 
 export interface BoxNodeProps {
@@ -27,47 +25,52 @@ export const BoxNode = ({
     <Position screen={screen} {...position}>
       {/* lines */}
       <div
-        className="absolute top-0 left-0 bg-transparent z-50 cursor-ns-resize touch-none"
+        className="absolute top-0 left-0 bg-gray-500 z-50 cursor-ns-resize touch-none"
         style={{ width: `${position.width - 16}px`, height: "2px", left: 8 }}
         {...handlers.edges.top()}
       ></div>
       <div
-        className="absolute top-0 left-0 bg-transparent z-50 cursor-ew-resize touch-none"
+        className="absolute top-0 left-0 bg-gray-500 z-50 cursor-ew-resize touch-none"
         style={{ width: "2px", height: `${position.height - 16}px`, top: 8 }}
         {...handlers.edges.left()}
       ></div>
       <div
-        className="absolute bottom-0 left-0 bg-transparent z-50 cursor-ns-resize touch-none"
+        className="absolute bottom-0 left-0 bg-gray-500 z-50 cursor-ns-resize touch-none"
         style={{ width: `${position.width - 16}px`, height: "2px", left: 8 }}
         {...handlers.edges.bottom()}
       ></div>
       <div
-        className="absolute top-0 right-0 bg-transparent z-50 cursor-ew-resize touch-none"
+        className="absolute top-0 right-0 bg-gray-500 z-50 cursor-ew-resize touch-none"
         style={{ width: "2px", height: `${position.height - 16}px`, top: 8 }}
         {...handlers.edges.right()}
       ></div>
       {/* corners */}
       <div
-        className="absolute top-0 left-0 bg-transparent z-50 cursor-nwse-resize touch-none"
+        className="absolute top-0 left-0 bg-gray-500 z-50 cursor-nwse-resize touch-none"
         style={{ width: "8px", height: "8px" }}
         {...handlers.corners.topLeft()}
       ></div>
       <div
-        className="absolute bottom-0 left-0 bg-transparent z-50 cursor-nesw-resize touch-none"
+        className="absolute bottom-0 left-0 bg-gray-500 z-50 cursor-nesw-resize touch-none"
         style={{ width: "8px", height: "8px" }}
         {...handlers.corners.bottomLeft()}
       ></div>
       <div
-        className="absolute bottom-0 right-0 bg-transparent z-50 cursor-nwse-resize touch-none"
+        className="absolute bottom-0 right-0 bg-gray-500 z-50 cursor-nwse-resize touch-none"
         style={{ width: "8px", height: "8px" }}
         {...handlers.corners.bottomRight()}
       ></div>
       <div
-        className="absolute top-0 right-0 bg-transparent z-50 cursor-nesw-resize touch-none"
+        className="absolute top-0 right-0 bg-gray-500 z-50 cursor-nesw-resize touch-none"
         style={{ width: "8px", height: "8px" }}
         {...handlers.corners.topRight()}
       ></div>
-      {children}
+      <div
+        className="absolute top-0 left-0 w-full h-full cursor-move touch-none"
+        {...handlers.group.box()}
+      >
+        {children}
+      </div>
     </Position>
   );
 };
