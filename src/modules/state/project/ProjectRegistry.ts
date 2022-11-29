@@ -33,7 +33,7 @@ export interface TextNode extends GenericNode {
   cacheKey: string;
   id: string;
   text: string;
-  parentId: string;
+  parent: string;
 }
 
 export interface TextboxNode extends GenericNode {

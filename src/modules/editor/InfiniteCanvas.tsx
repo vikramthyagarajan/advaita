@@ -4,33 +4,8 @@ import CanvasStore from "modules/state/canvas/CanvasStore";
 import { Node } from "modules/state/project/ProjectRegistry";
 import { getUiState } from "modules/state/ui/UiStore";
 import { memo } from "react";
+import ProjectNode from "./nodes/ProjectNode";
 import TextboxElement from "./nodes/TextboxElement";
-
-const ProjectNode = memo(
-  ({
-    node,
-    selected,
-    cacheKey,
-    screen,
-  }: {
-    node: Node;
-    selected: boolean;
-    cacheKey: string;
-    screen: ScreenPosition;
-  }) => {
-    if (node.type === "textbox") {
-      return (
-        <TextboxElement
-          node={node}
-          selected={selected}
-          cacheKey={cacheKey}
-          screen={screen}
-        />
-      );
-    }
-    return null;
-  }
-);
 
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
