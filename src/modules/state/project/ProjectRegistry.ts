@@ -96,6 +96,13 @@ export class ProjectRegistry {
     }
   }
 
+  public addNodeChild(id: string, child: SubNode) {
+    const node = this.getNode(id);
+    if (node.children) {
+      node.children.push({ id: child.id, type: child.type });
+    } else node.children = [{ id: child.id, type: child.type }];
+  }
+
   patchNodeText(id: string, text: string) {
     const node = this.root.texts[id];
     if (node) node.text = text;

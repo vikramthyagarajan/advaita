@@ -1,7 +1,7 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
-import { Node, ProjectRegistry } from "./ProjectRegistry";
+import { Node, ProjectRegistry, TextNode } from "./ProjectRegistry";
 
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
@@ -25,23 +25,11 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
-      const text = this.registry.addNode({
-        id: generateId(),
-        type: "text",
-        cacheKey: "",
-        parentId: id,
-        text: "Textbox",
-      });
       this.registry.addNode({
         id,
         position,
         type: "textbox",
-        children: [
-          {
-            type: "text",
-            id: text.id,
-          },
-        ],
+        children: [],
         cacheKey: "",
         align: "center",
         vertical: "center",
@@ -50,8 +38,15 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public editTextbox(id: string, { text }: { text: string }) {
-    this.registry.patchNodeText(id, text);
+  public addTextToBox(id: string, text: string) {
+    const sub = this.registry.addNode({
+      id: generateId(),
+      type: "text",
+      cacheKey: "",
+      parentId: id,
+      text,
+    }) as TextNode;
+    this.registry.addNodeChild(id, sub);
     AppStore.canvas.shouldRender = true;
   }
 
