@@ -8,9 +8,11 @@ import { BoxNode } from "./BoxNode";
 
 const TextElement = ({
   node,
+  index,
   cacheKey,
 }: {
   node: TextNode;
+  index: number;
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +41,10 @@ const TextElement = ({
             e.preventDefault();
             e.stopPropagation();
             e.currentTarget.blur();
-            AppStore.project.addTextToBox(node.parent || "", "", true);
+            AppStore.project.addTextToBox(node.parent || "", "", {
+              at: index + 1,
+              editOnCreate: true,
+            });
           }
         }
       }}
@@ -76,11 +81,22 @@ const TextboxElement = ({
         )}
       >
         {node.children
-          .map((child) => AppStore.project.getNode(child.id) as TextNode | null)
-          .filter(isPresent)
-          .map((sub) => (
-            <TextElement key={sub.id} node={sub} cacheKey={sub.cacheKey} />
-          ))}
+          .map((child, index) => ({
+            val: AppStore.project.getNode(child.id) as TextNode | null,
+            index,
+          }))
+          .filter(({ val }) => isPresent(val))
+          .map(({ val, index }) => {
+            const sub = val as TextNode;
+            return (
+              <TextElement
+                key={sub.id}
+                node={sub}
+                cacheKey={sub.cacheKey}
+                index={index}
+              />
+            );
+          })}
       </div>
     </BoxNode>
   );

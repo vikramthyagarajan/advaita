@@ -97,10 +97,10 @@ export class ProjectRegistry {
     }
   }
 
-  public addNodeChild(id: string, child: SubNode) {
+  public addNodeChild(id: string, child: SubNode, at: number) {
     const node = this.getNode(id);
     if (node.children) {
-      node.children.push({ id: child.id, type: child.type });
+      node.children.splice(at, 0, { id: child.id, type: child.type });
     } else node.children = [{ id: child.id, type: child.type }];
   }
 

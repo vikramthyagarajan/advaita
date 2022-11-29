@@ -38,7 +38,11 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public addTextToBox(id: string, text: string, editOnCreate?: boolean) {
+  public addTextToBox(
+    id: string,
+    text: string,
+    { at, editOnCreate }: { at?: number; editOnCreate?: boolean }
+  ) {
     const sub = this.registry.addNode({
       id: generateId(),
       type: "text",
@@ -47,7 +51,11 @@ export default class ProjectStore {
       text,
       editOnCreate,
     }) as TextNode;
-    this.registry.addNodeChild(id, sub);
+    this.registry.addNodeChild(
+      id,
+      sub,
+      at !== undefined ? at : this.registry.getNode(id).children?.length || 0
+    );
     AppStore.canvas.shouldRender = true;
   }
 
