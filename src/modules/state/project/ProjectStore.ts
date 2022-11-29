@@ -1,4 +1,5 @@
 import { CanvasPosition } from "modules/core/foundation";
+import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { Node, ProjectRegistry } from "./ProjectRegistry";
 
@@ -15,6 +16,7 @@ export default class ProjectStore {
 
   public moveBox(id: string, position: Partial<CanvasPosition>) {
     const node = this.registry.getNode(id);
+    if (!node || !("position" in node)) return;
     this.registry.patchNodePosition(id, { ...node.position, ...position });
     AppStore.canvas.shouldRender = true;
   }
@@ -23,12 +25,26 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
+      const text = this.registry.addNode({
+        id: generateId(),
+        type: "text",
+        cacheKey: "",
+        parentId: id,
+        text: "Textbox",
+      });
       this.registry.addNode({
         id,
         position,
         type: "textbox",
-        text: "",
+        children: [
+          {
+            type: "text",
+            id: text.id,
+          },
+        ],
         cacheKey: "",
+        align: "center",
+        vertical: "center",
       });
     }
     AppStore.canvas.shouldRender = true;

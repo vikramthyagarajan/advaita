@@ -4,7 +4,7 @@ import CanvasStore from "modules/state/canvas/CanvasStore";
 import { Node } from "modules/state/project/ProjectRegistry";
 import { getUiState } from "modules/state/ui/UiStore";
 import { memo } from "react";
-import TextboxNode from "./nodes/TextboxNode";
+import TextboxElement from "./nodes/TextboxElement";
 
 const ProjectNode = memo(
   ({
@@ -20,7 +20,7 @@ const ProjectNode = memo(
   }) => {
     if (node.type === "textbox") {
       return (
-        <TextboxNode
+        <TextboxElement
           node={node}
           selected={selected}
           cacheKey={cacheKey}

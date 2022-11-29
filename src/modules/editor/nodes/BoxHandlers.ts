@@ -17,6 +17,7 @@ const useResizeEdge = (
   return useDrag(({ down, delta: [x, y] }) => {
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (!node || !("position" in node)) return;
     switch (edge) {
       case "right": {
         AppStore.project.moveBox(id, {
@@ -60,6 +61,7 @@ const useResizeCorner = (
   return useDrag(({ down, delta: [x, y], direction }) => {
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (!node || !("position" in node)) return;
     switch (edge) {
       case "top-right": {
         const delta = direction[0] === 0 ? -1 * deltaY : deltaX;
@@ -109,6 +111,7 @@ const useDragBox = (id: string) => {
     const scale = AppStore.canvas.scale;
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (!node || !("position" in node)) return;
 
     AppStore.project.moveBox(id, {
       left: node.position.left + deltaX,
