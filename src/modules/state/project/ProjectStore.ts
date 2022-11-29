@@ -38,16 +38,21 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public addTextToBox(id: string, text: string) {
+  public addTextToBox(id: string, text: string, editOnCreate?: boolean) {
     const sub = this.registry.addNode({
       id: generateId(),
       type: "text",
       cacheKey: "",
       parent: id,
       text,
+      editOnCreate,
     }) as TextNode;
     this.registry.addNodeChild(id, sub);
     AppStore.canvas.shouldRender = true;
+  }
+
+  public setEditOnCreate(id: string, value: boolean) {
+    this.registry.patchEditOnCreate(id, value);
   }
 
   public get root() {

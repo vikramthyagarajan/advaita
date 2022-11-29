@@ -34,6 +34,7 @@ export interface TextNode extends GenericNode {
   id: string;
   text: string;
   parent: string;
+  editOnCreate?: boolean;
 }
 
 export interface TextboxNode extends GenericNode {
@@ -106,6 +107,12 @@ export class ProjectRegistry {
   patchNodeText(id: string, text: string) {
     const node = this.root.texts[id];
     if (node) node.text = text;
+    this.touch(id);
+  }
+
+  patchEditOnCreate(id: string, value: boolean) {
+    const node = this.getNode(id) as TextNode | null;
+    if (node) node.editOnCreate = value;
     this.touch(id);
   }
 

@@ -3,7 +3,7 @@ import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
 import { TextboxNode, TextNode } from "modules/state/project/ProjectRegistry";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { BoxNode } from "./BoxNode";
 
 const TextElement = ({
@@ -13,11 +13,36 @@ const TextElement = ({
   node: TextNode;
   cacheKey: string;
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  if (node.editOnCreate && ref.current) {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    if (selection && ref.current) {
+      selection.removeAllRanges();
+      range.selectNodeContents(ref.current);
+      range.collapse(false);
+      selection.addRange(range);
+      ref.current?.focus();
+      AppStore.project.setEditOnCreate(node.id, false);
+    }
+  } else if (!ref.current) AppStore.canvas.shouldRender = true;
+
   return (
     <div
+      ref={ref}
       className="cursor-text outline-none"
       contentEditable
       suppressContentEditableWarning
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          if (node.parent) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.currentTarget.blur();
+            AppStore.project.addTextToBox(node.parent || "", "", true);
+          }
+        }
+      }}
     >
       {node.text}
     </div>
@@ -44,7 +69,7 @@ const TextboxElement = ({
     >
       <div
         className={clsx(
-          "flex items-center justify-center border-2 rounded-lg w-full h-full select-none",
+          "flex flex-col items-center justify-center border-2 rounded-lg w-full h-full select-none",
           {
             "shadow-lg": selected,
           }
