@@ -43,7 +43,7 @@ export default class ProjectStore {
       id: generateId(),
       type: "text",
       cacheKey: "",
-      parentId: id,
+      parent: id,
       text,
     }) as TextNode;
     this.registry.addNodeChild(id, sub);
