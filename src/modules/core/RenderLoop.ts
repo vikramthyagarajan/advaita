@@ -47,7 +47,7 @@ export const useRenderLoop = (fps: number = 15) => {
     getRenderLoop(fps, () => {
       if (CanvasStore.shouldRender) {
         setFrame(`${performance.now()}`);
-        CanvasStore.shouldRender = false;
+        // CanvasStore.shouldRender = false;
       }
     })
   );
