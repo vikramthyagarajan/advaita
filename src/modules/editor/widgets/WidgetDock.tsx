@@ -2,10 +2,11 @@ import clsx from "clsx";
 import AppStore from "modules/state/AppStore";
 import { Widget } from "modules/state/ui/UiState";
 import { getUiDispatch } from "modules/state/ui/UiStore";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { Icon, MousePointer, PlusSquare, Image, Video } from "react-feather";
 
 export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const uiDispatch = getUiDispatch();
   const widgets: { name: Widget; icon: Icon }[] = [
     { name: "pointer", icon: MousePointer },
@@ -15,6 +16,7 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
   ];
   return (
     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-slate-100 px-4 py-2 rounded-t-lg">
+      <input ref={inputRef} type="file" hidden />
       <div className="flex gap-2">
         {widgets.map((widget) => (
           <div
@@ -22,9 +24,12 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
             className={clsx("p-2 rounded-md cursor-pointer", {
               "bg-slate-300": widget.name === selectedWidget,
             })}
-            onClick={() =>
-              uiDispatch({ type: "widgetUpdated", widget: widget.name })
-            }
+            onClick={() => {
+              if (widget.name === "image" || widget.name === "video") {
+                inputRef.current?.click();
+              }
+              uiDispatch({ type: "widgetUpdated", widget: widget.name });
+            }}
           >
             <widget.icon />
           </div>
