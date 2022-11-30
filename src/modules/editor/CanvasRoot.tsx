@@ -1,8 +1,12 @@
 import CanvasStore from "modules/state/canvas/CanvasStore";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import useSize from "@react-hook/size";
 import InfiniteCanvas from "./InfiniteCanvas";
 import { useCanvasHandlers } from "./CanvasHandlers";
+import { Widget } from "modules/state/ui/UiState";
+import AppStore from "modules/state/AppStore";
+import { getUiState } from "modules/state/ui/UiStore";
+import clsx from "clsx";
 
 export interface CanvasRootProps {
   frame: string;
@@ -16,11 +20,17 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
     CanvasStore.initialize(width, height);
   }, [width, height]);
   useCanvasHandlers(canvas);
+  const { widget } = getUiState();
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <div
-        className="w-full h-full relative overflow-hidden overscroll-none"
+        className={clsx(
+          "w-full h-full relative overflow-hidden overscroll-none",
+          {
+            "cursor-crosshair": widget !== "pointer",
+          }
+        )}
         ref={canvas}
       >
         <InfiniteCanvas frame={frame}></InfiniteCanvas>

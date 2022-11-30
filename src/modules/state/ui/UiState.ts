@@ -2,12 +2,14 @@ export type Widget = "pointer" | "textbox" | "image" | "video";
 export interface UiState {
   widget: Widget;
   selected: string | null;
+  urlPreview: string | null;
 }
 
 export const getInitialUiState = (): UiState => {
   return {
     widget: "pointer",
     selected: null,
+    urlPreview: null,
   };
 };
 
@@ -25,4 +27,13 @@ interface NodeSelected {
   id: string;
 }
 
-export type UiActions = UiInitialized | WidgetUpdated | NodeSelected;
+interface UrlPreviewUpdated {
+  type: "urlPreviewUpdated";
+  url: string;
+}
+
+export type UiActions =
+  | UiInitialized
+  | WidgetUpdated
+  | NodeSelected
+  | UrlPreviewUpdated;

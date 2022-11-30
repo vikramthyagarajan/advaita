@@ -1,21 +1,7 @@
 import { CanvasPosition } from "modules/core/foundation";
 
 type SubNodeType = "text" | "image" | "video";
-type NodeType = "textbox" | "image" | "video" | "graphics" | SubNodeType;
-
-export interface ImageSubNode {
-  type: "image";
-  id: string;
-  image: string;
-}
-
-export interface TextSubNode {
-  type: "text";
-  id: string;
-  text: string;
-}
-
-export type SubNode = TextSubNode | ImageSubNode;
+type NodeType = "textbox" | "imagebox" | "videobox" | "graphics" | SubNodeType;
 
 export interface GenericNode {
   type: NodeType;
@@ -45,11 +31,27 @@ export interface TextboxNode extends GenericNode {
   children: { type: SubNodeType; id: string }[];
 }
 
-export type Node = TextboxNode | TextNode;
+export interface ImageNode extends GenericNode {
+  type: "image";
+  url: string;
+  position: CanvasPosition;
+}
+
+export interface ImageboxNode extends GenericNode {
+  type: "imagebox";
+  position: CanvasPosition;
+  children: { type: SubNodeType; id: string }[];
+}
+
+export type SubNode = TextNode | ImageNode;
+export type Node = TextboxNode | ImageboxNode | SubNode;
 
 interface ProjectRoot {
   textboxes: {
     [id: string]: TextboxNode;
+  };
+  imageboxes: {
+    [id: string]: ImageboxNode;
   };
   texts: {
     [id: string]: TextNode;
@@ -65,6 +67,7 @@ interface ProjectRoot {
 export class ProjectRegistry {
   private _root: ProjectRoot = {
     textboxes: {},
+    imageboxes: {},
     texts: {},
     images: {},
     videos: {},
@@ -77,6 +80,8 @@ export class ProjectRegistry {
   public addNode(node: Node) {
     if (node.type === "textbox") this.root.textboxes[node.id] = node;
     else if (node.type === "text") this.root.texts[node.id] = node;
+    else if (node.type === "imagebox") this.root.imageboxes[node.id] = node;
+    else if (node.type === "image") this.root.images[node.id] = node;
     return node;
   }
 
@@ -143,6 +148,12 @@ export class ProjectRegistry {
 
   get textboxes() {
     return Object.values(this.root.textboxes);
+  }
+  get imageboxes() {
+    return Object.values(this.root.imageboxes);
+  }
+  get texts() {
+    return Object.values(this.root.texts);
   }
   get images() {
     return Object.values(this.root.images);

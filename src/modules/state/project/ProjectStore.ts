@@ -21,6 +21,36 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
+  public addImagebox(
+    id: string,
+    { url, position }: { url: string; position: CanvasPosition }
+  ) {
+    if (this.registry.getNode(id)) {
+      this.registry.patchNodePosition(id, position);
+    } else {
+      const inner = this.registry.addNode({
+        id,
+        position: {
+          left: 0,
+          top: 0,
+          width: position.width,
+          height: position.height,
+        },
+        type: "image",
+        url,
+        cacheKey: "",
+      });
+      this.registry.addNode({
+        id,
+        position,
+        type: "imagebox",
+        children: [{ id: inner.id, type: "image" }],
+        cacheKey: "",
+      });
+    }
+    AppStore.canvas.shouldRender = true;
+  }
+
   public addTextbox(id: string, { position }: { position: CanvasPosition }) {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
@@ -79,7 +109,6 @@ export default class ProjectStore {
   public get rootNodes(): Node[] {
     return ([] as Node[])
       .concat(this.registry.textboxes)
-      .concat(this.registry.images)
-      .concat(this.registry.videos);
+      .concat(this.registry.imageboxes);
   }
 }

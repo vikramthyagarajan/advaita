@@ -1,4 +1,4 @@
-import { ScreenPosition } from "modules/core/foundation";
+import { Position, ScreenPosition } from "modules/core/foundation";
 import AppStore from "modules/state/AppStore";
 import CanvasStore from "modules/state/canvas/CanvasStore";
 import { Node } from "modules/state/project/ProjectRegistry";
@@ -7,11 +7,42 @@ import { memo } from "react";
 import ProjectNode from "./nodes/ProjectNode";
 import TextboxElement from "./nodes/TextboxElement";
 
+const ImagePreview = memo(
+  ({
+    pointerX,
+    pointerY,
+  }: {
+    frame: string;
+    pointerX: number;
+    pointerY: number;
+  }) => {
+    const { urlPreview, widget } = getUiState();
+    const screen = AppStore.canvas.screen;
+    if (widget === "image" && urlPreview) {
+      return (
+        <Position
+          left={pointerX}
+          top={pointerY}
+          height={50}
+          width={50}
+          screen={screen}
+        >
+          <div className="bg-slate-500 p-[1px]">
+            <img className="" src={urlPreview} />
+          </div>
+        </Position>
+      );
+    }
+    return null;
+  }
+);
+
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
   const screen = CanvasStore.screen;
   const nodes = AppStore.project.rootNodes;
   const { selected } = getUiState();
+  const { x, y } = AppStore.canvas.pointer;
 
   return (
     <div
@@ -30,6 +61,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
           selected={node.id === selected}
         ></ProjectNode>
       ))}
+      <ImagePreview frame={frame} pointerX={x} pointerY={y} />
     </div>
   );
 };

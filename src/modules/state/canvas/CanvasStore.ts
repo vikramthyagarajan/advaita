@@ -105,7 +105,7 @@ export default class CanvasStore {
     return canvasData.container;
   }
 
-  private static get pointer() {
+  public static get pointer() {
     return canvasData.pointer;
   }
 

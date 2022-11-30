@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import AppStore from "modules/state/AppStore";
 import { Widget } from "modules/state/ui/UiState";
 import { getUiDispatch } from "modules/state/ui/UiStore";
 import { memo, useRef } from "react";
@@ -16,7 +15,27 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
   ];
   return (
     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-slate-100 px-4 py-2 rounded-t-lg">
-      <input ref={inputRef} type="file" hidden />
+      <input
+        ref={inputRef}
+        type="file"
+        hidden
+        onChange={(e) => {
+          const file = e.target.files ? e.target.files[0] : null;
+          console.log("change");
+          if (!file) return;
+          const fr = new FileReader();
+          fr.readAsArrayBuffer(file);
+          fr.onload = function () {
+            // you can keep blob or save blob to another position
+            if (!fr.result) return;
+            const blob = new Blob([fr.result]);
+            const url = URL.createObjectURL(blob);
+            console.log("change url", url);
+            const dispatch = getUiDispatch();
+            dispatch({ type: "urlPreviewUpdated", url });
+          };
+        }}
+      />
       <div className="flex gap-2">
         {widgets.map((widget) => (
           <div

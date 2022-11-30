@@ -10,6 +10,10 @@ const UiReducer = (state: UiState, action: UiActions) => {
     case "nodeSelected":
       state = { ...state, selected: action.id };
       break;
+
+    case "urlPreviewUpdated":
+      state = { ...state, urlPreview: action.url };
+      break;
   }
   return state;
 };
