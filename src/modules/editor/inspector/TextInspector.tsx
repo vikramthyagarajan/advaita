@@ -1,5 +1,12 @@
 import clsx from "clsx";
-import { Node } from "modules/state/project/ProjectRegistry";
+import AppStore from "modules/state/AppStore";
+import {
+  Align,
+  Node,
+  TextboxNode,
+  TextNode,
+  VerticalAlign,
+} from "modules/state/project/ProjectRegistry";
 import {
   AlignCenter,
   AlignLeft,
@@ -13,7 +20,7 @@ export interface TextInspectorProps {
   node: Node;
 }
 
-export const TextInspector = ({}: TextInspectorProps) => {
+export const TextInspector = ({ node }: TextInspectorProps) => {
   const aligns = [
     {
       name: "left",
@@ -33,8 +40,12 @@ export const TextInspector = ({}: TextInspectorProps) => {
         {aligns.map((align) => (
           <div
             key={align.name}
-            className={clsx("rounded-md cursor-pointer text-sm", {})}
-            onClick={() => {}}
+            className={clsx("cursor-pointer text-sm p-2", {
+              "bg-slate-300": (node as TextboxNode).align === align.name,
+            })}
+            onClick={() => {
+              AppStore.project.setNode(node.id, { align: align.name as Align });
+            }}
           >
             <align.icon size={15} />
           </div>
@@ -45,8 +56,14 @@ export const TextInspector = ({}: TextInspectorProps) => {
         {verticals.map((vertical) => (
           <div
             key={vertical.name}
-            className={clsx("cursor-pointer")}
-            onClick={() => {}}
+            className={clsx("cursor-pointer p-2", {
+              "bg-slate-300": (node as TextboxNode).vertical === vertical.name,
+            })}
+            onClick={() => {
+              AppStore.project.setNode(node.id, {
+                vertical: vertical.name as VerticalAlign,
+              });
+            }}
           >
             <vertical.icon size={15} />
           </div>

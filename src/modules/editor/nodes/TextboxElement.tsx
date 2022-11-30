@@ -89,9 +89,14 @@ const TextboxElement = ({
     >
       <div
         className={clsx(
-          "flex flex-col items-center justify-center border-2 rounded-lg w-full h-full select-none",
+          "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
           {
             "shadow-lg": selected,
+            "items-center": !node.align || node.align === "center",
+            "items-start": node.align === "left",
+            "items-end": node.align === "right",
+            "justify-start": node.vertical === "top",
+            "justify-center": node.vertical === "center",
           }
         )}
       >
