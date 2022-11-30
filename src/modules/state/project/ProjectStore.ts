@@ -59,6 +59,15 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
+  public setNode(id: string, node: Partial<Node>) {
+    this.registry.patchNode(id, node);
+    AppStore.canvas.shouldRender = true;
+  }
+
+  public removeChildNode(parent: string, id: string) {
+    this.registry.removeChildNode(parent, id);
+  }
+
   public setEditOnCreate(id: string, value: boolean) {
     this.registry.patchEditOnCreate(id, value);
   }

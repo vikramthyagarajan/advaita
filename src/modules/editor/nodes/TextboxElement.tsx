@@ -35,6 +35,10 @@ const TextElement = ({
       className="cursor-text outline-none"
       contentEditable
       suppressContentEditableWarning
+      onBlur={(e) => {
+        const text = e.currentTarget.textContent || "";
+        AppStore.project.setNode(node.id, { text });
+      }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           if (node.parent) {
@@ -45,6 +49,17 @@ const TextElement = ({
               at: index + 1,
               editOnCreate: true,
             });
+          }
+        } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
+          if (node.parent) {
+            const parent = AppStore.project.getNode(node.parent) as TextboxNode;
+            if (index > 0)
+              AppStore.project.setEditOnCreate(
+                parent.children[index - 1].id,
+                true
+              );
+            AppStore.project.removeChildNode(node.parent, node.id);
+            AppStore.canvas.shouldRender = true;
           }
         }
       }}

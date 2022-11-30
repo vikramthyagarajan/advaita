@@ -110,6 +110,22 @@ export class ProjectRegistry {
     this.touch(id);
   }
 
+  removeChildNode(parent: string, id: string) {
+    const node = this.getNode(parent);
+    if (node.children) {
+      const index = node.children.findIndex((child) => child.id === id);
+      if (index === -1) return;
+      node.children.splice(index, 1);
+    }
+    this.touch(parent);
+  }
+
+  patchNode(id: string, node: Partial<Node>) {
+    const original = this.getNode(id);
+    Object.assign(original, node);
+    this.touch(id);
+  }
+
   patchEditOnCreate(id: string, value: boolean) {
     const node = this.getNode(id) as TextNode | null;
     if (node) node.editOnCreate = value;
