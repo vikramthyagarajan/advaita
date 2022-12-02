@@ -1,50 +1,11 @@
 import { CanvasPosition } from "modules/core/foundation";
-
-type SubNodeType = "text" | "image" | "video";
-type NodeType = "textbox" | "imagebox" | "videobox" | "graphics" | SubNodeType;
-
-export interface GenericNode {
-  type: NodeType;
-  id: string;
-  cacheKey: string;
-  parent?: string;
-  children?: { id: string; type: NodeType }[];
-}
-
-export type Align = "left" | "center" | "right";
-export type VerticalAlign = "top" | "center";
-
-export interface TextNode extends GenericNode {
-  type: "text";
-  cacheKey: string;
-  id: string;
-  text: string;
-  parent: string;
-  editOnCreate?: boolean;
-}
-
-export interface TextboxNode extends GenericNode {
-  type: "textbox";
-  position: CanvasPosition;
-  align: Align;
-  vertical: VerticalAlign;
-  children: { type: SubNodeType; id: string }[];
-}
-
-export interface ImageNode extends GenericNode {
-  type: "image";
-  url: string;
-  position: CanvasPosition;
-}
-
-export interface ImageboxNode extends GenericNode {
-  type: "imagebox";
-  position: CanvasPosition;
-  children: { type: SubNodeType; id: string }[];
-}
-
-export type SubNode = TextNode | ImageNode;
-export type Node = TextboxNode | ImageboxNode | SubNode;
+import {
+  ImageboxNode,
+  Node,
+  SubNode,
+  TextboxNode,
+  TextNode,
+} from "./ProjectTypes";
 
 interface ProjectRoot {
   textboxes: {

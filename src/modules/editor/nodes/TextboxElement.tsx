@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
-import { TextboxNode, TextNode } from "modules/state/project/ProjectRegistry";
+import { TextboxNode, TextNode } from "modules/state/project/ProjectTypes";
 import { memo, useRef } from "react";
 import { BoxNode } from "./BoxNode";
 

@@ -1,12 +1,8 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
-import {
-  ImageboxNode,
-  Node,
-  ProjectRegistry,
-  TextNode,
-} from "./ProjectRegistry";
+import { ProjectRegistry } from "./ProjectRegistry";
+import { ImageboxNode, Node, TextNode } from "./ProjectTypes";
 
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
@@ -94,6 +90,11 @@ export default class ProjectStore {
       cacheKey: "",
       parent: id,
       text,
+      bold: false,
+      italic: false,
+      underline: false,
+      size: 16,
+      style: "none",
       editOnCreate,
     }) as TextNode;
     this.registry.addNodeChild(

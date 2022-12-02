@@ -4,15 +4,18 @@ import {
   Align,
   Node,
   TextboxNode,
-  TextNode,
   VerticalAlign,
-} from "modules/state/project/ProjectRegistry";
+} from "modules/state/project/ProjectTypes";
 import {
   AlignCenter,
   AlignLeft,
   AlignRight,
+  Bold,
   ChevronsDown,
   ChevronsUp,
+  Italic,
+  Type,
+  Underline,
 } from "react-feather";
 
 export interface TextInspectorProps {
@@ -32,6 +35,16 @@ export const TextInspector = ({ node }: TextInspectorProps) => {
   const verticals = [
     { name: "top", icon: ChevronsUp },
     { name: "center", icon: ChevronsDown },
+  ];
+  const formatting = [
+    { name: "bold", icon: Bold },
+    { name: "italic", icon: Italic },
+    { name: "underline", icon: Underline },
+  ];
+  const styles = [
+    { name: "heading-1", icon: Type },
+    { name: "heading-2", icon: Type },
+    { name: "heading-3", icon: Type },
   ];
   return (
     <div>
@@ -66,6 +79,24 @@ export const TextInspector = ({ node }: TextInspectorProps) => {
             }}
           >
             <vertical.icon size={15} />
+          </div>
+        ))}
+      </div>
+      <div className="text-sm my-2">Formatting</div>
+      <div className="flex flex-row gap-3">
+        {formatting.map((style) => (
+          <div
+            key={style.name}
+            className={clsx("cursor-pointer p-2", {
+              "bg-slate-300": (node as any)[style.name],
+            })}
+            onClick={() => {
+              AppStore.project.setNode(node.id, {
+                [style.name]: true,
+              });
+            }}
+          >
+            <style.icon size={15} />
           </div>
         ))}
       </div>

@@ -1,11 +1,9 @@
 import { Position, ScreenPosition } from "modules/core/foundation";
 import AppStore from "modules/state/AppStore";
 import CanvasStore from "modules/state/canvas/CanvasStore";
-import { Node } from "modules/state/project/ProjectRegistry";
 import { getUiState } from "modules/state/ui/UiStore";
 import { memo } from "react";
 import ProjectNode from "./nodes/ProjectNode";
-import TextboxElement from "./nodes/TextboxElement";
 
 const ImagePreview = memo(
   ({
