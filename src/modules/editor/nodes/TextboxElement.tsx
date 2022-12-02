@@ -33,6 +33,7 @@ const TextElement = ({
     <div
       ref={ref}
       className="cursor-text outline-none"
+      data-id={node.id}
       contentEditable
       suppressContentEditableWarning
       onBlur={(e) => {
@@ -88,6 +89,7 @@ const TextboxElement = ({
       screen={screen}
     >
       <div
+        data-id={node.id}
         className={clsx(
           "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
           {

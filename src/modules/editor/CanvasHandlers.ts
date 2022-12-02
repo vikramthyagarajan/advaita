@@ -75,7 +75,20 @@ const pointerDownListener = (event: PointerEvent) => {
 
 const pointerUpListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
-  if (pointerState.started) {
+  if (widget === "pointer") {
+    const id = (event.target as HTMLElement).getAttribute("data-id");
+    const dispatch = getUiDispatch();
+    if (id) {
+      const node = AppStore.project.getNode(id);
+      if (node) {
+        const nodeId = node.parent ? node.parent : node.id;
+        const childId = node.parent ? node.id : undefined;
+        dispatch({ type: "nodeSelected", id: nodeId, childId });
+      }
+    } else {
+      dispatch({ type: "nodeSelected", id: null });
+    }
+  } else if (pointerState.started) {
     const dispatch = getUiDispatch();
     dispatch({ type: "widgetUpdated", widget: "pointer" });
     dispatch({ type: "nodeSelected", id: pointerState.id });

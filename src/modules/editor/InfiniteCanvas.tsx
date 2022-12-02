@@ -39,7 +39,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
   const screen = CanvasStore.screen;
   const nodes = AppStore.project.rootNodes;
-  const { selected } = getUiState();
+  const { selectedNode: selected } = getUiState();
   const { x, y } = AppStore.canvas.pointer;
 
   return (
