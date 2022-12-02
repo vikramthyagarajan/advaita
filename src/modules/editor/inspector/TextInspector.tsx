@@ -2,7 +2,6 @@ import clsx from "clsx";
 import AppStore from "modules/state/AppStore";
 import {
   Align,
-  Node,
   TextboxNode,
   TextNode,
   TextStyles,
@@ -22,10 +21,11 @@ import {
 
 export interface TextInspectorProps {
   cacheKey: string;
-  node: Node;
+  node: TextboxNode;
+  child: TextNode | null;
 }
 
-export const TextInspector = ({ node }: TextInspectorProps) => {
+export const TextInspector = ({ node, child }: TextInspectorProps) => {
   const aligns = [
     {
       name: "left",
@@ -56,7 +56,7 @@ export const TextInspector = ({ node }: TextInspectorProps) => {
           <div
             key={align.name}
             className={clsx("cursor-pointer text-sm p-2", {
-              "bg-slate-300": (node as TextboxNode).align === align.name,
+              "bg-slate-300": node.align === align.name,
             })}
             onClick={() => {
               AppStore.project.setNode(node.id, { align: align.name as Align });
@@ -72,7 +72,7 @@ export const TextInspector = ({ node }: TextInspectorProps) => {
           <div
             key={vertical.name}
             className={clsx("cursor-pointer p-2", {
-              "bg-slate-300": (node as TextboxNode).vertical === vertical.name,
+              "bg-slate-300": node.vertical === vertical.name,
             })}
             onClick={() => {
               AppStore.project.setNode(node.id, {
@@ -84,42 +84,59 @@ export const TextInspector = ({ node }: TextInspectorProps) => {
           </div>
         ))}
       </div>
-      <div className="text-sm my-2">Formatting</div>
-      <div className="flex flex-row gap-3">
-        {formatting.map((style) => (
-          <div
-            key={style.name}
-            className={clsx("cursor-pointer p-2", {
-              "bg-slate-300": (node as any)[style.name],
-            })}
-            onClick={() => {
-              AppStore.project.setNode(node.id, {
-                [style.name]: !(node as any)[style.name],
-              });
-            }}
-          >
-            <style.icon size={15} />
+      {child ? (
+        <>
+          <div className="text-sm my-2">Formatting</div>
+          <div className="flex flex-row gap-3">
+            {formatting.map((style) => (
+              <div
+                key={style.name}
+                className={clsx("cursor-pointer p-2", {
+                  "bg-slate-300": (child as any)[style.name],
+                })}
+                onClick={() => {
+                  AppStore.project.setNode(child.id, {
+                    [style.name]: !(child as any)[style.name],
+                    style: "none",
+                  });
+                }}
+              >
+                <style.icon size={15} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="text-sm my-2">Styles</div>
-      <div className="flex flex-row gap-3">
-        {styles.map((style) => (
-          <div
-            key={style.name}
-            className={clsx("cursor-pointer p-2", {
-              "bg-slate-300": (node as TextNode).style === style.name,
-            })}
-            onClick={() => {
-              AppStore.project.setNode(node.id, {
-                style: style.name as TextStyles,
-              });
-            }}
-          >
-            <style.icon size={style.size} />
+          <div className="text-sm my-2">Styles</div>
+          <div className="flex flex-row gap-3 items-end">
+            {styles.map((style) => (
+              <div
+                key={style.name}
+                className={clsx("cursor-pointer p-2", {
+                  "bg-slate-300": child.style === style.name,
+                })}
+                onClick={() => {
+                  const unset = child.style === style.name;
+                  if (unset)
+                    AppStore.project.setNode(child.id, {
+                      style: "none",
+                      bold: false,
+                      italic: false,
+                      underline: false,
+                    });
+                  else
+                    AppStore.project.setNode(child.id, {
+                      style: style.name as TextStyles,
+                      bold: false,
+                      italic: false,
+                      underline: false,
+                    });
+                }}
+              >
+                <style.icon size={style.size} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      ) : null}
     </div>
   );
 };

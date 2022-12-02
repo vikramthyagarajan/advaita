@@ -32,7 +32,14 @@ const TextElement = ({
   return (
     <div
       ref={ref}
-      className="cursor-text outline-none"
+      className={clsx("cursor-text outline-none", {
+        "font-bold": node.bold,
+        italic: node.italic,
+        underline: node.underline,
+        "text-3xl font-bold": node.style === "heading-1",
+        "text-2xl font-semibold": node.style === "heading-2",
+        "text-xl": node.style === "heading-3",
+      })}
       data-id={node.id}
       contentEditable
       suppressContentEditableWarning
