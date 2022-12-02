@@ -21,7 +21,6 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
         hidden
         onChange={(e) => {
           const file = e.target.files ? e.target.files[0] : null;
-          console.log("change");
           if (!file) return;
           const fr = new FileReader();
           fr.readAsArrayBuffer(file);
@@ -30,7 +29,6 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
             if (!fr.result) return;
             const blob = new Blob([fr.result]);
             const url = URL.createObjectURL(blob);
-            console.log("change url", url);
             const dispatch = getUiDispatch();
             dispatch({ type: "urlPreviewUpdated", url });
           };

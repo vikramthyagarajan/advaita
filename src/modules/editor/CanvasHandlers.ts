@@ -17,16 +17,22 @@ const wheelListener = (e: WheelEvent) => {
   }
 };
 const pointerMoveListener = (event: PointerEvent) => {
-  const widget = getUiState().widget;
+  const { widget, urlPreview } = getUiState();
   const screen = AppStore.canvas.screen;
   const scale = AppStore.canvas.scale;
   AppStore.canvas.movePointer(event.clientX, event.clientY);
+  const localStart = { x: event.clientX, y: event.clientY };
+  const globalStart = {
+    x: localStart.x / scale.x + screen.x,
+    y: localStart.y / scale.y + screen.y,
+  };
+  const position = {
+    left: pointerState.x,
+    top: pointerState.y,
+    width: globalStart.x - pointerState.x,
+    height: globalStart.y - pointerState.y,
+  };
   if (pointerState.started && widget === "textbox") {
-    const localStart = { x: event.clientX, y: event.clientY };
-    const globalStart = {
-      x: localStart.x / scale.x + screen.x,
-      y: localStart.y / scale.y + screen.y,
-    };
     AppStore.project.addTextbox(pointerState.id, {
       position: {
         left: pointerState.x,
@@ -35,6 +41,12 @@ const pointerMoveListener = (event: PointerEvent) => {
         height: globalStart.y - pointerState.y,
       },
     });
+  } else if (pointerState.started && widget === "image") {
+    if (urlPreview)
+      AppStore.project.addImagebox(pointerState.id, {
+        position,
+        url: urlPreview,
+      });
   }
 };
 
@@ -48,7 +60,7 @@ const pointerDownListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
   const screen = AppStore.canvas.screen;
   const scale = AppStore.canvas.scale;
-  if (widget === "textbox") {
+  if (widget === "textbox" || widget === "image") {
     const localStart = { x: event.clientX, y: event.clientY };
     const globalStart = {
       x: localStart.x / scale.x + screen.x,
@@ -63,11 +75,12 @@ const pointerDownListener = (event: PointerEvent) => {
 
 const pointerUpListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
-  if (widget === "textbox" && pointerState.started) {
-    AppStore.project.addTextToBox(pointerState.id, "Textbox", {});
+  if (pointerState.started) {
     const dispatch = getUiDispatch();
     dispatch({ type: "widgetUpdated", widget: "pointer" });
     dispatch({ type: "nodeSelected", id: pointerState.id });
+    if (widget === "textbox")
+      AppStore.project.addTextToBox(pointerState.id, "Textbox", {});
   }
   pointerState.started = false;
   pointerState.x = 0;

@@ -1,7 +1,12 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
-import { Node, ProjectRegistry, TextNode } from "./ProjectRegistry";
+import {
+  ImageboxNode,
+  Node,
+  ProjectRegistry,
+  TextNode,
+} from "./ProjectRegistry";
 
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
@@ -26,10 +31,20 @@ export default class ProjectStore {
     { url, position }: { url: string; position: CanvasPosition }
   ) {
     if (this.registry.getNode(id)) {
+      const node = this.registry.getNode(id) as ImageboxNode;
       this.registry.patchNodePosition(id, position);
+      node.children.forEach((child) => {
+        this.registry.patchNodePosition(child.id, {
+          left: 0,
+          top: 0,
+          width: position.width,
+          height: position.height,
+        });
+      });
     } else {
+      const childId = generateId();
       const inner = this.registry.addNode({
-        id,
+        id: childId,
         position: {
           left: 0,
           top: 0,

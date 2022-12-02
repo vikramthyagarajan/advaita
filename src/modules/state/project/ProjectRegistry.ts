@@ -140,6 +140,7 @@ export class ProjectRegistry {
   public getNode(id: string): Node {
     return (
       this.root.textboxes[id] ||
+      this.root.imageboxes[id] ||
       this.root.texts[id] ||
       this.root.images[id] ||
       this.root.videos[id]
