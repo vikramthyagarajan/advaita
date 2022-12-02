@@ -14,26 +14,26 @@ export interface GenericNode {
 export type Align = "left" | "center" | "right";
 export type VerticalAlign = "top" | "center";
 
-interface TypeFormatting {
+interface TextFormatting {
   bold: boolean;
   italic: boolean;
   underline: boolean;
   size: number;
 }
 
-type TypeStyles =
+export type TextStyles =
   | "none"
   | "heading-1"
   | "heading-2"
   | "heading-3"
   | "heading-4";
 
-export interface TextNode extends GenericNode, TypeFormatting {
+export interface TextNode extends GenericNode, TextFormatting {
   type: "text";
   cacheKey: string;
   id: string;
   text: string;
-  style: TypeStyles;
+  style: TextStyles;
   parent: string;
   editOnCreate?: boolean;
 }
