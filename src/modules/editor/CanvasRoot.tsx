@@ -5,7 +5,12 @@ import InfiniteCanvas from "./InfiniteCanvas";
 import { useCanvasHandlers } from "./CanvasHandlers";
 import { getUiState } from "modules/state/ui/UiStore";
 import clsx from "clsx";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import {
+  closestCenter,
+  closestCorners,
+  DndContext,
+  rectIntersection,
+} from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
 
 export interface CanvasRootProps {
@@ -27,7 +32,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
       onDragStart={onDragStart}
       onDragMove={onDragMove}
       onDragEnd={onDragEnd}
-      collisionDetection={closestCorners}
+      collisionDetection={closestCenter}
     >
       <div className="w-full h-full relative">
         <div

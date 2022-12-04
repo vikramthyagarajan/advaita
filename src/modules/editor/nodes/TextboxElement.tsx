@@ -1,3 +1,4 @@
+import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
@@ -16,7 +17,13 @@ const TextElement = ({
   index: number;
   cacheKey: string;
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { setNodeRef } = useDroppable({
+    id: `drop-${node.id}`,
+    data: {
+      type: "child",
+    },
+  });
   if (node.editOnCreate && ref.current) {
     const selection = window.getSelection();
     const range = document.createRange();
@@ -34,8 +41,11 @@ const TextElement = ({
 
   return (
     <div
-      ref={ref}
-      className={clsx("cursor-text outline-none", {
+      ref={(el) => {
+        ref.current = el;
+        setNodeRef(el);
+      }}
+      className={clsx("cursor-text outline-none z-50", {
         "font-bold": node.bold,
         italic: node.italic,
         underline: node.underline,
