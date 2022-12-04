@@ -2,7 +2,7 @@ import { CanvasPosition } from "modules/core/foundation";
 import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry } from "./ProjectRegistry";
-import { ImageboxNode, Node, TextNode } from "./ProjectTypes";
+import { ImageboxNode, Node, SubNode, TextNode } from "./ProjectTypes";
 
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
@@ -110,8 +110,16 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
+  public addNodeChild(id: string, child: SubNode, at: number) {
+    this.registry.addNodeChild(id, child, at);
+  }
+
   public removeChildNode(parent: string, id: string) {
     this.registry.removeChildNode(parent, id);
+  }
+
+  public removeNode(id: string) {
+    this.registry.removeNode(id);
   }
 
   public setEditOnCreate(id: string, value: boolean) {

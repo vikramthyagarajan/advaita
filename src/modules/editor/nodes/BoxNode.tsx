@@ -1,3 +1,5 @@
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import clsx from "clsx";
 import {
   CanvasPosition,
   Position,
@@ -21,6 +23,17 @@ export const BoxNode = ({
   screen,
 }: PropsWithChildren<BoxNodeProps>) => {
   const handlers = useBoxHandlers({ id, position });
+  const { attributes, listeners, setNodeRef, over, isDragging } = useDraggable({
+    id: `drag-${id}`,
+  });
+  const { setNodeRef: droppableRef } = useDroppable({
+    id: `drop-${id}`,
+    data: {
+      type: "parent",
+    },
+  });
+  const overId = over?.id.toString().split("drop-")[1];
+
   return (
     <Position screen={screen} {...position}>
       {/* lines */}
@@ -66,8 +79,18 @@ export const BoxNode = ({
         {...handlers.corners.topRight()}
       ></div>
       <div
-        className="absolute top-0 left-0 w-full h-full cursor-move touch-none"
-        {...handlers.group.box()}
+        className={clsx(
+          "absolute top-0 left-0 w-full h-full cursor-move touch-none",
+          {
+            invisible: isDragging && overId && overId !== id,
+          }
+        )}
+        ref={(ref) => {
+          setNodeRef(ref);
+          droppableRef(ref);
+        }}
+        {...listeners}
+        {...attributes}
       >
         {children}
       </div>

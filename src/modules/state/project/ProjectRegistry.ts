@@ -98,6 +98,11 @@ export class ProjectRegistry {
     this.touch(parent);
   }
 
+  removeNode(id: string) {
+    delete this.root.textboxes[id];
+    delete this.root.imageboxes[id];
+  }
+
   patchNode(id: string, node: Partial<Node>) {
     const original = this.getNode(id);
     Object.assign(original, node);
