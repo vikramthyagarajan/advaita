@@ -11,12 +11,17 @@ const useResizeEdge = (
   id: string,
   edge: "right" | "left" | "top" | "bottom"
 ) => {
-  const node = AppStore.project.getNode(id);
   const scale = AppStore.canvas.scale;
 
-  return useDrag(({ down, delta: [x, y] }) => {
+  return useDrag(({ down, movement: [x, y], last, first }) => {
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (first) {
+      AppStore.project.fork();
+    } else {
+      AppStore.project.resetWithFork();
+    }
+    const node = AppStore.project.getOriginNode(id);
     if (!node || !("position" in node)) return;
     switch (edge) {
       case "right": {
@@ -48,6 +53,9 @@ const useResizeEdge = (
       default:
         break;
     }
+    if (last) {
+      AppStore.project.commit();
+    }
   });
 };
 
@@ -58,9 +66,15 @@ const useResizeCorner = (
   const node = AppStore.project.getNode(id);
   const scale = AppStore.canvas.scale;
 
-  return useDrag(({ down, delta: [x, y], direction }) => {
+  return useDrag(({ down, movement: [x, y], direction, first, last }) => {
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (first) {
+      AppStore.project.fork();
+    } else {
+      AppStore.project.resetWithFork();
+    }
+    const node = AppStore.project.getOriginNode(id);
     if (!node || !("position" in node)) return;
     switch (edge) {
       case "top-right": {
@@ -102,21 +116,32 @@ const useResizeCorner = (
       default:
         break;
     }
+    if (last) {
+      AppStore.project.commit();
+    }
   });
 };
 
 const useDragBox = (id: string) => {
-  return useDrag(({ down, delta: [x, y] }) => {
-    const node = AppStore.project.getNode(id);
+  return useDrag(({ down, movement: [x, y], first, last }) => {
     const scale = AppStore.canvas.scale;
     const deltaX = x / scale.x;
     const deltaY = y / scale.y;
+    if (first) {
+      AppStore.project.fork();
+    } else {
+      AppStore.project.resetWithFork();
+    }
+    const node = AppStore.project.getOriginNode(id);
     if (!node || !("position" in node)) return;
 
     AppStore.project.moveBox(id, {
       left: node.position.left + deltaX,
       top: node.position.top + deltaY,
     });
+    if (last) {
+      AppStore.project.commit();
+    }
   });
 };
 

@@ -1,4 +1,5 @@
 import { CanvasPosition } from "modules/core/foundation";
+import { copyJSON } from "modules/core/function-utils";
 import {
   ImageboxNode,
   Node,
@@ -26,6 +27,13 @@ interface ProjectRoot {
 }
 
 export class ProjectRegistry {
+  private _shadowRoot: ProjectRoot = {
+    textboxes: {},
+    imageboxes: {},
+    texts: {},
+    images: {},
+    videos: {},
+  };
   private _root: ProjectRoot = {
     textboxes: {},
     imageboxes: {},
@@ -35,6 +43,10 @@ export class ProjectRegistry {
   };
 
   public get root() {
+    return this._shadowRoot;
+  }
+
+  public get origin() {
     return this._root;
   }
 
@@ -106,6 +118,28 @@ export class ProjectRegistry {
       this.root.images[id] ||
       this.root.videos[id]
     );
+  }
+
+  public getOriginNode(id: string): Node {
+    return (
+      this.origin.textboxes[id] ||
+      this.origin.imageboxes[id] ||
+      this.origin.texts[id] ||
+      this.origin.images[id] ||
+      this.origin.videos[id]
+    );
+  }
+
+  public fork() {
+    this._root = copyJSON(this._shadowRoot);
+  }
+
+  public resetWithFork() {
+    this._shadowRoot = copyJSON(this._root);
+  }
+
+  public commit() {
+    this._root = copyJSON(this._shadowRoot);
   }
 
   get textboxes() {

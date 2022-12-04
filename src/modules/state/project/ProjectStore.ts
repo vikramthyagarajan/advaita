@@ -118,6 +118,26 @@ export default class ProjectStore {
     this.registry.patchEditOnCreate(id, value);
   }
 
+  public fork() {
+    this.registry.fork();
+  }
+
+  public resetWithFork() {
+    this.registry.resetWithFork();
+  }
+
+  public commit() {
+    this.registry.commit();
+  }
+
+  public get origin() {
+    return this.registry.origin;
+  }
+
+  public getOriginNode(id: string) {
+    return this.registry.getOriginNode(id);
+  }
+
   public get root() {
     return this.registry.root;
   }
