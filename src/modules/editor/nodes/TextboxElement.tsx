@@ -3,6 +3,7 @@ import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
 import { TextboxNode, TextNode } from "modules/state/project/ProjectTypes";
+import { getUiDispatch } from "modules/state/ui/UiStore";
 import { memo, useRef } from "react";
 import { BoxNode } from "./BoxNode";
 
@@ -19,12 +20,14 @@ const TextElement = ({
   if (node.editOnCreate && ref.current) {
     const selection = window.getSelection();
     const range = document.createRange();
+    const dispatch = getUiDispatch();
     if (selection && ref.current) {
       selection.removeAllRanges();
       range.selectNodeContents(ref.current);
       range.collapse(false);
       selection.addRange(range);
       ref.current?.focus();
+      dispatch({ type: "nodeSelected", id: node.parent, childId: node.id });
       AppStore.project.setEditOnCreate(node.id, false);
     }
   } else if (!ref.current) AppStore.canvas.shouldRender = true;
