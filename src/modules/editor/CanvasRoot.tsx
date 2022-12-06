@@ -7,9 +7,11 @@ import { getUiState } from "modules/state/ui/UiStore";
 import clsx from "clsx";
 import {
   closestCenter,
-  closestCorners,
   DndContext,
-  rectIntersection,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
 
@@ -26,6 +28,18 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   }, [width, height]);
   useCanvasHandlers(canvas);
   const { widget } = getUiState();
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
 
   return (
     <DndContext
@@ -33,6 +47,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
       onDragMove={onDragMove}
       onDragEnd={onDragEnd}
       collisionDetection={closestCenter}
+      sensors={sensors}
     >
       <div className="w-full h-full relative">
         <div

@@ -61,6 +61,15 @@ export const onDragMove = (event: DragMoveEvent) => {
 };
 
 export const onDragEnd = (event: DragEndEvent) => {
-  const { active, over, delta } = event;
+  const { active, over } = event;
+  const dropNodeId = over?.id.toString().split("drop-")[1];
+  const nodeId = active.id.toString().split("drag-")[1];
+  const isSelf = dropNodeId === nodeId;
+  const node = AppStore.project.getOriginNode(nodeId);
+  if (!node || !("position" in node)) return;
+
+  if (dropNodeId && !isSelf) {
+    AppStore.project.removeNode(nodeId);
+  }
   AppStore.project.commit();
 };
