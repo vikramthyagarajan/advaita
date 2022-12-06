@@ -3,7 +3,11 @@ import clsx from "clsx";
 import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
-import { TextboxNode, TextNode } from "modules/state/project/ProjectTypes";
+import {
+  ImageNode,
+  TextboxNode,
+  TextNode,
+} from "modules/state/project/ProjectTypes";
 import { getUiDispatch } from "modules/state/ui/UiStore";
 import { memo, useRef } from "react";
 import { BoxNode } from "./BoxNode";
@@ -90,6 +94,22 @@ const TextElement = ({
   );
 };
 
+const ImageElement = ({
+  node,
+  index,
+  cacheKey,
+}: {
+  node: ImageNode;
+  index: number;
+  cacheKey: string;
+}) => {
+  return (
+    <div>
+      <img src={node.url} className="w-24 h-24"></img>
+    </div>
+  );
+};
+
 const TextboxElement = ({
   node,
   selected,
@@ -124,20 +144,33 @@ const TextboxElement = ({
       >
         {node.children
           .map((child, index) => ({
-            val: AppStore.project.getNode(child.id) as TextNode | null,
+            val: AppStore.project.getNode(child.id) as
+              | TextNode
+              | ImageNode
+              | null,
             index,
           }))
           .filter(({ val }) => isPresent(val))
           .map(({ val, index }) => {
-            const sub = val as TextNode;
-            return (
-              <TextElement
-                key={sub.id}
-                node={sub}
-                cacheKey={sub.cacheKey}
-                index={index}
-              />
-            );
+            const sub = val as TextNode | ImageNode;
+            if (sub.type === "text")
+              return (
+                <TextElement
+                  key={sub.id}
+                  node={sub}
+                  cacheKey={sub.cacheKey}
+                  index={index}
+                />
+              );
+            else if (sub.type === "image")
+              return (
+                <ImageElement
+                  key={sub.id}
+                  node={sub}
+                  cacheKey={sub.cacheKey}
+                  index={index}
+                />
+              );
           })}
       </div>
     </BoxNode>

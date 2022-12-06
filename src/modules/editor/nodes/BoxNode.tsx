@@ -82,7 +82,7 @@ export const BoxNode = ({
         className={clsx(
           "absolute top-0 left-0 w-full h-full cursor-move touch-none",
           {
-            // invisible: isDragging && overId && overId !== id,
+            invisible: isDragging && overId && overId !== id,
           }
         )}
         ref={(ref) => {
