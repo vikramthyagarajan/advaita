@@ -24,15 +24,17 @@ export const onDragMove = (event: DragMoveEvent) => {
 
   if (dropNodeId && !isSelf) {
     // merge boxes;
+    console.log(
+      "rect",
+      active.rect,
+      over.rect,
+      overType,
+      dropNodeId,
+      (AppStore.project.getNode(nodeId) as any).type,
+      nodeId
+    );
     if (overType === "parent") {
-      const node = AppStore.project.getNode(nodeId);
-      const dropNode = AppStore.project.getNode(dropNodeId);
-      const childBoxes = node.children || [];
-      childBoxes.reverse().forEach(({ id: childId }) => {
-        const child = AppStore.project.getNode(childId) as SubNode;
-        const index = dropNode.children?.length || 0;
-        if (child) AppStore.project.addNodeChild(dropNode.id, child, index);
-      });
+      const a = over.rect;
     } else {
       const childDropNode = AppStore.project.getNode(dropNodeId);
       const parentDropNode = AppStore.project.getNode(
@@ -45,11 +47,11 @@ export const onDragMove = (event: DragMoveEvent) => {
             (c) => c.id === childDropNode.id
           ) || -1;
         if (index === -1) return;
-        childBoxes.reverse().forEach(({ id: childId }) => {
-          const child = AppStore.project.getNode(childId) as SubNode;
-          if (child)
-            AppStore.project.addNodeChild(parentDropNode.id, child, index);
-        });
+        AppStore.project.addNodeChild(
+          parentDropNode.id,
+          { id: "preview", type: "preview" },
+          index
+        );
       }
     }
   } else {
@@ -66,9 +68,32 @@ export const onDragEnd = (event: DragEndEvent) => {
   const nodeId = active.id.toString().split("drag-")[1];
   const isSelf = dropNodeId === nodeId;
   const node = AppStore.project.getOriginNode(nodeId);
+  const overData = over?.data.current;
+  const overType = overData?.type || "parent";
+  AppStore.project.resetWithFork();
   if (!node || !("position" in node)) return;
 
   if (dropNodeId && !isSelf) {
+    if (overType === "parent") {
+    } else {
+      const childDropNode = AppStore.project.getNode(dropNodeId);
+      const parentDropNode = AppStore.project.getNode(
+        childDropNode.parent || ""
+      );
+      const childBoxes = node.children || [];
+      if (childDropNode && parentDropNode) {
+        const index =
+          parentDropNode.children?.findIndex(
+            (c) => c.id === childDropNode.id
+          ) || -1;
+        if (index === -1) return;
+        [...childBoxes].reverse().forEach(({ id: childId }) => {
+          const child = AppStore.project.getNode(childId) as SubNode;
+          if (child)
+            AppStore.project.addNodeChild(parentDropNode.id, child, index);
+        });
+      }
+    }
     AppStore.project.removeNode(nodeId);
   }
   AppStore.project.commit();

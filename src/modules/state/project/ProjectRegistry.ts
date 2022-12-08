@@ -4,6 +4,7 @@ import {
   ImageboxNode,
   Node,
   SubNode,
+  SubNodeType,
   TextboxNode,
   TextNode,
 } from "./ProjectTypes";
@@ -75,7 +76,11 @@ export class ProjectRegistry {
     }
   }
 
-  public addNodeChild(id: string, child: SubNode, at: number) {
+  public addNodeChild(
+    id: string,
+    child: { id: string; type: SubNodeType },
+    at: number
+  ) {
     const node = this.getNode(id);
     if (node.children) {
       node.children.splice(at, 0, { id: child.id, type: child.type });

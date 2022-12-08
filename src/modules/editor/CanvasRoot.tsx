@@ -7,8 +7,11 @@ import { getUiState } from "modules/state/ui/UiStore";
 import clsx from "clsx";
 import {
   closestCenter,
+  closestCorners,
   DndContext,
   MouseSensor,
+  pointerWithin,
+  rectIntersection,
   TouchSensor,
   useSensor,
   useSensors,
@@ -46,7 +49,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
       onDragStart={onDragStart}
       onDragMove={onDragMove}
       onDragEnd={onDragEnd}
-      collisionDetection={closestCenter}
+      collisionDetection={pointerWithin}
       sensors={sensors}
     >
       <div className="w-full h-full relative">

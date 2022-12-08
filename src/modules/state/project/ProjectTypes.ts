@@ -1,7 +1,12 @@
 import { CanvasPosition } from "modules/core/foundation";
 
-type SubNodeType = "text" | "image" | "video";
-type NodeType = "textbox" | "imagebox" | "videobox" | "graphics" | SubNodeType;
+export type SubNodeType = "text" | "image" | "video" | "preview";
+export type NodeType =
+  | "textbox"
+  | "imagebox"
+  | "videobox"
+  | "graphics"
+  | SubNodeType;
 
 export interface GenericNode {
   type: NodeType;
@@ -56,6 +61,11 @@ export interface ImageboxNode extends GenericNode {
   type: "imagebox";
   position: CanvasPosition;
   children: { type: SubNodeType; id: string }[];
+}
+
+export interface PreviewNode {
+  type: "preview";
+  id: string;
 }
 
 export type SubNode = TextNode | ImageNode;

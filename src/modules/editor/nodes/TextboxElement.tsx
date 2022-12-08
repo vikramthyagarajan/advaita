@@ -5,6 +5,7 @@ import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
 import {
   ImageNode,
+  PreviewNode,
   TextboxNode,
   TextNode,
 } from "modules/state/project/ProjectTypes";
@@ -148,15 +149,20 @@ const TextboxElement = ({
               | TextNode
               | ImageNode
               | null,
+            child,
             index,
           }))
-          .filter(({ val }) => isPresent(val))
-          .map(({ val, index }) => {
-            const sub = val as TextNode | ImageNode;
-            if (sub.type === "text")
+          // .filter(({ val }) => isPresent(val))
+          .map(({ val, child, index }) => {
+            const sub = val as TextNode | ImageNode | PreviewNode;
+            if (child.type === "preview")
+              return (
+                <div className="border border-slate-400 w-24 h-[2px]"></div>
+              );
+            else if (sub.type === "text")
               return (
                 <TextElement
-                  key={sub.id}
+                  key={index}
                   node={sub}
                   cacheKey={sub.cacheKey}
                   index={index}

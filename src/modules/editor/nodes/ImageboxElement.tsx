@@ -44,6 +44,7 @@ const ImageboxElement = ({
             const child = val as ImageNode;
             return (
               <img
+                key={child.id}
                 className="absolute pointer-events-none"
                 style={{
                   left: child.position.left,
