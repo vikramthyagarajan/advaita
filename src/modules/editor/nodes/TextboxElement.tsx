@@ -15,10 +15,12 @@ import { BoxNode } from "./BoxNode";
 
 const TextElement = ({
   node,
+  parent,
   index,
   cacheKey,
 }: {
   node: TextNode;
+  parent: TextboxNode;
   index: number;
   cacheKey: string;
 }) => {
@@ -46,51 +48,59 @@ const TextElement = ({
 
   return (
     <div
-      ref={(el) => {
-        ref.current = el;
-        setNodeRef(el);
-      }}
-      className={clsx("cursor-text outline-none z-50", {
-        "font-bold": node.bold,
-        italic: node.italic,
-        underline: node.underline,
-        "text-3xl font-bold": node.style === "heading-1",
-        "text-2xl font-semibold": node.style === "heading-2",
-        "text-xl": node.style === "heading-3",
+      ref={setNodeRef}
+      className={clsx("w-full flex", {
+        "justify-center": !parent.align || parent.align === "center",
+        "justify-start": parent.align === "left",
+        "justify-end": parent.align === "right",
       })}
-      data-id={node.id}
-      contentEditable
-      suppressContentEditableWarning
-      onBlur={(e) => {
-        const text = e.currentTarget.textContent || "";
-        AppStore.project.setNode(node.id, { text });
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          if (node.parent) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.currentTarget.blur();
-            AppStore.project.addTextToBox(node.parent || "", "", {
-              at: index + 1,
-              editOnCreate: true,
-            });
-          }
-        } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
-          if (node.parent) {
-            const parent = AppStore.project.getNode(node.parent) as TextboxNode;
-            if (index > 0)
-              AppStore.project.setEditOnCreate(
-                parent.children[index - 1].id,
-                true
-              );
-            AppStore.project.removeChildNode(node.parent, node.id);
-            AppStore.canvas.shouldRender = true;
-          }
-        }
-      }}
     >
-      {node.text}
+      <div
+        ref={ref}
+        className={clsx("cursor-text outline-none z-50", {
+          "font-bold": node.bold,
+          italic: node.italic,
+          underline: node.underline,
+          "text-3xl font-bold": node.style === "heading-1",
+          "text-2xl font-semibold": node.style === "heading-2",
+          "text-xl": node.style === "heading-3",
+        })}
+        data-id={node.id}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={(e) => {
+          const text = e.currentTarget.textContent || "";
+          AppStore.project.setNode(node.id, { text });
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            if (node.parent) {
+              e.preventDefault();
+              e.stopPropagation();
+              e.currentTarget.blur();
+              AppStore.project.addTextToBox(node.parent || "", "", {
+                at: index + 1,
+                editOnCreate: true,
+              });
+            }
+          } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
+            if (node.parent) {
+              const parent = AppStore.project.getNode(
+                node.parent
+              ) as TextboxNode;
+              if (index > 0)
+                AppStore.project.setEditOnCreate(
+                  parent.children[index - 1].id,
+                  true
+                );
+              AppStore.project.removeChildNode(node.parent, node.id);
+              AppStore.canvas.shouldRender = true;
+            }
+          }
+        }}
+      >
+        {node.text}
+      </div>
     </div>
   );
 };
@@ -106,7 +116,7 @@ const ImageElement = ({
 }) => {
   return (
     <div>
-      <img src={node.url} className="w-24 h-24"></img>
+      <img src={node.url} className="w-full"></img>
     </div>
   );
 };
@@ -135,9 +145,6 @@ const TextboxElement = ({
           "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
           {
             "shadow-lg": selected,
-            "items-center": !node.align || node.align === "center",
-            "items-start": node.align === "left",
-            "items-end": node.align === "right",
             "justify-start": node.vertical === "top",
             "justify-center": node.vertical === "center",
           }
@@ -164,6 +171,7 @@ const TextboxElement = ({
                 <TextElement
                   key={index}
                   node={sub}
+                  parent={node}
                   cacheKey={sub.cacheKey}
                   index={index}
                 />

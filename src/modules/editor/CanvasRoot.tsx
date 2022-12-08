@@ -6,12 +6,9 @@ import { useCanvasHandlers } from "./CanvasHandlers";
 import { getUiState } from "modules/state/ui/UiStore";
 import clsx from "clsx";
 import {
-  closestCenter,
-  closestCorners,
   DndContext,
   MouseSensor,
   pointerWithin,
-  rectIntersection,
   TouchSensor,
   useSensor,
   useSensors,

@@ -63,13 +63,16 @@ export const onDragMove = (event: DragMoveEvent) => {
 };
 
 export const onDragEnd = (event: DragEndEvent) => {
-  const { active, over } = event;
+  const { active, over, delta } = event;
   const dropNodeId = over?.id.toString().split("drop-")[1];
   const nodeId = active.id.toString().split("drag-")[1];
   const isSelf = dropNodeId === nodeId;
   const node = AppStore.project.getOriginNode(nodeId);
   const overData = over?.data.current;
   const overType = overData?.type || "parent";
+  const scale = AppStore.canvas.scale;
+  const deltaX = delta.x / scale.x;
+  const deltaY = delta.y / scale.y;
   AppStore.project.resetWithFork();
   if (!node || !("position" in node)) return;
 
@@ -95,6 +98,11 @@ export const onDragEnd = (event: DragEndEvent) => {
       }
     }
     AppStore.project.removeNode(nodeId);
+  } else {
+    AppStore.project.moveBox(nodeId, {
+      left: node.position.left + deltaX,
+      top: node.position.top + deltaY,
+    });
   }
   AppStore.project.commit();
 };
