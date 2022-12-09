@@ -3,6 +3,7 @@ import { copyJSON } from "modules/core/function-utils";
 import {
   ImageboxNode,
   Node,
+  NodeType,
   SubNode,
   SubNodeType,
   TextboxNode,
@@ -78,12 +79,13 @@ export class ProjectRegistry {
 
   public addNodeChild(
     id: string,
-    child: { id: string; type: SubNodeType },
-    at: number
+    child: { id: string; type: NodeType },
+    at?: number
   ) {
     const node = this.getNode(id);
+    const index = at === undefined ? node.children?.length || 0 : at;
     if (node.children) {
-      node.children.splice(at, 0, { id: child.id, type: child.type });
+      node.children.splice(index, 0, { id: child.id, type: child.type });
     } else node.children = [{ id: child.id, type: child.type }];
   }
 

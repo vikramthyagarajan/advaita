@@ -5,6 +5,7 @@ import { ProjectRegistry } from "./ProjectRegistry";
 import {
   ImageboxNode,
   Node,
+  NodeType,
   SubNode,
   SubNodeType,
   TextNode,
@@ -118,8 +119,8 @@ export default class ProjectStore {
 
   public addNodeChild(
     id: string,
-    child: { id: string; type: SubNodeType },
-    at: number
+    child: { id: string; type: NodeType },
+    at?: number
   ) {
     this.registry.addNodeChild(id, child, at);
   }

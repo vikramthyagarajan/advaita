@@ -60,7 +60,7 @@ export interface ImageNode extends GenericNode {
 export interface ImageboxNode extends GenericNode {
   type: "imagebox";
   position: CanvasPosition;
-  children: { type: SubNodeType; id: string }[];
+  children: { type: NodeType; id: string }[];
 }
 
 export interface PreviewNode {

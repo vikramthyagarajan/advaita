@@ -1,4 +1,5 @@
 import { DragEndEvent, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
+import { CanvasPosition } from "modules/core/foundation";
 import AppStore from "modules/state/AppStore";
 import { SubNode } from "modules/state/project/ProjectTypes";
 
@@ -24,17 +25,22 @@ export const onDragMove = (event: DragMoveEvent) => {
 
   if (dropNodeId && !isSelf) {
     // merge boxes;
-    console.log(
-      "rect",
-      active.rect,
-      over.rect,
-      overType,
-      dropNodeId,
-      (AppStore.project.getNode(nodeId) as any).type,
-      nodeId
-    );
     if (overType === "parent") {
-      const a = over.rect;
+      const node = AppStore.project.getNode(nodeId);
+      const dropRect = over.rect;
+      const activeRect = active.rect.current.translated;
+      if (!activeRect) return;
+      const newPosition: CanvasPosition = {
+        left: activeRect.left - dropRect.left,
+        top: activeRect.top - dropRect.top,
+        height: activeRect.height,
+        width: activeRect.width,
+      };
+      AppStore.project.setNode(nodeId, { position: newPosition });
+      AppStore.project.addNodeChild(dropNodeId, {
+        id: nodeId,
+        type: node.type,
+      });
     } else {
       const childDropNode = AppStore.project.getNode(dropNodeId);
       const parentDropNode = AppStore.project.getNode(
@@ -78,6 +84,21 @@ export const onDragEnd = (event: DragEndEvent) => {
 
   if (dropNodeId && !isSelf) {
     if (overType === "parent") {
+      const node = AppStore.project.getNode(nodeId);
+      const dropRect = over.rect;
+      const activeRect = active.rect.current.translated;
+      if (!activeRect) return;
+      const newPosition: CanvasPosition = {
+        left: activeRect.left - dropRect.left,
+        top: activeRect.top - dropRect.top,
+        height: activeRect.height,
+        width: activeRect.width,
+      };
+      AppStore.project.setNode(nodeId, { position: newPosition });
+      AppStore.project.addNodeChild(dropNodeId, {
+        id: nodeId,
+        type: node.type,
+      });
     } else {
       const childDropNode = AppStore.project.getNode(dropNodeId);
       const parentDropNode = AppStore.project.getNode(
@@ -96,8 +117,8 @@ export const onDragEnd = (event: DragEndEvent) => {
             AppStore.project.addNodeChild(parentDropNode.id, child, index);
         });
       }
+      AppStore.project.removeNode(nodeId);
     }
-    AppStore.project.removeNode(nodeId);
   } else {
     AppStore.project.moveBox(nodeId, {
       left: node.position.left + deltaX,
