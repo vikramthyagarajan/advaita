@@ -11,6 +11,7 @@ import {
 } from "modules/state/project/ProjectTypes";
 import { getUiDispatch } from "modules/state/ui/UiStore";
 import { memo, useRef } from "react";
+import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 
 const TextElement = ({
@@ -132,14 +133,17 @@ const TextboxElement = ({
   selected: boolean;
   cacheKey: string;
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   return (
     <BoxNode
       id={node.id}
       cacheKey={cacheKey}
       position={node.position}
       screen={screen}
+      actions={() => <BoxActions id={node.id} elementRef={ref} />}
     >
       <div
+        ref={ref}
         data-id={node.id}
         className={clsx(
           "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
