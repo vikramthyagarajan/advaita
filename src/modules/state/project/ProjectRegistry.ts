@@ -10,7 +10,7 @@ import {
   TextNode,
 } from "./ProjectTypes";
 
-interface ProjectRoot {
+export interface ProjectRoot {
   textboxes: {
     [id: string]: TextboxNode;
   };
@@ -152,6 +152,15 @@ export class ProjectRegistry {
 
   public commit() {
     this._root = copyJSON(this._shadowRoot);
+  }
+
+  public ___loadRegistry(root: ProjectRoot) {
+    this._shadowRoot = copyJSON(root);
+    this._root = copyJSON(root);
+  }
+
+  public ___fetchRoot() {
+    return copyJSON(this._shadowRoot);
   }
 
   get textboxes() {

@@ -14,6 +14,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
+import AppStore from "modules/state/AppStore";
+import Fixtures from "modules/state/fixtures/Fixtures";
 
 export interface CanvasRootProps {
   frame: string;
@@ -25,6 +27,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   useEffect(() => {
     if (width === 0 || height === 0) return;
     CanvasStore.initialize(width, height);
+    AppStore.project.___loadState(Fixtures.MemeTemplate);
   }, [width, height]);
   useCanvasHandlers(canvas);
   const { widget } = getUiState();

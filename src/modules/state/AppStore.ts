@@ -12,3 +12,6 @@ export default class AppStore {
     return this._project;
   }
 }
+
+// @ts-ignore
+window.AppStore = AppStore;

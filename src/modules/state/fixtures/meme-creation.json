@@ -1,0 +1,110 @@
+{
+  "textboxes": {
+    "833409d6-d00c-45cd-a7d2-eb620b3689ac": {
+      "id": "833409d6-d00c-45cd-a7d2-eb620b3689ac",
+      "position": {
+        "left": 392.3828125,
+        "top": 126.4453125,
+        "height": 73.2109375,
+        "width": 362.4453125
+      },
+      "type": "textbox",
+      "children": [
+        {
+          "id": "03ac7c0e-e97f-4392-91c8-b32562ba3c4e",
+          "type": "text"
+        }
+      ],
+      "cacheKey": "53746.10000000149-833409d6-d00c-45cd-a7d2-eb620b3689ac",
+      "align": "center",
+      "vertical": "center"
+    },
+    "65361b56-b12b-461e-b38b-6600dd8a8746": {
+      "id": "65361b56-b12b-461e-b38b-6600dd8a8746",
+      "position": {
+        "left": 394.9140625,
+        "top": 465.765625,
+        "height": 72.9453125,
+        "width": 362.8671875
+      },
+      "type": "textbox",
+      "children": [
+        {
+          "id": "c65f8be3-5b4b-4002-a2f8-53c21a2df148",
+          "type": "text"
+        }
+      ],
+      "cacheKey": "62786.300000000745-65361b56-b12b-461e-b38b-6600dd8a8746",
+      "align": "center",
+      "vertical": "center"
+    }
+  },
+  "imageboxes": {
+    "d61ea2f2-89d3-41e9-9b9f-b45e74b732b8": {
+      "id": "d61ea2f2-89d3-41e9-9b9f-b45e74b732b8",
+      "position": {
+        "left": 1144.4609375,
+        "top": 1144.9765625,
+        "width": 765.45703125,
+        "height": 673.8125
+      },
+      "type": "imagebox",
+      "children": [
+        {
+          "id": "ba4c377f-2f81-47ef-bafe-b7d7d35bf774",
+          "type": "image"
+        },
+        {
+          "id": "833409d6-d00c-45cd-a7d2-eb620b3689ac",
+          "type": "textbox"
+        },
+        {
+          "id": "65361b56-b12b-461e-b38b-6600dd8a8746",
+          "type": "textbox"
+        }
+      ],
+      "cacheKey": "6439.20000000298-d61ea2f2-89d3-41e9-9b9f-b45e74b732b8"
+    }
+  },
+  "texts": {
+    "03ac7c0e-e97f-4392-91c8-b32562ba3c4e": {
+      "id": "03ac7c0e-e97f-4392-91c8-b32562ba3c4e",
+      "type": "text",
+      "cacheKey": "45733.900000002235-03ac7c0e-e97f-4392-91c8-b32562ba3c4e",
+      "parent": "833409d6-d00c-45cd-a7d2-eb620b3689ac",
+      "text": "making memes on photoshop",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "size": 16,
+      "style": "none"
+    },
+    "c65f8be3-5b4b-4002-a2f8-53c21a2df148": {
+      "id": "c65f8be3-5b4b-4002-a2f8-53c21a2df148",
+      "type": "text",
+      "cacheKey": "41336.900000002235-c65f8be3-5b4b-4002-a2f8-53c21a2df148",
+      "parent": "65361b56-b12b-461e-b38b-6600dd8a8746",
+      "text": "making memes on Advaita",
+      "bold": false,
+      "italic": false,
+      "underline": false,
+      "size": 16,
+      "style": "none"
+    }
+  },
+  "images": {
+    "ba4c377f-2f81-47ef-bafe-b7d7d35bf774": {
+      "id": "ba4c377f-2f81-47ef-bafe-b7d7d35bf774",
+      "position": {
+        "left": 0,
+        "top": 0,
+        "width": 765.45703125,
+        "height": 673.8125
+      },
+      "type": "image",
+      "url": "blob:http://localhost:3000/394a65e5-225e-4ae0-8689-0608c891ce7e",
+      "cacheKey": "6439.20000000298-ba4c377f-2f81-47ef-bafe-b7d7d35bf774"
+    }
+  },
+  "videos": {}
+}

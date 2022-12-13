@@ -1,7 +1,7 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
-import { ProjectRegistry } from "./ProjectRegistry";
+import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
 import {
   ImageboxNode,
   Node,
@@ -115,6 +115,14 @@ export default class ProjectStore {
   public setNode(id: string, node: Partial<Node>) {
     this.registry.patchNode(id, node);
     AppStore.canvas.shouldRender = true;
+  }
+
+  public ___loadState(root: any) {
+    return this.registry.___loadRegistry(root as ProjectRoot);
+  }
+
+  public ___fetchState() {
+    return this.registry.___fetchRoot();
   }
 
   public addNodeChild(
