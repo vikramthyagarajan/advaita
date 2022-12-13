@@ -27,7 +27,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   useEffect(() => {
     if (width === 0 || height === 0) return;
     CanvasStore.initialize(width, height);
-    AppStore.project.___loadState(Fixtures.MemeTemplate);
+    // AppStore.project.___loadState(Fixtures.MemeTemplate);
   }, [width, height]);
   useCanvasHandlers(canvas);
   const { widget } = getUiState();

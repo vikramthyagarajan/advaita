@@ -7,7 +7,8 @@ import {
   ImageNode,
   TextboxNode,
 } from "modules/state/project/ProjectTypes";
-import { memo } from "react";
+import { memo, useRef } from "react";
+import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 
 export interface ImageboxElementProps {
@@ -70,17 +71,20 @@ const ImageboxElement = ({
   screen,
   selected,
 }: ImageboxElementProps) => {
+  const ref = useRef<HTMLDivElement | null>(null);
   return (
     <BoxNode
       id={node.id}
       cacheKey={cacheKey}
       position={node.position}
       screen={screen}
+      actions={() => <BoxActions id={node.id} elementRef={ref} />}
     >
       <div
         data-id={node.id}
+        ref={ref}
         className={clsx(
-          "relative flex flex-col border-2 rounded-lg w-full h-full select-none p-2 overflow-hidden",
+          "relative flex flex-col border-2 rounded-lg w-full h-full select-none p-2 overflow-hidden border-slate-200",
           {
             "shadow-lg": selected,
           }

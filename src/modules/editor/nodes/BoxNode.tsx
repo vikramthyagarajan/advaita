@@ -13,6 +13,7 @@ export interface BoxNodeProps {
   cacheKey: string;
   position: CanvasPosition;
   screen: ScreenPosition;
+  actions?: () => JSX.Element;
 }
 
 export const BoxNode = ({
@@ -21,6 +22,7 @@ export const BoxNode = ({
   position,
   children,
   screen,
+  actions,
 }: PropsWithChildren<BoxNodeProps>) => {
   const handlers = useBoxHandlers({ id, position });
   const { attributes, listeners, setNodeRef, over, isDragging } = useDraggable({
@@ -78,6 +80,7 @@ export const BoxNode = ({
         style={{ width: "8px", height: "8px" }}
         {...handlers.corners.topRight()}
       ></div>
+      {actions ? actions() : null}
       <div
         className={clsx(
           "absolute top-0 left-0 w-full h-full cursor-move touch-none",
