@@ -80,7 +80,7 @@ const ImageboxElement = ({
       <div
         data-id={node.id}
         className={clsx(
-          "relative flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
+          "relative flex flex-col border-2 rounded-lg w-full h-full select-none p-2 overflow-hidden",
           {
             "shadow-lg": selected,
           }
