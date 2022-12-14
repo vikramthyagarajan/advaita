@@ -7,6 +7,7 @@ import {
   ImageNode,
   TextboxNode,
 } from "modules/state/project/ProjectTypes";
+import { getUiDispatch, getUiState } from "modules/state/ui/UiStore";
 import { memo, useRef } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
@@ -20,21 +21,30 @@ export interface ImageboxElementProps {
 
 const InnerTextboxElement = ({
   node,
+  parent,
+  selected,
 }: {
   node: TextboxNode;
+  parent: ImageboxNode;
+  selected: boolean;
   cacheKey: string;
 }) => {
   return (
     <div
-      className={clsx("absolute flex flex-col w-full h-full select-none p-2", {
+      className={clsx("absolute flex flex-col w-full h-full select-none", {
         "justify-start": node.vertical === "top",
         "justify-center": node.vertical === "center",
+        "border-2 rounded-lg select-none": selected,
       })}
       style={{
         left: node.position.left,
         top: node.position.top,
         height: node.position.height,
         width: node.position.width,
+      }}
+      onClick={() => {
+        const dispatch = getUiDispatch();
+        dispatch({ type: "nodeSelected", id: parent.id, childId: node.id });
       }}
     >
       {node.children.map(({ id, type }) => {
@@ -72,6 +82,7 @@ const ImageboxElement = ({
   selected,
 }: ImageboxElementProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
+  const { selectedChild } = getUiState();
   return (
     <BoxNode
       id={node.id}
@@ -116,7 +127,9 @@ const ImageboxElement = ({
               return (
                 <InnerTextboxElement
                   node={child}
+                  parent={node}
                   cacheKey={child.cacheKey}
+                  selected={selectedChild === child.id}
                   key={child.id}
                 />
               );
