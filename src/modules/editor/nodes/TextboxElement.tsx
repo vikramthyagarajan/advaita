@@ -10,20 +10,32 @@ import {
   TextNode,
 } from "modules/state/project/ProjectTypes";
 import { getUiDispatch } from "modules/state/ui/UiStore";
-import { memo, useRef } from "react";
+import { memo, RefObject, useRef } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
+import { useTextState } from "./TextHandlers";
 
+type ListenerType = {
+  [key: string]: (
+    id: string,
+    ref: RefObject<HTMLDivElement>,
+    e: Event | KeyboardEvent | MouseEvent
+  ) => void;
+};
 const TextElement = ({
   node,
   parent,
   index,
   cacheKey,
+  listeners,
+  setTextRef,
 }: {
   node: TextNode;
   parent: TextboxNode;
   index: number;
   cacheKey: string;
+  listeners: ListenerType;
+  setTextRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { setNodeRef } = useDroppable({
@@ -32,6 +44,9 @@ const TextElement = ({
       type: "child",
     },
   });
+  if (ref.current) {
+    setTextRef(node.id, ref);
+  }
   if (node.editOnCreate && ref.current) {
     const selection = window.getSelection();
     const range = document.createRange();
@@ -58,7 +73,7 @@ const TextElement = ({
     >
       <div
         ref={ref}
-        className={clsx("cursor-text outline-none z-50", {
+        className={clsx("cursor-text outline-none z-50 relative", {
           "font-bold": node.bold,
           italic: node.italic,
           underline: node.underline,
@@ -69,36 +84,41 @@ const TextElement = ({
         data-id={node.id}
         contentEditable
         suppressContentEditableWarning
+        {...Object.keys(listeners).reduce((acc, listenerKey) => {
+          acc[listenerKey] = (e: Event) =>
+            listeners[listenerKey](node.id, ref, e);
+          return acc;
+        }, {} as { [key: string]: (e: Event) => void })}
         onBlur={(e) => {
           const text = e.currentTarget.textContent || "";
           AppStore.project.setNode(node.id, { text });
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (node.parent) {
-              e.preventDefault();
-              e.stopPropagation();
-              e.currentTarget.blur();
-              AppStore.project.addTextToBox(node.parent || "", "", {
-                at: index + 1,
-                editOnCreate: true,
-              });
-            }
-          } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
-            if (node.parent) {
-              const parent = AppStore.project.getNode(
-                node.parent
-              ) as TextboxNode;
-              if (index > 0)
-                AppStore.project.setEditOnCreate(
-                  parent.children[index - 1].id,
-                  true
-                );
-              AppStore.project.removeChildNode(node.parent, node.id);
-              AppStore.canvas.shouldRender = true;
-            }
-          }
-        }}
+        // onKeyDown={(e) => {
+        //   if (e.key === "Enter") {
+        //     if (node.parent) {
+        //       e.preventDefault();
+        //       e.stopPropagation();
+        //       e.currentTarget.blur();
+        //       AppStore.project.addTextToBox(node.parent || "", "", {
+        //         at: index + 1,
+        //         editOnCreate: true,
+        //       });
+        //     }
+        //   } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
+        //     if (node.parent) {
+        //       const parent = AppStore.project.getNode(
+        //         node.parent
+        //       ) as TextboxNode;
+        //       if (index > 0)
+        //         AppStore.project.setEditOnCreate(
+        //           parent.children[index - 1].id,
+        //           true
+        //         );
+        //       AppStore.project.removeChildNode(node.parent, node.id);
+        //       AppStore.canvas.shouldRender = true;
+        //     }
+        //   }
+        // }}
       >
         {node.text}
       </div>
@@ -134,6 +154,7 @@ const TextboxElement = ({
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const { listeners, setTextRef } = useTextState({ id: node.id, ref });
   return (
     <BoxNode
       id={node.id}
@@ -178,6 +199,8 @@ const TextboxElement = ({
                   parent={node}
                   cacheKey={sub.cacheKey}
                   index={index}
+                  listeners={listeners}
+                  setTextRef={setTextRef}
                 />
               );
             else if (sub.type === "image")

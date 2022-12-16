@@ -19,3 +19,11 @@ export const inBounds = (rect1: Rect, rect2: Rect) => {
     return true;
   else return false;
 };
+
+export const isCloseEnough = (
+  num1: number,
+  num2: number,
+  precision: number
+) => {
+  return num2 > num1 - precision && num2 < num1 + precision;
+};
