@@ -1,12 +1,12 @@
 import { moveCaretToPoint } from "modules/core/dom-utils";
 import { isCloseEnough } from "modules/core/math-utils";
 import AppStore from "modules/state/AppStore";
-import { TextboxNode } from "modules/state/project/ProjectTypes";
+import { TextboxNode, TextNode } from "modules/state/project/ProjectTypes";
 import { MouseEvent, RefObject, useRef } from "react";
 
 export const useTextState = ({
   id,
-  ref,
+  ref: boxRef,
 }: {
   id: string;
   ref: RefObject<HTMLElement>;
@@ -20,10 +20,35 @@ export const useTextState = ({
     onKeyDown: (childId: string, ref: RefObject<HTMLDivElement>, e: Event) => {
       const event = e as KeyboardEvent;
       const selection = window.getSelection();
+      const childNode = AppStore.project.getNode(childId) as TextNode | null;
       if (selection && selection?.rangeCount > 0) {
         switch (event.key) {
-          case "ArrowLeft":
+          case "ArrowLeft": {
+            const range = selection.getRangeAt(0);
+            const elementRect = (
+              event.currentTarget as HTMLDivElement
+            )?.getBoundingClientRect();
+            const textboxRect = boxRef.current?.getBoundingClientRect();
+            // incase no text selection (empty div), assume whole element is selected
+            const atStart = range.endOffset === 0;
+
+            if (atStart) {
+              event.preventDefault();
+              const currentChildIndex = node.children.findIndex(
+                (n) => n.id === childId
+              );
+              if (currentChildIndex > 0) {
+                const prevChild = AppStore.project.getNode(
+                  node.children[currentChildIndex - 1].id
+                );
+                const nextRef = refMap.current[prevChild.id];
+                if (nextRef && textboxRect) {
+                  moveCaretToPoint(textboxRect.right - 5, elementRect.top - 5);
+                }
+              }
+            }
             break;
+          }
           case "ArrowUp": {
             const range = selection.getRangeAt(0);
             const rects = range.getClientRects();
@@ -32,7 +57,6 @@ export const useTextState = ({
             )?.getBoundingClientRect();
             // incase no text selection (empty div), assume whole element is selected
             const textRect = rects[0] ? rects[0] : { ...elementRect };
-            console.log("rects", elementRect, textRect, rects);
             const atTop = isCloseEnough(elementRect.top, textRect.top, 5);
 
             if (atTop) {
@@ -52,8 +76,36 @@ export const useTextState = ({
             }
             break;
           }
-          case "ArrowRight":
+          case "ArrowRight": {
+            const range = selection.getRangeAt(0);
+            const elementRect = (
+              event.currentTarget as HTMLDivElement
+            )?.getBoundingClientRect();
+            const textboxRect = boxRef.current?.getBoundingClientRect();
+            // incase no text selection (empty div), assume whole element is selected
+            const atEnd =
+              childNode && range.endOffset === childNode.text.length;
+
+            if (atEnd) {
+              event.preventDefault();
+              const currentChildIndex = node.children.findIndex(
+                (n) => n.id === childId
+              );
+              if (currentChildIndex < node.children.length) {
+                const nextChild = AppStore.project.getNode(
+                  node.children[currentChildIndex + 1].id
+                );
+                const nextRef = refMap.current[nextChild.id];
+                if (nextRef && textboxRect) {
+                  moveCaretToPoint(
+                    textboxRect.left + 5,
+                    elementRect.bottom + 5
+                  );
+                }
+              }
+            }
             break;
+          }
           case "ArrowDown": {
             const range = selection.getRangeAt(0);
             const rects = range.getClientRects();

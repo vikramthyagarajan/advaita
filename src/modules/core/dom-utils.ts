@@ -10,6 +10,7 @@ export const moveCaretToPoint = (x: number, y: number) => {
   } else if (document.caretRangeFromPoint) {
     // Use WebKit-proprietary fallback method
     const range = document.caretRangeFromPoint(x, y);
+    console.log("got range", range);
     if (range) {
       node = range.startContainer;
       offset = range.startOffset;
