@@ -1,4 +1,5 @@
 import { CanvasPosition } from "modules/core/foundation";
+import { FocusEvent, KeyboardEvent, MouseEvent } from "react";
 
 export type SubNodeType = "text" | "image" | "video" | "preview";
 export type NodeType =
@@ -70,3 +71,8 @@ export interface PreviewNode {
 
 export type SubNode = TextNode | ImageNode;
 export type Node = TextboxNode | ImageboxNode | SubNode;
+
+export type AllEventTypes =
+  | FocusEvent<HTMLDivElement>
+  | KeyboardEvent<HTMLDivElement>
+  | MouseEvent<HTMLDivElement>;

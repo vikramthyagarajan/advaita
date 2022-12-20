@@ -4,13 +4,21 @@ import { ScreenPosition } from "modules/core/foundation";
 import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
 import {
+  AllEventTypes,
   ImageNode,
   PreviewNode,
   TextboxNode,
   TextNode,
 } from "modules/state/project/ProjectTypes";
 import { getUiDispatch } from "modules/state/ui/UiStore";
-import { memo, RefObject, useRef } from "react";
+import {
+  FocusEvent,
+  KeyboardEvent,
+  memo,
+  MouseEvent,
+  RefObject,
+  useRef,
+} from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 import { useTextState } from "./TextHandlers";
@@ -19,7 +27,7 @@ type ListenerType = {
   [key: string]: (
     id: string,
     ref: RefObject<HTMLDivElement>,
-    e: Event | KeyboardEvent | MouseEvent
+    e: AllEventTypes
   ) => void;
 };
 const TextElement = ({
@@ -85,40 +93,10 @@ const TextElement = ({
         contentEditable
         suppressContentEditableWarning
         {...Object.keys(listeners).reduce((acc, listenerKey) => {
-          acc[listenerKey] = (e: Event) =>
+          acc[listenerKey] = (e: AllEventTypes) =>
             listeners[listenerKey](node.id, ref, e);
           return acc;
-        }, {} as { [key: string]: (e: Event) => void })}
-        onBlur={(e) => {
-          const text = e.currentTarget.textContent || "";
-          AppStore.project.setNode(node.id, { text });
-        }}
-        // onKeyDown={(e) => {
-        //   if (e.key === "Enter") {
-        //     if (node.parent) {
-        //       e.preventDefault();
-        //       e.stopPropagation();
-        //       e.currentTarget.blur();
-        //       AppStore.project.addTextToBox(node.parent || "", "", {
-        //         at: index + 1,
-        //         editOnCreate: true,
-        //       });
-        //     }
-        //   } else if (e.key === "Backspace" && !e.currentTarget.textContent) {
-        //     if (node.parent) {
-        //       const parent = AppStore.project.getNode(
-        //         node.parent
-        //       ) as TextboxNode;
-        //       if (index > 0)
-        //         AppStore.project.setEditOnCreate(
-        //           parent.children[index - 1].id,
-        //           true
-        //         );
-        //       AppStore.project.removeChildNode(node.parent, node.id);
-        //       AppStore.canvas.shouldRender = true;
-        //     }
-        //   }
-        // }}
+        }, {} as { [key: string]: (e: AllEventTypes) => void })}
       >
         {node.text}
       </div>

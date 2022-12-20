@@ -1,8 +1,18 @@
 import { moveCaretToPoint } from "modules/core/dom-utils";
 import { isCloseEnough } from "modules/core/math-utils";
 import AppStore from "modules/state/AppStore";
-import { TextboxNode, TextNode } from "modules/state/project/ProjectTypes";
-import { MouseEvent, RefObject, useRef } from "react";
+import {
+  AllEventTypes,
+  TextboxNode,
+  TextNode,
+} from "modules/state/project/ProjectTypes";
+import {
+  FocusEvent,
+  KeyboardEvent,
+  MouseEvent,
+  RefObject,
+  useRef,
+} from "react";
 
 export const useTextState = ({
   id,
@@ -17,8 +27,12 @@ export const useTextState = ({
     refMap.current[id] = ref;
   };
   const listeners = {
-    onKeyDown: (childId: string, ref: RefObject<HTMLDivElement>, e: Event) => {
-      const event = e as KeyboardEvent;
+    onKeyDown: (
+      childId: string,
+      ref: RefObject<HTMLDivElement>,
+      e: AllEventTypes
+    ) => {
+      const event = e as KeyboardEvent<HTMLDivElement>;
       const selection = window.getSelection();
       const childNode = AppStore.project.getNode(childId) as TextNode | null;
       if (selection && selection?.rangeCount > 0) {
@@ -126,6 +140,7 @@ export const useTextState = ({
 
             if (atBottom) {
               event.preventDefault();
+              console.log("children", node.children);
               const currentChildIndex = node.children.findIndex(
                 (n) => n.id === childId
               );
@@ -143,11 +158,41 @@ export const useTextState = ({
             }
             break;
           }
+          case "Enter": {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget?.blur();
+            const currentChildIndex = node.children.findIndex(
+              (n) => n.id === childId
+            );
+            AppStore.project.addTextToBox(node.id || "", "", {
+              at: currentChildIndex + 1,
+              editOnCreate: true,
+            });
+            break;
+          }
+          case "Backspace": {
+            if (e.currentTarget.textContent) break;
+            const index = node.children.findIndex((n) => n.id === childId);
+            const parent = AppStore.project.getNode(node.id) as TextboxNode;
+            if (index > 0)
+              AppStore.project.setEditOnCreate(
+                parent.children[index - 1].id,
+                true
+              );
+            AppStore.project.removeChildNode(node.id, childId);
+            AppStore.canvas.shouldRender = true;
+            break;
+          }
         }
       }
     },
-    onMouseUp: (id: string, ref: RefObject<HTMLDivElement>, e: Event) => {
-      const event = e as unknown as MouseEvent;
+    onMouseUp: (
+      childId: string,
+      ref: RefObject<HTMLDivElement>,
+      e: AllEventTypes
+    ) => {
+      const event = e as MouseEvent<HTMLDivElement>;
       const selection = window.getSelection();
       if (selection && selection?.rangeCount > 0) {
         const range = selection.getRangeAt(0);
@@ -161,6 +206,14 @@ export const useTextState = ({
         const boxTop = ref.current?.getBoundingClientRect().top || 0;
         const topOfElement = offsetTop - boxTop;
       }
+    },
+    onBlur: (
+      childId: string,
+      ref: RefObject<HTMLDivElement>,
+      e: AllEventTypes
+    ) => {
+      const text = e.currentTarget.textContent || "";
+      AppStore.project.setNode(childId, { text });
     },
   };
 
