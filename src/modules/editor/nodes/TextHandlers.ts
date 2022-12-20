@@ -51,12 +51,14 @@ export const useTextState = ({
           }
           case "ArrowUp": {
             const range = selection.getRangeAt(0);
-            const rects = range.getClientRects();
+            const duplicated = range.cloneRange();
+            duplicated.collapse();
+            const rects = duplicated.getClientRects();
             const elementRect = (
               event.currentTarget as HTMLDivElement
             )?.getBoundingClientRect();
             // incase no text selection (empty div), assume whole element is selected
-            const textRect = rects[0] ? rects[0] : { ...elementRect };
+            const textRect = rects[0] ? rects[0] : { ...elementRect.toJSON() };
             const atTop = isCloseEnough(elementRect.top, textRect.top, 5);
 
             if (atTop) {
@@ -108,12 +110,14 @@ export const useTextState = ({
           }
           case "ArrowDown": {
             const range = selection.getRangeAt(0);
-            const rects = range.getClientRects();
             const elementRect = (
               event.currentTarget as HTMLDivElement
             )?.getBoundingClientRect();
             // incase no text selection (empty div), assume whole element is selected
-            const textRect = rects[0] ? rects[0] : { ...elementRect };
+            const duplicated = range.cloneRange();
+            duplicated.collapse();
+            const rects = duplicated.getClientRects();
+            const textRect = rects[0] ? rects[0] : { ...elementRect.toJSON() };
             const atBottom = isCloseEnough(
               elementRect.bottom,
               textRect.bottom,
@@ -131,7 +135,9 @@ export const useTextState = ({
                 );
                 const nextRef = refMap.current[nextChild.id];
                 if (nextRef) {
-                  moveCaretToPoint(textRect.left, elementRect.bottom + 5);
+                  moveCaretToPoint(textRect.left, elementRect.bottom + 5, {
+                    extendSelection: event.shiftKey,
+                  });
                 }
               }
             }
@@ -142,12 +148,10 @@ export const useTextState = ({
     },
     onMouseUp: (id: string, ref: RefObject<HTMLDivElement>, e: Event) => {
       const event = e as unknown as MouseEvent;
-      console.log("getting position");
       const selection = window.getSelection();
       if (selection && selection?.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         const rects = range.getClientRects();
-        console.log("got rects", rects, rects[0], rects[1]);
 
         const preCaretRange = range.cloneRange();
         preCaretRange.selectNodeContents(event.currentTarget);
@@ -156,8 +160,6 @@ export const useTextState = ({
         const offsetTop = e.currentTarget.getBoundingClientRect().top;
         const boxTop = ref.current?.getBoundingClientRect().top || 0;
         const topOfElement = offsetTop - boxTop;
-        console.log("at top of element", rects[0].top, offsetTop, boxTop);
-        console.log("index", preCaretRange.toString());
       }
     },
   };

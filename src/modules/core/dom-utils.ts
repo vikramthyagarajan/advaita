@@ -1,4 +1,8 @@
-export const moveCaretToPoint = (x: number, y: number) => {
+export const moveCaretToPoint = (
+  x: number,
+  y: number,
+  options: { extendSelection?: boolean } = {}
+) => {
   let node: Node | null = null,
     offset: number = 0;
   // @ts-ignore
@@ -10,21 +14,22 @@ export const moveCaretToPoint = (x: number, y: number) => {
   } else if (document.caretRangeFromPoint) {
     // Use WebKit-proprietary fallback method
     const range = document.caretRangeFromPoint(x, y);
-    console.log("got range", range);
     if (range) {
-      node = range.startContainer;
-      offset = range.startOffset;
+      node = range.endContainer;
+      offset = range.endOffset;
     }
   } else {
     // Neither method is supported, do nothing
     return;
   }
+  console.log("offset is", node, offset);
 
   const selection = window.getSelection();
-  const newRange = document.createRange();
-  if (node && selection) {
+  const existingRange = selection?.getRangeAt(0);
+  const newRange = existingRange?.cloneRange();
+  if (node && newRange && selection) {
     newRange.setEnd(node, offset);
-    newRange.collapse(false);
+    if (!options.extendSelection) newRange.collapse(false);
     selection.removeAllRanges();
     selection.addRange(newRange);
   }
