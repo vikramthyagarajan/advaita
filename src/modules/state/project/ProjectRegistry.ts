@@ -151,7 +151,7 @@ export class ProjectRegistry {
   }
 
   public commit() {
-    this._root = copyJSON(this._shadowRoot);
+    // this._root = copyJSON(this._shadowRoot);
   }
 
   public ___loadRegistry(root: ProjectRoot) {
