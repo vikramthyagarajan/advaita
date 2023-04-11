@@ -37,7 +37,7 @@ import {
   MdTitle,
 } from "react-icons/md";
 import { Heading1, Heading2, Heading3 } from "./icons/headings";
-import * as slateTypes from "./slate-types";
+import * as slateTypes from "./slateTypes";
 
 export type GraspSlateElement = Element & { type: string };
 

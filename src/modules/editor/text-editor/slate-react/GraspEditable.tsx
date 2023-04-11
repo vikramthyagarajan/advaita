@@ -58,16 +58,18 @@ const GraspEditable: FC<Partial<GraspEditableProps>> = ({
   }, []);
 
   const handleOnKeyDown = (event) => {
+    console.log("keydown", hotkeys);
     for (const pressedKeys in hotkeys) {
       if (isHotkey(pressedKeys, event)) {
         const hotkey = hotkeys[pressedKeys];
+        console.log("keydown ishot", hotkey);
 
         event.preventDefault();
         if (hotkey.type === "mark") {
-          // editor.toggleMark(hotkey.value)
+          editor.toggleMark(hotkey.value);
         }
         if (hotkey.type === "block") {
-          // editor.toggleBlock(hotkey.value)
+          editor.toggleBlock(hotkey.value);
         }
         if (hotkey.type === "newline") {
           editor.insertText("\n");
@@ -79,27 +81,32 @@ const GraspEditable: FC<Partial<GraspEditableProps>> = ({
           onHotkey && onHotkey({ event, editor, hotkey, pressedKeys, hotkeys })
         );
       }
-      // if (event.key === CMD_KEY) {
-      //     editor.isCommandMenu = true
-      //     // editor.insertText('hey')
-      // }
+      if (event.key === CMD_KEY) {
+        editor.isCommandMenu = true;
+        // editor.insertText('hey')
+      }
       if (event.key === "Enter") {
-        // if (!editor.isCommandMenu) {
-        //     const currentType = editor.getCurrentNode().type
-        //     if (!editor.LIST_TYPES.includes(currentType) && currentType !== 'list-item') {
-        //         event.preventDefault()
-        //         const newLine = {
-        //             type: 'paragraph',
-        //             children: [
-        //                 {
-        //                     text: '',
-        //                 },
-        //             ],
-        //         } as Descendant
-        //         Transforms.insertNodes(editor, newLine)
-        //         return onHotkey && onHotkey({ event, editor, pressedKeys, hotkeys })
-        //     }
-        // } else event.preventDefault()
+        if (!editor.isCommandMenu) {
+          const currentType = editor.getCurrentNode().type;
+          if (
+            !editor.LIST_TYPES.includes(currentType) &&
+            currentType !== "list-item"
+          ) {
+            event.preventDefault();
+            const newLine = {
+              type: "paragraph",
+              children: [
+                {
+                  text: "",
+                },
+              ],
+            } as Descendant;
+            Transforms.insertNodes(editor, newLine);
+            return (
+              onHotkey && onHotkey({ event, editor, pressedKeys, hotkeys })
+            );
+          }
+        } else event.preventDefault();
       }
     }
   };

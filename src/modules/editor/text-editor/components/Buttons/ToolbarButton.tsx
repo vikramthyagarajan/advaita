@@ -48,10 +48,10 @@ const ToolbarButton: FC<any> = React.forwardRef(
       event.preventDefault();
       switch (type) {
         case "mark":
-          //   editor.toggleMark(format);
+          editor.toggleMark(format);
           break;
         case "block":
-        //   editor.toggleBlock(format);
+          editor.toggleBlock(format);
       }
       onMouseDown && onMouseDown({ editor, format, type, event });
     };
@@ -63,11 +63,11 @@ const ToolbarButton: FC<any> = React.forwardRef(
 
       switch (type) {
         case "mark":
-        //   return editor.isMarkActive(format);
+          return editor.isMarkActive(format);
         case "block":
-        //   return editor.isBlockActive(format);
+          return editor.isBlockActive(format);
         case "link":
-        //   return editor.isNodeTypeActive(format);
+          return editor.isNodeTypeActive(format);
       }
       return;
     };
@@ -77,8 +77,8 @@ const ToolbarButton: FC<any> = React.forwardRef(
      */
     const isDisabled = () => {
       let disabled = false;
-      //   disabled = disableOnSelection ? editor.isSelectionExpanded() : false;
-      //   disabled = disableOnCollapse ? editor.isSelectionCollapsed() : disabled;
+      disabled = disableOnSelection ? editor.isSelectionExpanded() : false;
+      disabled = disableOnCollapse ? editor.isSelectionCollapsed() : disabled;
       return disabled;
     };
 

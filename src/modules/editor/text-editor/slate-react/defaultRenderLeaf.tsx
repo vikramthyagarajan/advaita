@@ -1,7 +1,7 @@
 import { chakra, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { RenderLeafProps } from "slate-react";
-import { CustomText } from "../slate-types";
+import { CustomText } from "../slateTypes";
 
 /**
  * Default renderer of leafs.

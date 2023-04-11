@@ -3,6 +3,13 @@ import AppStore from "modules/state/AppStore";
 import { getUiDispatch, getUiState } from "modules/state/ui/UiStore";
 import { RefObject, useEffect } from "react";
 
+let pointerState = {
+  id: "",
+  started: false,
+  x: 0,
+  y: 0,
+};
+
 const wheelListener = (e: WheelEvent) => {
   e.preventDefault();
   e.stopPropagation();
@@ -17,15 +24,27 @@ const wheelListener = (e: WheelEvent) => {
   }
 };
 const pointerMoveListener = (event: PointerEvent) => {
+  const { widget } = getUiState();
+  const screen = AppStore.canvas.screen;
+  const scale = AppStore.canvas.scale;
   AppStore.canvas.movePointer(event.clientX, event.clientY);
+  const localStart = { x: event.clientX, y: event.clientY };
+  const globalStart = {
+    x: localStart.x / scale.x + screen.x,
+    y: localStart.y / scale.y + screen.y,
+  };
+  if (pointerState.started && widget === "textbox") {
+    AppStore.project.addTextbox(pointerState.id, {
+      position: {
+        left: pointerState.x,
+        top: pointerState.y,
+        width: globalStart.x - pointerState.x,
+        height: globalStart.y - pointerState.y,
+      },
+    });
+  }
 };
 
-let pointerState = {
-  id: "",
-  started: false,
-  x: 0,
-  y: 0,
-};
 const pointerDownListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
   const screen = AppStore.canvas.screen;
@@ -44,8 +63,11 @@ const pointerDownListener = (event: PointerEvent) => {
 };
 
 const pointerUpListener = (event: PointerEvent) => {
+  const widget = getUiState().widget;
   const dispatch = getUiDispatch();
   dispatch({ type: "widgetUpdated", widget: "pointer" });
+  if (widget === "textbox")
+    AppStore.project.addTextToBox(pointerState.id, "Textbox", {});
   pointerState.started = false;
   pointerState.x = 0;
   pointerState.y = 0;

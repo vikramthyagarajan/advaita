@@ -1,124 +1,17 @@
-import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { ScreenPosition } from "modules/core/foundation";
-import { isPresent } from "modules/core/function-utils";
 import AppStore from "modules/state/AppStore";
 import {
-  AllEventTypes,
   ImageNode,
-  PreviewNode,
   TextboxNode,
   TextNode,
 } from "modules/state/project/ProjectTypes";
-import { getUiDispatch } from "modules/state/ui/UiStore";
-import {
-  FocusEvent,
-  KeyboardEvent,
-  memo,
-  MouseEvent,
-  RefObject,
-  useRef,
-} from "react";
+import { memo, useRef, useState } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
-import { useTextState } from "./TextHandlers";
-
-type ListenerType = {
-  [key: string]: (
-    id: string,
-    ref: RefObject<HTMLDivElement>,
-    e: AllEventTypes
-  ) => void;
-};
-const TextElement = ({
-  node,
-  parent,
-  index,
-  cacheKey,
-  listeners,
-  setTextRef,
-}: {
-  node: TextNode;
-  parent: TextboxNode;
-  index: number;
-  cacheKey: string;
-  listeners: ListenerType;
-  setTextRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
-}) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { setNodeRef } = useDroppable({
-    id: `drop-${node.id}`,
-    data: {
-      type: "child",
-    },
-  });
-  if (ref.current) {
-    setTextRef(node.id, ref);
-  }
-  if (node.editOnCreate && ref.current) {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    const dispatch = getUiDispatch();
-    if (selection && ref.current) {
-      selection.removeAllRanges();
-      range.selectNodeContents(ref.current);
-      range.collapse(false);
-      selection.addRange(range);
-      ref.current?.focus();
-      dispatch({ type: "nodeSelected", id: node.parent, childId: node.id });
-      AppStore.project.setEditOnCreate(node.id, false);
-    }
-  } else if (!ref.current) AppStore.canvas.shouldRender = true;
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={clsx("w-full flex", {
-        "justify-center": !parent.align || parent.align === "center",
-        "justify-start": parent.align === "left",
-        "justify-end": parent.align === "right",
-      })}
-    >
-      <div
-        ref={ref}
-        className={clsx("cursor-text outline-none z-50 relative", {
-          "font-bold": node.bold,
-          italic: node.italic,
-          underline: node.underline,
-          "text-3xl font-bold": node.style === "heading-1",
-          "text-2xl font-semibold": node.style === "heading-2",
-          "text-xl": node.style === "heading-3",
-        })}
-        data-id={node.id}
-        contentEditable
-        suppressContentEditableWarning
-        {...Object.keys(listeners).reduce((acc, listenerKey) => {
-          acc[listenerKey] = (e: AllEventTypes) =>
-            listeners[listenerKey](node.id, ref, e);
-          return acc;
-        }, {} as { [key: string]: (e: AllEventTypes) => void })}
-      >
-        {node.text}
-      </div>
-    </div>
-  );
-};
-
-const ImageElement = ({
-  node,
-  index,
-  cacheKey,
-}: {
-  node: ImageNode;
-  index: number;
-  cacheKey: string;
-}) => {
-  return (
-    <div>
-      <img src={node.url} className="w-full"></img>
-    </div>
-  );
-};
+import { Descendant } from "slate";
+import MainEditor, { createGraspEditor } from "../text-editor/MainEditor";
+import { CustomEditor, initialSlateValue } from "../text-editor/slateTypes";
 
 const TextboxElement = ({
   node,
@@ -132,7 +25,10 @@ const TextboxElement = ({
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { listeners, setTextRef } = useTextState({ id: node.id, ref });
+  const [value, setValue] = useState<Descendant[]>(initialSlateValue());
+  const mainEditorRef = useRef<CustomEditor>();
+  if (!mainEditorRef.current)
+    mainEditorRef.current = createGraspEditor(node.id);
   return (
     <BoxNode
       id={node.id}
@@ -148,8 +44,6 @@ const TextboxElement = ({
           "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
           {
             "shadow-lg": selected,
-            "justify-start": node.vertical === "top",
-            "justify-center": node.vertical === "center",
           }
         )}
       >
@@ -164,32 +58,19 @@ const TextboxElement = ({
           }))
           // .filter(({ val }) => isPresent(val))
           .map(({ val, child, index }) => {
-            const sub = val as TextNode | ImageNode | PreviewNode;
-            if (child.type === "preview")
-              return (
-                <div className="border border-slate-400 w-24 h-[2px]"></div>
-              );
-            else if (sub.type === "text")
-              return (
-                <TextElement
-                  key={index}
-                  node={sub}
-                  parent={node}
-                  cacheKey={sub.cacheKey}
-                  index={index}
-                  listeners={listeners}
-                  setTextRef={setTextRef}
-                />
-              );
-            else if (sub.type === "image")
-              return (
-                <ImageElement
-                  key={sub.id}
-                  node={sub}
-                  cacheKey={sub.cacheKey}
-                  index={index}
-                />
-              );
+            const sub = val as TextNode;
+            return (
+              <MainEditor
+                key={index}
+                editorKey={sub.id}
+                // onEditorChange={(value) => {
+                //   setValue(value);
+                // }}
+                editor={mainEditorRef.current}
+                value={value}
+                setValue={setValue}
+              />
+            );
           })}
       </div>
     </BoxNode>

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Editor from "./modules/editor/Editor";
+import { Center, ChakraProvider, CSSReset } from "@chakra-ui/react";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
@@ -9,7 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Editor />
+    <ChakraProvider>
+      <CSSReset />
+      <Editor />
+    </ChakraProvider>
   </React.StrictMode>
 );
 
