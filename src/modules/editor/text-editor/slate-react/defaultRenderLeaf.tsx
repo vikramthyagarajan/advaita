@@ -2,6 +2,7 @@ import { chakra, useColorMode } from "@chakra-ui/react";
 import React from "react";
 import { RenderLeafProps } from "slate-react";
 import { CustomText } from "../slateTypes";
+import { stopEventBubbling } from "modules/core/dom-utils";
 
 /**
  * Default renderer of leafs.
@@ -50,5 +51,16 @@ export default function defaultRenderLeaf({
   if (leaf?.underline || leaf.underlined) {
     children = <u>{children}</u>;
   }
-  return <span {...attributes}>{children}</span>;
+  return (
+    <span
+      style={{ cursor: "text" }}
+      //@ts-ignore
+      onMouseDown={(event) => stopEventBubbling(event)}
+      //@ts-ignore
+      onMouseUp={(event) => stopEventBubbling(event)}
+      {...attributes}
+    >
+      {children}
+    </span>
+  );
 }

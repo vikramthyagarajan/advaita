@@ -75,7 +75,7 @@ export const BoxNode = ({
       ></div>
       {actions ? actions() : null}
       <div
-        className={clsx("absolute top-0 left-0 w-full h-full")}
+        className={clsx("absolute top-0 left-0 w-full h-full cursor-move")}
         ref={(ref) => {
           setNodeRef(ref);
         }}

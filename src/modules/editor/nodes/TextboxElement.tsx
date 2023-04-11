@@ -6,7 +6,7 @@ import {
   TextboxNode,
   TextNode,
 } from "modules/state/project/ProjectTypes";
-import { memo, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 import { Descendant } from "slate";
@@ -29,6 +29,9 @@ const TextboxElement = ({
   const mainEditorRef = useRef<CustomEditor>();
   if (!mainEditorRef.current)
     mainEditorRef.current = createGraspEditor(node.id);
+  const onEditorChange = useCallback(() => {
+    setValue(value);
+  }, [value]);
   return (
     <BoxNode
       id={node.id}
@@ -63,9 +66,7 @@ const TextboxElement = ({
               <MainEditor
                 key={index}
                 editorKey={sub.id}
-                // onEditorChange={(value) => {
-                //   setValue(value);
-                // }}
+                onEditorChange={onEditorChange}
                 editor={mainEditorRef.current}
                 value={value}
                 setValue={setValue}

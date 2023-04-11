@@ -15,7 +15,7 @@ interface MainEditorProps {
   editor;
   value;
   setValue;
-  // onEditorChange;
+  onEditorChange;
   readOnly?: boolean;
 }
 
@@ -30,11 +30,10 @@ export function createGraspEditor(editorId = "default") {
 const MainEditor: FC<MainEditorProps> = ({
   editor,
   editorKey,
-  // onEditorChange,
+  onEditorChange,
   value,
   readOnly = false,
 }) => {
-  console.log("editor rerender");
   return (
     <>
       {
@@ -42,8 +41,7 @@ const MainEditor: FC<MainEditorProps> = ({
           key={editorKey}
           editor={editor}
           value={value}
-          onChange={(test) => {}}
-          // onChange={onEditorChange}
+          onChange={onEditorChange}
         >
           <HoveringToolbar />
           <MenuHandler />
