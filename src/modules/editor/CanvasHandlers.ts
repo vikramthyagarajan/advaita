@@ -66,8 +66,15 @@ const pointerUpListener = (event: PointerEvent) => {
   const widget = getUiState().widget;
   const dispatch = getUiDispatch();
   dispatch({ type: "widgetUpdated", widget: "pointer" });
+  const nodes = AppStore.project.rootNodes;
+  const connections = nodes
+    .filter((n) => n.id !== pointerState.id)
+    .map((n) => ({ id: n.id }));
   if (widget === "textbox")
-    AppStore.project.setNode(pointerState.id, { text: "# Start writing..." });
+    AppStore.project.setNode(pointerState.id, {
+      text: "# Start writing...",
+      connections,
+    });
   pointerState.started = false;
   pointerState.x = 0;
   pointerState.y = 0;

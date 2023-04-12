@@ -17,6 +17,7 @@ import {
   initialSlateValue,
 } from "../text-editor/slateTypes";
 import { toMd, toSlate } from "../text-editor/SlateUtils";
+import Xarrow from "react-xarrows";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   // const [value, setValue] = useState(initialSlateMarkdown());
@@ -70,6 +71,7 @@ const TextboxElement = ({
     >
       <div
         ref={ref}
+        id={node.id}
         data-id={node.id}
         className={clsx(
           "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
@@ -80,6 +82,13 @@ const TextboxElement = ({
       >
         {node.text ? <TextElement node={node} cacheKey={cacheKey} /> : null}
       </div>
+      {node.connections
+        ? node.connections.map((connection, index) => {
+            return (
+              <Xarrow key={index} start={node.id} end={connection.id}></Xarrow>
+            );
+          })
+        : null}
     </BoxNode>
   );
 };

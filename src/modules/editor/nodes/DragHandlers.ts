@@ -8,7 +8,7 @@ export const onDragStart = (event: DragStartEvent) => {
   AppStore.project.fork();
 };
 
-export const onDragMove = (event: DragMoveEvent) => {
+export const onDragMove = (event: DragMoveEvent, callback?: () => void) => {
   const { active, over, delta } = event;
   const nodeId = active.id.toString().split("drag-")[1];
   const scale = AppStore.canvas.scale;
@@ -23,6 +23,7 @@ export const onDragMove = (event: DragMoveEvent) => {
     left: node.position.left + deltaX,
     top: node.position.top + deltaY,
   });
+  if (callback) callback();
 };
 
 export const onDragEnd = (event: DragEndEvent) => {

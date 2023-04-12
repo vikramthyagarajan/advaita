@@ -5,6 +5,7 @@ import { useRef } from "react";
 import CanvasRoot from "./CanvasRoot";
 import { ElementInspector } from "./inspector/ElementInspector";
 import WidgetDock from "./widgets/WidgetDock";
+import { Xwrapper } from "react-xarrows";
 
 const Editor = () => {
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
@@ -16,13 +17,15 @@ const Editor = () => {
 
   return (
     <div className="w-full h-full relative" ref={rootRef}>
-      <CanvasRoot frame={frame} />
-      <WidgetDock selectedWidget={widget} />
-      <ElementInspector
-        selectedNode={selected}
-        cacheKey={cacheKey}
-        selectedChild={selectedChild}
-      />
+      <Xwrapper>
+        <CanvasRoot frame={frame} />
+        <WidgetDock selectedWidget={widget} />
+        <ElementInspector
+          selectedNode={selected}
+          cacheKey={cacheKey}
+          selectedChild={selectedChild}
+        />
+      </Xwrapper>
     </div>
   );
 };
