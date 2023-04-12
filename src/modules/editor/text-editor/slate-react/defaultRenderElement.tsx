@@ -32,8 +32,16 @@ export default function defaultRenderElement({
   handelOnConceptClick,
   ...rest
 }) {
-  switch (element.type) {
-    case "block-quote":
+  let type = element.type;
+  if (type === "heading") {
+    type = "heading-3";
+    if (element.depth === 1) type = "heading-0";
+    if (element.depth === 2) type = "heading-1";
+    if (element.depth === 3) type = "heading-2";
+    if (element.depth > 3) type = "heading-3";
+  }
+  switch (type) {
+    case "blockquote":
       return (
         <SlateElementBox>
           <chakra.blockquote

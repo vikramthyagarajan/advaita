@@ -6,12 +6,17 @@ import {
   TextboxNode,
   TextNode,
 } from "modules/state/project/ProjectTypes";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 import { Descendant } from "slate";
 import MainEditor, { createGraspEditor } from "../text-editor/MainEditor";
-import { CustomEditor, initialSlateValue } from "../text-editor/slateTypes";
+import {
+  CustomEditor,
+  initialSlateMarkdown,
+  initialSlateValue,
+} from "../text-editor/slateTypes";
+import { toSlate } from "../text-editor/SlateUtils";
 
 const TextboxElement = ({
   node,
@@ -25,11 +30,17 @@ const TextboxElement = ({
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [value, setValue] = useState<Descendant[]>(initialSlateValue());
+  const [value, setValue] = useState<string>(initialSlateMarkdown());
+  const [slate, setSlate] = useState<Descendant[]>([]);
+  useEffect(() => {
+    console.log("setting slate", toSlate(value));
+    setSlate(toSlate(value));
+  }, [value]);
   const mainEditorRef = useRef<CustomEditor>();
   if (!mainEditorRef.current)
     mainEditorRef.current = createGraspEditor(node.id);
   const onEditorChange = useCallback(() => {
+    console.log("on editor change");
     setValue(value);
   }, [value]);
   return (
@@ -68,8 +79,8 @@ const TextboxElement = ({
                 editorKey={sub.id}
                 onEditorChange={onEditorChange}
                 editor={mainEditorRef.current}
-                value={value}
-                setValue={setValue}
+                value={slate}
+                setValue={setSlate}
               />
             );
           })}

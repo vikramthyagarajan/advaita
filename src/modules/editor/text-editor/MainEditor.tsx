@@ -8,7 +8,6 @@ import { CustomEditor } from "./slateTypes";
 import withBlocks from "./plugins/withBlocks";
 import withMarks from "./plugins/withMarks";
 import withBase from "./plugins/withBase";
-import withHtml from "./plugins/withHtml";
 
 interface MainEditorProps {
   editorKey;
@@ -21,7 +20,7 @@ interface MainEditorProps {
 
 export function createGraspEditor(editorId = "default") {
   const editor = withBlocks(
-    withMarks(withBase(withHtml(withReact(createEditor() as CustomEditor))))
+    withMarks(withBase(withReact(createEditor() as CustomEditor)))
   );
   editor.editorId = editorId;
   return editor;

@@ -144,6 +144,12 @@ export type VideoElement = {
   children: EmptyText[];
 };
 
+export type HeadingElement = {
+  type: "heading";
+  depth: number;
+  children: CustomText[];
+};
+
 type CustomElement =
   | BlockQuoteElement
   | BulletedListElement
@@ -151,6 +157,7 @@ type CustomElement =
   | CheckListItemElement
   | EditableVoidElement
   | HeadingTitleElement
+  | HeadingElement
   | HeadingOneElement
   | HeadingTwoElement
   | HeadingThreeElement
@@ -389,4 +396,8 @@ export const initialSlateValue = (): Descendant[] => {
     },
     { type: "paragraph", children: [{ text: "" }] },
   ];
+};
+
+export const initialSlateMarkdown = () => {
+  return `# Slate.js\n## Start working\n>**Slate is currently in beta.** Its core API is usable now, but you might need to pull request fixes for advanced use cases. Some of its APIs are not "finalized" and will (breaking) change over time as we find better solutions.`;
 };
