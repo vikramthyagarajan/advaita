@@ -49,6 +49,7 @@ export interface TextboxNode extends GenericNode {
   position: CanvasPosition;
   align: Align;
   vertical: VerticalAlign;
+  text: string;
   children: { type: SubNodeType; id: string }[];
 }
 

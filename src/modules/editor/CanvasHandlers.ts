@@ -67,7 +67,7 @@ const pointerUpListener = (event: PointerEvent) => {
   const dispatch = getUiDispatch();
   dispatch({ type: "widgetUpdated", widget: "pointer" });
   if (widget === "textbox")
-    AppStore.project.addTextToBox(pointerState.id, "# Start writing...", {});
+    AppStore.project.setNode(pointerState.id, { text: "# Start writing..." });
   pointerState.started = false;
   pointerState.x = 0;
   pointerState.y = 0;

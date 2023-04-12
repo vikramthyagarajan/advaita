@@ -81,6 +81,7 @@ export default class ProjectStore {
         cacheKey: "",
         align: "center",
         vertical: "center",
+        text: "",
       });
     }
     AppStore.canvas.shouldRender = true;

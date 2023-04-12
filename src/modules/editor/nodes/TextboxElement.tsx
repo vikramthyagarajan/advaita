@@ -18,12 +18,12 @@ import {
 } from "../text-editor/slateTypes";
 import { toMd, toSlate } from "../text-editor/SlateUtils";
 
-const TextElement = ({ node }: { node: TextNode; cacheKey: string }) => {
+const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   // const [value, setValue] = useState(initialSlateMarkdown());
   const value = node.text;
   const [slate, setSlate] = useState<Descendant[]>(toSlate(value));
   useEffect(() => {
-    console.log("stting slate", toSlate(value));
+    console.log("stting slate", value, toSlate(value));
     setSlate(toSlate(value));
   }, [value]);
   // console.log("slate i", slate);
@@ -78,20 +78,7 @@ const TextboxElement = ({
           }
         )}
       >
-        {node.children
-          .map((child, index) => ({
-            val: AppStore.project.getNode(child.id) as
-              | TextNode
-              | ImageNode
-              | null,
-            child,
-            index,
-          }))
-          // .filter(({ val }) => isPresent(val))
-          .map(({ val, child, index }) => {
-            const sub = val as TextNode;
-            return <TextElement key={index} node={sub} cacheKey={cacheKey} />;
-          })}
+        {node.text ? <TextElement node={node} cacheKey={cacheKey} /> : null}
       </div>
     </BoxNode>
   );
