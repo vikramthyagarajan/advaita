@@ -18,6 +18,7 @@ import {
 } from "../text-editor/slateTypes";
 import { toMd, toSlate } from "../text-editor/SlateUtils";
 import Xarrow from "react-xarrows";
+import ForkButton from "../text-editor/components/ForkButton/ForkButton";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   // const [value, setValue] = useState(initialSlateMarkdown());
@@ -44,7 +45,9 @@ const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
         editor={mainEditor.current}
         value={slate}
         setValue={setSlate}
-      />
+      >
+        <ForkButton />
+      </MainEditor>
     </div>
   );
 };

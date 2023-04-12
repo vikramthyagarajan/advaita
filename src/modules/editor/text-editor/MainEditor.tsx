@@ -1,6 +1,6 @@
 import { createEditor } from "slate";
 import { withReact } from "slate-react";
-import { FC, memo } from "react";
+import { FC, PropsWithChildren, memo } from "react";
 import { GraspEditable, GraspSlate, HoveringToolbar } from ".";
 import SlateCommand from "./components/Command/SlateCommand";
 import MenuHandler from "./components/MenuHandler/MenuHandler";
@@ -27,12 +27,13 @@ export function createGraspEditor(editorId = "default") {
   return editor;
 }
 
-const MainEditor: FC<MainEditorProps> = ({
+const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
   editor,
   editorKey,
   onEditorChange,
   value,
   readOnly = false,
+  children,
 }) => {
   return (
     <>
@@ -44,10 +45,10 @@ const MainEditor: FC<MainEditorProps> = ({
           onChange={onEditorChange}
         >
           <HoveringToolbar />
-          {/* <ForkButton /> */}
           <MenuHandler />
           <SlateCommand />
           <GraspEditable readOnly={readOnly} />
+          {children}
         </GraspSlate>
       }
     </>

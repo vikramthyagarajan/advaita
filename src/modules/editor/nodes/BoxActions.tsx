@@ -11,7 +11,7 @@ const BoxActions = ({
 }) => {
   return (
     <div className="absolute right-4 top-0 p-[3px] bg-slate-200 -translate-y-full rounded-t-sm cursor-pointer">
-      <div
+      {/* <div
         onClick={(e) => {
           e.preventDefault();
           if (elementRef.current)
@@ -19,7 +19,7 @@ const BoxActions = ({
         }}
       >
         <Save></Save>
-      </div>
+      </div> */}
     </div>
   );
 };

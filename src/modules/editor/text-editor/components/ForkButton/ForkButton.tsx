@@ -1,13 +1,12 @@
 //@ts-nocheck
-import React from "react";
-import { useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-import { Descendant, Editor, Range, Transforms } from "slate";
+import { Editor, Range } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
 
-import { Box, Stack, useColorMode } from "@chakra-ui/react";
 import { FC } from "react";
+import { MessageSquare, Save } from "react-feather";
+import clsx from "clsx";
 
 const Portal = ({ children }) => {
   return ReactDOM.createPortal(children, document.body);
@@ -22,29 +21,38 @@ const Portal = ({ children }) => {
  *
  * Children will typically be `ToolbarButton`.
  */
-export const ForkButton: FC<any> = ({ children, ...props }) => {
+export const ForkButton: FC<any> = (props) => {
   const editor = useSlate();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { selection, children } = editor;
+  const isVisible =
+    selection &&
+    ReactEditor.isFocused(editor) &&
+    !Range.isCollapsed(selection) &&
+    Editor.string(editor, selection) !== "";
+  console.log(
+    "isvisible",
+    isVisible,
+    selection,
+    ReactEditor.isFocused(editor),
+    Range.isCollapsed(selection),
+    Editor.string(editor, selection)
+  );
 
-  useEffect(() => {
-    const { selection, children } = editor;
-    if (!selection) return;
-
-    const range = [selection.anchor.path[0], selection.focus.path[0]];
-    const nodes: Descendant[] = children.slice(range[0], range[1] + 1);
-    console.log("selection", selection, nodes);
-
-    if (
-      !selection ||
-      !ReactEditor.isFocused(editor) ||
-      Range.isCollapsed(selection) ||
-      Editor.string(editor, selection) === ""
-    ) {
-      return;
-    }
-  });
-
-  return <div>Comment here</div>;
+  return (
+    <div
+      className={clsx(
+        "absolute right-[-30px] top-[40px] p-[3px] bg-slate-200 -translate-y-full rounded-t-sm cursor-pointer",
+        {
+          block: isVisible,
+          hidden: !isVisible,
+        }
+      )}
+    >
+      <div>
+        <MessageSquare></MessageSquare>
+      </div>
+    </div>
+  );
 };
 
 export default ForkButton;
