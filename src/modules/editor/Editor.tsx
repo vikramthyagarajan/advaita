@@ -1,14 +1,21 @@
 import useRenderLoop from "modules/core/RenderLoop";
 import AppStore from "modules/state/AppStore";
 import { useUiStore } from "modules/state/ui/UiStore";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import CanvasRoot from "./CanvasRoot";
 import { ElementInspector } from "./inspector/ElementInspector";
 import WidgetDock from "./widgets/WidgetDock";
 import { Xwrapper } from "react-xarrows";
+import { fetchAllDocumentsQuery } from "modules/core/network-utils";
 
 const Editor = () => {
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
+  useEffect(() => {
+    console.log("fetching documents");
+    fetchAllDocumentsQuery().then((nodes) => {
+      AppStore.project.loadProject(nodes);
+    });
+  }, []);
   const rootRef = useRef<HTMLDivElement>(null);
   const frame = useRenderLoop(60);
   const selectedNode =

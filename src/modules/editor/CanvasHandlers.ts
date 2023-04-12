@@ -1,5 +1,7 @@
-import { generateId } from "modules/core/project-utils";
+import { createNewDocumentQuery } from "modules/core/network-utils";
+import { generateId, getAuthorId } from "modules/core/project-utils";
 import AppStore from "modules/state/AppStore";
+import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { getUiDispatch, getUiState } from "modules/state/ui/UiStore";
 import { RefObject, useEffect } from "react";
 
@@ -70,11 +72,24 @@ const pointerUpListener = (event: PointerEvent) => {
   const connections = nodes
     .filter((n) => n.id !== pointerState.id)
     .map((n) => ({ id: n.id }));
-  if (widget === "textbox")
+  if (widget === "textbox") {
     AppStore.project.setNode(pointerState.id, {
       text: "# Start writing...\n## Type something",
       connections,
     });
+    const node = AppStore.project.getNode(
+      pointerState.id
+    ) as TextboxNode | null;
+    if (node) {
+      createNewDocumentQuery(node.title || "", getAuthorId() || "unknown", node)
+        .then((response) => {
+          console.log("Got creation response", response);
+        })
+        .catch((e) => {
+          console.error("Error during creation:", e);
+        });
+    }
+  }
   pointerState.started = false;
   pointerState.x = 0;
   pointerState.y = 0;

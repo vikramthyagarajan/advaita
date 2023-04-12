@@ -11,6 +11,7 @@ export type NodeType =
 
 export interface GenericNode {
   type: NodeType;
+  title?: string;
   id: string;
   cacheKey: string;
   parent?: string;

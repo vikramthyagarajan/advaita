@@ -76,6 +76,7 @@ export default class ProjectStore {
       this.registry.addNode({
         id,
         position,
+        title: generateId(),
         type: "textbox",
         children: [],
         cacheKey: "",
@@ -115,6 +116,11 @@ export default class ProjectStore {
 
   public setNode(id: string, node: Partial<Node>) {
     this.registry.patchNode(id, node);
+    AppStore.canvas.shouldRender = true;
+  }
+
+  public loadProject(nodes: Node[]) {
+    nodes.map((node) => this.registry.addNode(node));
     AppStore.canvas.shouldRender = true;
   }
 
