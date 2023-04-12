@@ -16,7 +16,37 @@ import {
   initialSlateMarkdown,
   initialSlateValue,
 } from "../text-editor/slateTypes";
-import { toSlate } from "../text-editor/SlateUtils";
+import { toMd, toSlate } from "../text-editor/SlateUtils";
+
+const TextElement = ({ node }: { node: TextNode; cacheKey: string }) => {
+  // const [value, setValue] = useState(initialSlateMarkdown());
+  const value = node.text;
+  const [slate, setSlate] = useState<Descendant[]>(toSlate(value));
+  useEffect(() => {
+    console.log("stting slate", toSlate(value));
+    setSlate(toSlate(value));
+  }, [value]);
+  // console.log("slate i", slate);
+  const mainEditor = useRef<CustomEditor>();
+  if (!mainEditor.current) mainEditor.current = createGraspEditor("hello");
+  const onEditorChange = useCallback((slate) => {
+    const markdown = toMd(slate);
+    AppStore.project.setNode(node.id, {
+      text: markdown,
+    });
+  }, []);
+  return (
+    <div className="w-full h-full">
+      <MainEditor
+        editorKey={"hello"}
+        onEditorChange={onEditorChange}
+        editor={mainEditor.current}
+        value={slate}
+        setValue={setSlate}
+      />
+    </div>
+  );
+};
 
 const TextboxElement = ({
   node,
@@ -30,19 +60,6 @@ const TextboxElement = ({
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [value, setValue] = useState<string>(initialSlateMarkdown());
-  const [slate, setSlate] = useState<Descendant[]>([]);
-  useEffect(() => {
-    console.log("setting slate", toSlate(value));
-    setSlate(toSlate(value));
-  }, [value]);
-  const mainEditorRef = useRef<CustomEditor>();
-  if (!mainEditorRef.current)
-    mainEditorRef.current = createGraspEditor(node.id);
-  const onEditorChange = useCallback(() => {
-    console.log("on editor change");
-    setValue(value);
-  }, [value]);
   return (
     <BoxNode
       id={node.id}
@@ -73,16 +90,7 @@ const TextboxElement = ({
           // .filter(({ val }) => isPresent(val))
           .map(({ val, child, index }) => {
             const sub = val as TextNode;
-            return (
-              <MainEditor
-                key={index}
-                editorKey={sub.id}
-                onEditorChange={onEditorChange}
-                editor={mainEditorRef.current}
-                value={slate}
-                setValue={setSlate}
-              />
-            );
+            return <TextElement key={index} node={sub} cacheKey={cacheKey} />;
           })}
       </div>
     </BoxNode>

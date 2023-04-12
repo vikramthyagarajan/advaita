@@ -33,6 +33,7 @@ export default function defaultRenderElement({
   ...rest
 }) {
   let type = element.type;
+  console.log("got type got", type);
   if (type === "heading") {
     type = "heading-3";
     if (element.depth === 1) type = "heading-0";

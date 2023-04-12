@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Node } from "slate";
 import { unified } from "unified";
 import markdown from "remark-parse";
@@ -6,6 +7,7 @@ import frontmatter from "remark-frontmatter";
 import stringify from "remark-stringify";
 import {
   remarkToSlate,
+  slateToRemark,
   remarkToSlateLegacy,
   slateToRemarkLegacy,
 } from "remark-slate-transformer";
@@ -17,14 +19,14 @@ const toSlateProcessor = unified()
   .use(remarkToSlate);
 
 const toRemarkProcessor = unified()
-  .use(slateToRemarkLegacy)
+  .use(slateToRemark)
   .use(gfm)
   .use(frontmatter)
   .use(stringify);
 
 export const toSlate = <T>(s: string) =>
   toSlateProcessor.processSync(s).result as T[];
-export const toMd = <T>(value: T[]) => {
+export const toMd = <T>(value: T[]): string => {
   const mdast = toRemarkProcessor.runSync({
     type: "root",
     //@ts-ignore
