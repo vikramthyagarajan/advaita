@@ -44,15 +44,13 @@ const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   return (
     <div className="w-full h-full">
       <MainEditor
-        editorKey={node.id}
+        nodeId={node.id}
         onEditorChange={onEditorChange}
         editor={mainEditor.current}
         value={slate}
         setValue={setSlate}
         onBlur={onBlur}
-      >
-        {/* <ForkButton /> */}
-      </MainEditor>
+      ></MainEditor>
     </div>
   );
 };

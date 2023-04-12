@@ -11,7 +11,7 @@ import withBase from "./plugins/withBase";
 import ForkButton from "./components/ForkButton/ForkButton";
 
 interface MainEditorProps {
-  editorKey;
+  nodeId: string;
   editor;
   value;
   setValue;
@@ -30,7 +30,7 @@ export function createGraspEditor(editorId = "default") {
 
 const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
   editor,
-  editorKey,
+  nodeId,
   onEditorChange,
   onBlur,
   value,
@@ -41,12 +41,13 @@ const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
     <>
       {
         <GraspSlate
-          key={editorKey}
+          key={nodeId}
           editor={editor}
           value={value}
           onChange={onEditorChange}
           onBlur={onBlur}
         >
+          <ForkButton nodeId={nodeId} />
           <HoveringToolbar />
           <MenuHandler />
           <SlateCommand />

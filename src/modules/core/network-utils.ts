@@ -39,7 +39,6 @@ export const createNewDocumentQuery = async (
       headers: {
         Author: author,
       },
-      withCredentials: false,
     }
   );
 };
@@ -52,4 +51,37 @@ export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
     },
   });
   return;
+};
+
+export const forkDocumentQuery = async ({
+  id,
+  original,
+  diff,
+  author,
+  forkedNode,
+}: {
+  id: string;
+  original: string;
+  diff: string;
+  author: string;
+  forkedNode: TextboxNode;
+}) => {
+  const response = await axios.post(
+    `${backendUrl}/documents/${id}/fork.json`,
+    {
+      document: {
+        title: forkedNode.title || "",
+        original,
+        diff,
+        forkedNode,
+      },
+    },
+    {
+      headers: {
+        Author: author,
+      },
+    }
+  );
+  console.log("got response after fork", response);
+  return response;
 };

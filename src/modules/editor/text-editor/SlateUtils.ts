@@ -43,10 +43,10 @@ export const getUserSelectionDiff = (
   const range = [startRange.path[0], endRange.path[0]];
   const preNodes = slate.slice(0, range[0]);
   const nodes: Descendant[] = slate.slice(range[0], range[1] + 1);
-  const postNodes = slate.slice(range[1]);
+  const postNodes = slate.slice(range[1] + 1);
   const diff = toMd(nodes);
   return {
     diff,
-    original: `${toMd(preNodes)}<!---->${postNodes}`,
+    original: `${toMd(preNodes)}<!---->${toMd(postNodes)}`,
   };
 };
