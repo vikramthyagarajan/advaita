@@ -72,7 +72,7 @@ const pointerUpListener = (event: PointerEvent) => {
     .map((n) => ({ id: n.id }));
   if (widget === "textbox")
     AppStore.project.setNode(pointerState.id, {
-      text: "# Start writing...",
+      text: "# Start writing...\n## Type something",
       connections,
     });
   pointerState.started = false;

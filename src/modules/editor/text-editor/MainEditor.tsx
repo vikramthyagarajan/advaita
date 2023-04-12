@@ -8,6 +8,7 @@ import { CustomEditor } from "./slateTypes";
 import withBlocks from "./plugins/withBlocks";
 import withMarks from "./plugins/withMarks";
 import withBase from "./plugins/withBase";
+import ForkButton from "./components/ForkButton/ForkButton";
 
 interface MainEditorProps {
   editorKey;
@@ -43,6 +44,7 @@ const MainEditor: FC<MainEditorProps> = ({
           onChange={onEditorChange}
         >
           <HoveringToolbar />
+          {/* <ForkButton /> */}
           <MenuHandler />
           <SlateCommand />
           <GraspEditable readOnly={readOnly} />

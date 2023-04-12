@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Node } from "slate";
+import { Descendant, Node, Point } from "slate";
 import { unified } from "unified";
 import markdown from "remark-parse";
 import gfm from "remark-gfm";
@@ -34,3 +34,9 @@ export const toMd = <T>(value: T[]): string => {
   });
   return toRemarkProcessor.stringify(mdast);
 };
+
+export const getUserSelectionDiff = (
+  startRange: Point,
+  endRange: Point,
+  slate: Descendant[]
+) => {};
