@@ -16,6 +16,7 @@ interface MainEditorProps {
   value;
   setValue;
   onEditorChange;
+  onBlur;
   readOnly?: boolean;
 }
 
@@ -31,6 +32,7 @@ const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
   editor,
   editorKey,
   onEditorChange,
+  onBlur,
   value,
   readOnly = false,
   children,
@@ -43,6 +45,7 @@ const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
           editor={editor}
           value={value}
           onChange={onEditorChange}
+          onBlur={onBlur}
         >
           <HoveringToolbar />
           <MenuHandler />

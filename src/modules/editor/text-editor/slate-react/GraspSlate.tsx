@@ -18,10 +18,17 @@ function GraspSlate({
   children,
   className,
   focusClassName,
+  onBlur,
 }) {
   const [isFocused, setIsFocused] = useState(false);
   return (
-    <Box onBlur={() => setIsFocused(false)} onFocus={() => setIsFocused(true)}>
+    <Box
+      onBlur={() => {
+        setIsFocused(false);
+        onBlur();
+      }}
+      onFocus={() => setIsFocused(true)}
+    >
       <Slate
         value={value}
         editor={editor}

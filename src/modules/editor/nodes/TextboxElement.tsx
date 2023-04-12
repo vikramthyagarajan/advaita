@@ -19,6 +19,7 @@ import {
 import { toMd, toSlate } from "../text-editor/SlateUtils";
 import Xarrow from "react-xarrows";
 import ForkButton from "../text-editor/components/ForkButton/ForkButton";
+import { saveDocumentQuery } from "modules/core/network-utils";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   // const [value, setValue] = useState(initialSlateMarkdown());
@@ -30,23 +31,27 @@ const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   }, [value]);
   // console.log("slate i", slate);
   const mainEditor = useRef<CustomEditor>();
-  if (!mainEditor.current) mainEditor.current = createGraspEditor("hello");
+  if (!mainEditor.current) mainEditor.current = createGraspEditor(node.id);
   const onEditorChange = useCallback((slate) => {
     const markdown = toMd(slate);
     AppStore.project.setNode(node.id, {
       text: markdown,
     });
   }, []);
+  const onBlur = useCallback(() => {
+    saveDocumentQuery(node.id, node);
+  }, []);
   return (
     <div className="w-full h-full">
       <MainEditor
-        editorKey={"hello"}
+        editorKey={node.id}
         onEditorChange={onEditorChange}
         editor={mainEditor.current}
         value={slate}
         setValue={setSlate}
+        onBlur={onBlur}
       >
-        <ForkButton />
+        {/* <ForkButton /> */}
       </MainEditor>
     </div>
   );

@@ -2,30 +2,20 @@ import axios from "axios";
 import { GenericNode, TextboxNode } from "modules/state/project/ProjectTypes";
 import { getAuthorId } from "./project-utils";
 
-const backendUrl = "https://7349-49-36-191-234.ngrok-free.app";
+const backendUrl = "http://192.168.29.215:3000";
 
 export const fetchAllDocumentsQuery = () => {
   return axios
-    .get<any, { metadata: TextboxNode }[]>(`${backendUrl}/documents.json`, {
-      withCredentials: false,
-      headers: {
-        "Content-Type": "application/json",
-        Author: getAuthorId(),
-      },
-    })
+    .get(`${backendUrl}/documents.json`)
     .then((response) => {
-      return response.map((document) => {
-        return document.metadata;
+      const data = response.data;
+      return data.map((document) => {
+        return document.metadata.node;
       });
+    })
+    .catch((e) => {
+      console.error("error during doc fetch", e);
     });
-
-  // return fetch(`${backendUrl}/documents.json`)
-  //   .then((res) => res.json())
-  //   .then((response) => {
-  //     return response.map((document) => {
-  //       return document.metadata;
-  //     });
-  //   });
 };
 
 export const createNewDocumentQuery = async (
@@ -40,7 +30,7 @@ export const createNewDocumentQuery = async (
         title,
         body: node.text,
         uuid: node.id,
-        metadata: {
+        data: {
           node,
         },
       },
@@ -52,4 +42,14 @@ export const createNewDocumentQuery = async (
       withCredentials: false,
     }
   );
+};
+
+export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
+  const response = await axios.patch(`${backendUrl}/documents/${id}.json`, {
+    body: node.text,
+    data: {
+      node,
+    },
+  });
+  return;
 };
