@@ -12,7 +12,7 @@ import {
   slateToRemarkLegacy,
 } from "remark-slate-transformer";
 import { jsx } from "slate-hyperscript";
-import { TextboxNode } from "modules/state/project/ProjectTypes";
+import { MergeboxNode, TextboxNode } from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import { generateId } from "modules/core/project-utils";
 
@@ -72,5 +72,24 @@ export const onMergeDocument = (id: string) => {
     child: node.id,
     parent: parent.id,
     position,
+  });
+};
+
+export const onCommentAdd = ({
+  mergeboxId,
+  text,
+  author,
+}: {
+  mergeboxId: string;
+  text: string;
+  author: string;
+  parentId?: string;
+}) => {
+  const node = AppStore.project.getNode(mergeboxId) as MergeboxNode;
+  AppStore.project.setNode(mergeboxId, {
+    comments: [
+      ...node.comments,
+      { id: generateId(), text, author, createdAt: Date.now(), comments: [] },
+    ],
   });
 };

@@ -69,15 +69,20 @@ export interface ImageboxNode extends GenericNode {
   children: { type: NodeType; id: string }[];
 }
 
+export interface Comment {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: number;
+  comments?: Comment[];
+}
+
 export interface MergeboxNode extends GenericNode {
   type: "mergebox";
   child: string;
   parent: string;
   position: CanvasPosition;
-  comments: {
-    text: string;
-    author: string;
-  }[];
+  comments: Comment[];
 }
 
 export interface PreviewNode {
