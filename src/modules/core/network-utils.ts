@@ -4,10 +4,9 @@ import { getAuthorId } from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 
-const backendUrl = "http://192.168.29.215:3000";
+const backendUrl = "http://192.168.1.215:3000";
 
 export const fetchAllDocumentsQuery = () => {
-  return Promise.resolve([]);
   return axios
     .get(`${backendUrl}/documents.json`)
     .then((response) => {
@@ -26,7 +25,6 @@ export const createNewDocumentQuery = async (
   author: string,
   node: TextboxNode
 ) => {
-  return Promise.resolve();
   return axios.post(
     `${backendUrl}/documents.json`,
     {
@@ -48,7 +46,6 @@ export const createNewDocumentQuery = async (
 };
 
 export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
-  return Promise.resolve();
   const response = await axios.patch(`${backendUrl}/documents/${id}.json`, {
     body: node.text,
     data: {
@@ -71,7 +68,6 @@ export const forkDocumentQuery = async ({
   author: string;
   forkedNode: TextboxNode;
 }) => {
-  return Promise.resolve();
   const node = AppStore.project.getNode(id) as TextboxNode;
   const response = await axios.post(
     `${backendUrl}/documents/${id}/fork.json`,
@@ -95,8 +91,41 @@ export const forkDocumentQuery = async ({
   return response;
 };
 
+export const fetchDocumentCommentsQuery = async (id: string) => {
+  const comments = await axios.get(
+    `${backendUrl}/documents/${id}/comments.json`
+  );
+  return JSON.parse(JSON.stringify(comments.data));
+};
+
+export const addCommentQuery = async (
+  documentId: string,
+  {
+    text,
+    author,
+    createdAt,
+    id,
+  }: { text: string; author: string; createdAt: number; id: string }
+) => {
+  return await axios.post(
+    `${backendUrl}/documents/${documentId}/comments.json`,
+    {
+      comment: {
+        uuid: id,
+        body: text,
+        createdAt,
+        author,
+      },
+    },
+    {
+      headers: {
+        Author: author,
+      },
+    }
+  );
+};
+
 export const initializeSockets = async () => {
-  return Promise.resolve();
   Pusher.logToConsole = true;
   const socketClient = new Pusher("b6229e41fcc751d61ba8", {
     cluster: "ap2",

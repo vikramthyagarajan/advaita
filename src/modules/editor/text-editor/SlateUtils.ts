@@ -15,6 +15,10 @@ import { jsx } from "slate-hyperscript";
 import { MergeboxNode, TextboxNode } from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import { generateId } from "modules/core/project-utils";
+import {
+  addCommentQuery,
+  fetchDocumentCommentsQuery,
+} from "modules/core/network-utils";
 
 const toSlateProcessor = unified()
   .use(markdown)
@@ -57,10 +61,11 @@ export const getUserSelectionDiff = (
 
 export const toJsx = (slate: Descendant[]) => jsx("fragment", {}, children);
 
-export const onMergeDocument = (id: string) => {
+export const onMergeDocument = async (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
   const parent = AppStore.project.getNode(node.parent) as TextboxNode;
   if (!node || !parent) return;
+  const comments = await fetchDocumentCommentsQuery(node.id);
   const mergeId = generateId();
   const position = {
     width: parent.position.width * 2,
@@ -72,6 +77,12 @@ export const onMergeDocument = (id: string) => {
     child: node.id,
     parent: parent.id,
     position,
+    comments: comments.map((c) => ({
+      id: c.uuid,
+      text: c.body,
+      author: c.author,
+      createdAt: c.createdAt,
+    })),
   });
 };
 
@@ -86,10 +97,10 @@ export const onCommentAdd = ({
   parentId?: string;
 }) => {
   const node = AppStore.project.getNode(mergeboxId) as MergeboxNode;
+  const id = generateId();
+  const createdAt = Date.now();
   AppStore.project.setNode(mergeboxId, {
-    comments: [
-      ...node.comments,
-      { id: generateId(), text, author, createdAt: Date.now(), comments: [] },
-    ],
+    comments: [...node.comments, { id, text, author, createdAt, comments: [] }],
   });
+  addCommentQuery(node.child, { text, author, createdAt, id });
 };

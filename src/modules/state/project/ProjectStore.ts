@@ -3,6 +3,7 @@ import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
 import {
+  Comment,
   ImageboxNode,
   Node,
   NodeType,
@@ -75,14 +76,20 @@ export default class ProjectStore {
       parent,
       child,
       position,
-    }: { parent: string; child: string; position: CanvasPosition }
+      comments,
+    }: {
+      parent: string;
+      child: string;
+      position: CanvasPosition;
+      comments: Comment[];
+    }
   ) {
     this.registry.addNode({
       id,
       position,
       type: "mergebox",
       children: [],
-      comments: [],
+      comments: comments || [],
       cacheKey: "",
       child,
       parent,
