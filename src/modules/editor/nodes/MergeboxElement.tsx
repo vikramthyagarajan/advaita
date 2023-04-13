@@ -6,6 +6,11 @@ import { memo, useRef } from "react";
 import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 import DiffViewer from "react-diff-viewer";
+import Markdown from "markdown-to-jsx";
+
+const renderDiff = (markdown: string) => {
+  return <Markdown>{markdown}</Markdown>;
+};
 
 const MergeboxElement = ({
   node,
@@ -42,6 +47,7 @@ const MergeboxElement = ({
           oldValue={parentNode.text}
           newValue={childNode.text}
           splitView={true}
+          renderContent={renderDiff}
         ></DiffViewer>
       </div>
     </BoxNode>

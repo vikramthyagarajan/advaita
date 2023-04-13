@@ -25,6 +25,7 @@
     "clsx": "^1.2.1",
     "framer-motion": "^10.11.2",
     "html2canvas": "^1.4.1",
+    "markdown-to-jsx": "^7.2.0",
     "match-sorter": "^6.3.1",
     "postcss": "^8.4.19",
     "react": "^18.2.0",
