@@ -2,6 +2,7 @@ import { CanvasPosition } from "modules/core/foundation";
 import { copyJSON } from "modules/core/function-utils";
 import {
   ImageboxNode,
+  MergeboxNode,
   Node,
   NodeType,
   SubNode,
@@ -13,6 +14,9 @@ import {
 export interface ProjectRoot {
   textboxes: {
     [id: string]: TextboxNode;
+  };
+  mergeboxes: {
+    [id: string]: MergeboxNode;
   };
   imageboxes: {
     [id: string]: ImageboxNode;
@@ -31,6 +35,7 @@ export interface ProjectRoot {
 export class ProjectRegistry {
   private _shadowRoot: ProjectRoot = {
     textboxes: {},
+    mergeboxes: {},
     imageboxes: {},
     texts: {},
     images: {},
@@ -38,6 +43,7 @@ export class ProjectRegistry {
   };
   private _root: ProjectRoot = {
     textboxes: {},
+    mergeboxes: {},
     imageboxes: {},
     texts: {},
     images: {},
@@ -54,6 +60,7 @@ export class ProjectRegistry {
 
   public addNode(node: Node) {
     if (node.type === "textbox") this.root.textboxes[node.id] = node;
+    else if (node.type === "mergebox") this.root.mergeboxes[node.id] = node;
     else if (node.type === "text") this.root.texts[node.id] = node;
     else if (node.type === "imagebox") this.root.imageboxes[node.id] = node;
     else if (node.type === "image") this.root.images[node.id] = node;
@@ -125,6 +132,7 @@ export class ProjectRegistry {
   public getNode(id: string): Node {
     return (
       this.root.textboxes[id] ||
+      this.root.mergeboxes[id] ||
       this.root.imageboxes[id] ||
       this.root.texts[id] ||
       this.root.images[id] ||
@@ -135,6 +143,7 @@ export class ProjectRegistry {
   public getOriginNode(id: string): Node {
     return (
       this.origin.textboxes[id] ||
+      this.origin.mergeboxes[id] ||
       this.origin.imageboxes[id] ||
       this.origin.texts[id] ||
       this.origin.images[id] ||
@@ -165,6 +174,9 @@ export class ProjectRegistry {
 
   get textboxes() {
     return Object.values(this.root.textboxes);
+  }
+  get mergeboxes() {
+    return Object.values(this.root.mergeboxes);
   }
   get imageboxes() {
     return Object.values(this.root.imageboxes);

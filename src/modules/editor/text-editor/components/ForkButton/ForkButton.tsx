@@ -11,21 +11,15 @@ import { TextboxNode } from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import { generateId } from "modules/core/project-utils";
 import { getUserSelectionDiff } from "../../SlateUtils";
-import { forkDocumentQuery } from "modules/core/network-utils";
+import {
+  forkDocumentQuery,
+  saveDocumentQuery,
+} from "modules/core/network-utils";
 
 export interface ForkButtonProps {
   nodeId: string;
 }
 
-/**
- * A hovering toolbar that is, a toolbar that appears over a selected text, and only when there is
- * a selection.
- *
- * If no children are provided it displays the following buttons:
- * Bold, italic, underline, strike through and code.
- *
- * Children will typically be `ToolbarButton`.
- */
 export const ForkButton: FC<ForkButtonProps> = ({ nodeId }) => {
   const editor = useSlate();
   const { selection, children } = editor;
@@ -55,10 +49,13 @@ export const ForkButton: FC<ForkButtonProps> = ({ nodeId }) => {
     });
     AppStore.project.addTextbox(id, { position });
     AppStore.project.setNode(id, {
+      parent: node.id,
       text: node.text,
       selection: range,
     });
     const forkedNode = AppStore.project.getNode(id);
+    const originalNode = AppStore.project.getNode(node.id);
+    saveDocumentQuery(node.id, originalNode);
     forkDocumentQuery({ id: nodeId, diff, original, forkedNode });
   };
 

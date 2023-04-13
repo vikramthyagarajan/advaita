@@ -69,6 +69,27 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
+  public addMergeBox(
+    id: string,
+    {
+      parent,
+      child,
+      position,
+    }: { parent: string; child: string; position: CanvasPosition }
+  ) {
+    this.registry.addNode({
+      id,
+      position,
+      type: "mergebox",
+      children: [],
+      comments: [],
+      cacheKey: "",
+      child,
+      parent,
+    });
+    AppStore.canvas.shouldRender = true;
+  }
+
   public addTextbox(id: string, { position }: { position: CanvasPosition }) {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
@@ -179,6 +200,7 @@ export default class ProjectStore {
   public get rootNodes(): Node[] {
     return ([] as Node[])
       .concat(this.registry.textboxes)
+      .concat(this.registry.mergeboxes)
       .concat(this.registry.imageboxes);
   }
 }

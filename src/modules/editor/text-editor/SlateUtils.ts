@@ -12,6 +12,9 @@ import {
   slateToRemarkLegacy,
 } from "remark-slate-transformer";
 import { jsx } from "slate-hyperscript";
+import { TextboxNode } from "modules/state/project/ProjectTypes";
+import AppStore from "modules/state/AppStore";
+import { generateId } from "modules/core/project-utils";
 
 const toSlateProcessor = unified()
   .use(markdown)
@@ -53,3 +56,21 @@ export const getUserSelectionDiff = (
 };
 
 export const toJsx = (slate: Descendant[]) => jsx("fragment", {}, children);
+
+export const onMergeDocument = (id: string) => {
+  const node = AppStore.project.getNode(id) as TextboxNode;
+  const parent = AppStore.project.getNode(node.parent) as TextboxNode;
+  if (!node || !parent) return;
+  const mergeId = generateId();
+  const position = {
+    width: parent.position.width * 2,
+    height: parent.position.height * 1.5,
+    top: parent.position.top - parent.position.height * 2,
+    left: parent.position.left - parent.position.width,
+  };
+  AppStore.project.addMergeBox(mergeId, {
+    child: node.id,
+    parent: parent.id,
+    position,
+  });
+};

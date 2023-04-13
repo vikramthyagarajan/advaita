@@ -6,6 +6,7 @@ import AppStore from "modules/state/AppStore";
 const backendUrl = "http://192.168.29.215:3000";
 
 export const fetchAllDocumentsQuery = () => {
+  return Promise.resolve([]);
   return axios
     .get(`${backendUrl}/documents.json`)
     .then((response) => {
@@ -24,6 +25,7 @@ export const createNewDocumentQuery = async (
   author: string,
   node: TextboxNode
 ) => {
+  return Promise.resolve();
   return axios.post(
     `${backendUrl}/documents.json`,
     {
@@ -45,6 +47,7 @@ export const createNewDocumentQuery = async (
 };
 
 export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
+  return Promise.resolve();
   const response = await axios.patch(`${backendUrl}/documents/${id}.json`, {
     body: node.text,
     data: {
@@ -67,6 +70,7 @@ export const forkDocumentQuery = async ({
   author: string;
   forkedNode: TextboxNode;
 }) => {
+  return Promise.resolve();
   const node = AppStore.project.getNode(id) as TextboxNode;
   const response = await axios.post(
     `${backendUrl}/documents/${id}/fork.json`,
