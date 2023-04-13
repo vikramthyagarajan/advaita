@@ -7,9 +7,40 @@ import BoxActions from "./BoxActions";
 import { BoxNode } from "./BoxNode";
 import DiffViewer from "react-diff-viewer";
 import Markdown from "markdown-to-jsx";
-import { CornerDownLeft } from "react-feather";
+import { Check, CornerDownLeft } from "react-feather";
 import { onCommentAdd } from "../text-editor/SlateUtils";
 import { getAuthorId } from "modules/core/project-utils";
+
+const MergeActions = ({ id }: { id: string }) => {
+  const node = AppStore.project.getNode(id) as TextboxNode;
+  return (
+    <div className="absolute right-4 top-0 p-[3px] bg-slate-200 -translate-y-full rounded-t-sm cursor-pointer">
+      <div className={clsx("", {})}>
+        <Check
+          onClick={async () => {
+            const node = AppStore.project.getNode(id) as MergeboxNode;
+            const parent = JSON.parse(
+              JSON.stringify(AppStore.project.getNode(node.parent))
+            ) as TextboxNode;
+            const child = JSON.parse(
+              JSON.stringify(AppStore.project.getNode(node.child))
+            ) as TextboxNode;
+            // const { document } = await acceptMergeDocumentQuery(id);
+            AppStore.project.removeNode(parent.id);
+            setTimeout(() => {
+              const newNode = {
+                ...child,
+                id: parent.id,
+                position: parent.position,
+              };
+              AppStore.project.registry.addNode({ ...newNode });
+            }, 1000);
+          }}
+        ></Check>
+      </div>
+    </div>
+  );
+};
 
 const renderDiff = (markdown: string) => {
   return <Markdown>{markdown}</Markdown>;
@@ -107,6 +138,7 @@ const MergeboxElement = ({
       cacheKey={cacheKey}
       position={node.position}
       screen={screen}
+      actions={() => <MergeActions id={node.id} />}
     >
       <div
         id={node.id}

@@ -15,7 +15,7 @@ import {
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
 
-  private get registry() {
+  public get registry() {
     return this._registry;
   }
 
@@ -77,11 +77,13 @@ export default class ProjectStore {
       child,
       position,
       comments,
+      diff,
     }: {
       parent: string;
       child: string;
       position: CanvasPosition;
       comments: Comment[];
+      diff: string;
     }
   ) {
     this.registry.addNode({
@@ -91,6 +93,7 @@ export default class ProjectStore {
       children: [],
       comments: comments || [],
       cacheKey: "",
+      diff,
       child,
       parent,
     });

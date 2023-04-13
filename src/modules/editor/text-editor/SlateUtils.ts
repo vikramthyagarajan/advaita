@@ -65,7 +65,7 @@ export const onMergeDocument = async (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
   const parent = AppStore.project.getNode(node.parent) as TextboxNode;
   if (!node || !parent) return;
-  const comments = await fetchDocumentCommentsQuery(node.id);
+  const { comments, diff } = await fetchDocumentCommentsQuery(node.id);
   const mergeId = generateId();
   const position = {
     width: parent.position.width * 2,
@@ -77,6 +77,7 @@ export const onMergeDocument = async (id: string) => {
     child: node.id,
     parent: parent.id,
     position,
+    diff,
     comments: comments.map((c) => ({
       id: c.uuid,
       text: c.body,

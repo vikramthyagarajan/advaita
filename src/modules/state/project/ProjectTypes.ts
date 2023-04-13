@@ -81,6 +81,7 @@ export interface MergeboxNode extends GenericNode {
   type: "mergebox";
   child: string;
   parent: string;
+  diff: string;
   position: CanvasPosition;
   comments: Comment[];
 }

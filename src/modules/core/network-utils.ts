@@ -125,6 +125,12 @@ export const addCommentQuery = async (
   );
 };
 
+export const acceptMergeDocumentQuery = async (id: string) => {
+  const data = (await axios.post(`${backendUrl}/documents/${id}/merge.json`))
+    .data;
+  return JSON.parse(JSON.stringify(data));
+};
+
 export const initializeSockets = async () => {
   Pusher.logToConsole = true;
   const socketClient = new Pusher("b6229e41fcc751d61ba8", {
