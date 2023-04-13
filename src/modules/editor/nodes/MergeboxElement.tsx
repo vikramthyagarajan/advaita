@@ -48,17 +48,18 @@ const CommentInput = ({ nodeId }: { nodeId: string }) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       ></textarea>
-      <button className="p-2 absolute right-0 bottom-0 bg-gray-200 rounded-md opacity-50 hover:opacity-100">
-        <CornerDownLeft
-          className="border-inherit"
-          onClick={() => {
-            onCommentAdd({
-              mergeboxId: nodeId,
-              text: value,
-              author: getAuthorId() || "",
-            });
-          }}
-        />
+      <button
+        className="p-2 absolute right-0 bottom-0 bg-gray-200 rounded-md opacity-50 hover:opacity-100"
+        onClick={() => {
+          setValue("");
+          onCommentAdd({
+            mergeboxId: nodeId,
+            text: value,
+            author: getAuthorId() || "",
+          });
+        }}
+      >
+        <CornerDownLeft className="border-inherit" />
       </button>
     </div>
   );
