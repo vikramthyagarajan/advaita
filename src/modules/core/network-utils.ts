@@ -1,6 +1,7 @@
 import axios from "axios";
 import { GenericNode, TextboxNode } from "modules/state/project/ProjectTypes";
 import { getAuthorId } from "./project-utils";
+import AppStore from "modules/state/AppStore";
 
 const backendUrl = "http://192.168.29.215:3000";
 
@@ -66,14 +67,17 @@ export const forkDocumentQuery = async ({
   author: string;
   forkedNode: TextboxNode;
 }) => {
+  const node = AppStore.project.getNode(id) as TextboxNode;
   const response = await axios.post(
     `${backendUrl}/documents/${id}/fork.json`,
     {
       document: {
-        title: forkedNode.title || "",
-        original,
-        diff,
-        forkedNode,
+        title: node.title || "",
+        body: forkedNode.text,
+        uuid: forkedNode.id,
+        data: {
+          node: forkedNode,
+        },
       },
     },
     {

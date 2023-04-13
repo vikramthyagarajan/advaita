@@ -11,6 +11,7 @@ import {
   remarkToSlateLegacy,
   slateToRemarkLegacy,
 } from "remark-slate-transformer";
+import { jsx } from "slate-hyperscript";
 
 const toSlateProcessor = unified()
   .use(markdown)
@@ -50,3 +51,5 @@ export const getUserSelectionDiff = (
     original: `${toMd(preNodes)}<!---->${toMd(postNodes)}`,
   };
 };
+
+export const toJsx = (slate: Descendant[]) => jsx("fragment", {}, children);

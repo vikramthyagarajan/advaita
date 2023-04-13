@@ -47,7 +47,7 @@ const MainEditor: FC<PropsWithChildren<MainEditorProps>> = ({
           onChange={onEditorChange}
           onBlur={onBlur}
         >
-          <ForkButton nodeId={nodeId} />
+          {!readOnly ? <ForkButton nodeId={nodeId} /> : null}
           <HoveringToolbar />
           <MenuHandler />
           <SlateCommand />

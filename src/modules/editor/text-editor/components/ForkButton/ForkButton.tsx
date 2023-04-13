@@ -34,23 +34,15 @@ export const ForkButton: FC<ForkButtonProps> = ({ nodeId }) => {
     ReactEditor.isFocused(editor) &&
     !Range.isCollapsed(selection) &&
     Editor.string(editor, selection) !== "";
-  console.log(
-    "isvisible",
-    isVisible,
-    selection
-    // ReactEditor.isFocused(editor),
-
-    // !Range.isCollapsed(selection),
-
-    // Editor.string(editor, selection) !== ""
-  );
 
   const onFork = () => {
-    const node = AppStore.project.getNode(nodeId);
+    const node = AppStore.project.getNode(nodeId) as TextboxNode;
     if (!selection || !node) return;
     const position = { ...node.position };
     position.left += position.width + position.width / 2;
     position.top -= position.height / 2;
+
+    const range = [selection.anchor.path[0], selection.focus.path[0]];
     const { original, diff } = getUserSelectionDiff(
       selection.anchor,
       selection.focus,
@@ -63,7 +55,8 @@ export const ForkButton: FC<ForkButtonProps> = ({ nodeId }) => {
     });
     AppStore.project.addTextbox(id, { position });
     AppStore.project.setNode(id, {
-      text: diff,
+      text: node.text,
+      selection: range,
     });
     const forkedNode = AppStore.project.getNode(id);
     forkDocumentQuery({ id: nodeId, diff, original, forkedNode });
