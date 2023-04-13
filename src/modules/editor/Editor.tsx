@@ -6,7 +6,10 @@ import CanvasRoot from "./CanvasRoot";
 import { ElementInspector } from "./inspector/ElementInspector";
 import WidgetDock from "./widgets/WidgetDock";
 import { Xwrapper } from "react-xarrows";
-import { fetchAllDocumentsQuery } from "modules/core/network-utils";
+import {
+  fetchAllDocumentsQuery,
+  initializeSockets,
+} from "modules/core/network-utils";
 
 const Editor = () => {
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
@@ -15,6 +18,7 @@ const Editor = () => {
     fetchAllDocumentsQuery().then((nodes) => {
       AppStore.project.loadProject(nodes);
     });
+    initializeSockets();
   }, []);
   const rootRef = useRef<HTMLDivElement>(null);
   const frame = useRenderLoop(60);

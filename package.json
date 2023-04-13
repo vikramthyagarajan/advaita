@@ -28,6 +28,7 @@
     "markdown-to-jsx": "^7.2.0",
     "match-sorter": "^6.3.1",
     "postcss": "^8.4.19",
+    "pusher-js": "^8.0.2",
     "react": "^18.2.0",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^18.2.0",
