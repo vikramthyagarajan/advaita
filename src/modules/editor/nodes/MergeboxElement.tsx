@@ -10,6 +10,7 @@ import Markdown from "markdown-to-jsx";
 import { Check, CornerDownLeft } from "react-feather";
 import { onCommentAdd } from "../text-editor/SlateUtils";
 import { getAuthorId } from "modules/core/project-utils";
+import { acceptMergeDocumentQuery } from "modules/core/network-utils";
 
 const MergeActions = ({ id }: { id: string }) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
@@ -25,16 +26,15 @@ const MergeActions = ({ id }: { id: string }) => {
             const child = JSON.parse(
               JSON.stringify(AppStore.project.getNode(node.child))
             ) as TextboxNode;
-            // const { document } = await acceptMergeDocumentQuery(id);
-            AppStore.project.removeNode(parent.id);
-            setTimeout(() => {
-              const newNode = {
-                ...child,
-                id: parent.id,
-                position: parent.position,
-              };
-              AppStore.project.registry.addNode({ ...newNode });
-            }, 1000);
+            const { document } = await acceptMergeDocumentQuery(child.id);
+            // AppStore.project.removeNode(node.id);
+            // AppStore.project.removeNode(parent.id);
+            // setTimeout(() => {
+            //   const newNode = {
+            //     ...document.metadata.node,
+            //   };
+            //   AppStore.project.registry.addNode({ ...newNode });
+            // }, 1000);
           }}
         ></Check>
       </div>
@@ -131,6 +131,8 @@ const MergeboxElement = ({
 }) => {
   const parentNode = AppStore.project.getNode(node.parent) as TextboxNode;
   const childNode = AppStore.project.getNode(node.child) as TextboxNode;
+
+  if (!parentNode || !childNode) return <div></div>;
 
   return (
     <BoxNode

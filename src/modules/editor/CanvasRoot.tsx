@@ -31,7 +31,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
     CanvasStore.initialize(width, height);
     // AppStore.project.___loadState(Fixtures.MemeTemplate);
   }, [width, height]);
-  useCanvasHandlers(canvas);
+  useCanvasHandlers(canvas, updateArrows);
   const { widget } = getUiState();
   const sensors = useSensors(
     useSensor(MouseSensor, {

@@ -114,6 +114,7 @@ export class ProjectRegistry {
 
   removeNode(id: string) {
     delete this.root.textboxes[id];
+    delete this.root.mergeboxes[id];
     delete this.root.imageboxes[id];
   }
 

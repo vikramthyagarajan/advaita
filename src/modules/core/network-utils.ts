@@ -1,10 +1,14 @@
 import axios from "axios";
-import { GenericNode, TextboxNode } from "modules/state/project/ProjectTypes";
-import { getAuthorId } from "./project-utils";
+import {
+  GenericNode,
+  MergeboxNode,
+  TextboxNode,
+} from "modules/state/project/ProjectTypes";
+import { generateId, getAuthorId } from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 
-const backendUrl = "http://192.168.1.215:3000";
+const backendUrl = "http://192.168.29.215:3000";
 
 export const fetchAllDocumentsQuery = () => {
   return axios
@@ -141,4 +145,86 @@ export const initializeSockets = async () => {
   channel.bind("update-board", function (data) {
     console.log("update board request", data);
   });
+
+  channel.bind("create-document", (data) => {
+    const document = data;
+    console.log("got document to create", document);
+    const node = AppStore.project.getNode(document.uuid);
+    if (!node)
+      AppStore.project.registry.addNode({
+        ...document.data.node,
+      });
+  });
+
+  channel.bind("update-document", (data) => {
+    const document = data;
+    console.log("got document to update", document);
+    const node = AppStore.project.getNode(document.uuid) as TextboxNode;
+    if (
+      document.data.node.author === getAuthorId ||
+      (node && document.data.node.text === node.text)
+    )
+      return;
+    AppStore.project.removeNode(document.uuid);
+    setTimeout(() => {
+      AppStore.project.registry.addNode({
+        ...document.data.node,
+      });
+    }, 500);
+  });
+
+  channel.bind("create-comment", async (data) => {
+    const comment = data;
+    const documentId = comment.document_uuid;
+    const node = AppStore.project.registry.mergeboxes.find(
+      (m) => m.child === documentId
+    ) as MergeboxNode | null;
+    if (!node) {
+      const child = AppStore.project.getNode(documentId) as TextboxNode;
+      const parent = AppStore.project.getNode(
+        child.parent || ""
+      ) as TextboxNode;
+      if (!node || !parent || !child) return;
+      const { comments, diff } = await fetchDocumentCommentsQuery(child.id);
+      const mergeId = generateId();
+      const position = {
+        width: parent.position.width * 2,
+        height: parent.position.height * 1.5,
+        top: parent.position.top - parent.position.height * 2,
+        left: parent.position.left - parent.position.width,
+      };
+      AppStore.project.addMergeBox(mergeId, {
+        child: child.id,
+        parent: parent.id,
+        position,
+        diff,
+        comments: comments.map((c) => ({
+          id: c.uuid,
+          text: c.body,
+          author: c.author,
+          createdAt: c.createdAt,
+        })),
+      });
+    } else {
+      const { comments, diff } = await fetchDocumentCommentsQuery(node.child);
+      AppStore.project.setNode(node.id, {
+        comments: comments.map((c) => ({
+          id: c.uuid,
+          text: c.body,
+          author: c.author,
+          createdAt: c.createdAt,
+        })),
+      });
+    }
+  });
+
+  // const poller = async () => {
+  //   const documents = await fetchAllDocumentsQuery();
+
+  //   AppStore.project.loadProject(documents);
+  // };
+  // const interval = setInterval(poller, 2000);
+  // window.onbeforeunload = () => {
+  //   clearInterval(interval);
+  // };
 };
