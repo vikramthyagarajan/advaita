@@ -4,6 +4,7 @@ import { memo } from "react";
 import ImageboxElement from "./ImageboxElement";
 import TextboxElement from "./TextboxElement";
 import MergeboxElement from "./MergeboxElement";
+import ProseMirrorTextBox from "./ProseMirrorTextBox";
 
 const ProjectNode = ({
   node,
@@ -18,7 +19,7 @@ const ProjectNode = ({
 }) => {
   if (node.type === "textbox") {
     return (
-      <TextboxElement
+      <ProseMirrorTextBox
         node={node}
         selected={selected}
         cacheKey={cacheKey}

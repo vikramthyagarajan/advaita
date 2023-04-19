@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "prosemirror-example-setup/style/style.css";
 import "./index.css";
 import Editor from "./modules/editor/Editor";
 import { Center, ChakraProvider, CSSReset } from "@chakra-ui/react";
