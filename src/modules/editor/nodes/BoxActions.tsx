@@ -5,7 +5,7 @@ import AppStore from "modules/state/AppStore";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { RefObject } from "react";
 import { GitMerge } from "react-feather";
-import { onMergeDocument } from "../text-editor/SlateUtils";
+import { onMergeDocument } from "../prose-mirror/SlateUtils";
 
 const BoxActions = ({
   id,

@@ -8,7 +8,7 @@ import { BoxNode } from "./BoxNode";
 import DiffViewer from "react-diff-viewer";
 import Markdown from "markdown-to-jsx";
 import { Check, CornerDownLeft } from "react-feather";
-import { onCommentAdd } from "../text-editor/SlateUtils";
+import { onCommentAdd } from "../prose-mirror/SlateUtils";
 import { getAuthorId } from "modules/core/project-utils";
 import { acceptMergeDocumentQuery } from "modules/core/network-utils";
 

@@ -2,7 +2,6 @@ import { ScreenPosition } from "modules/core/foundation";
 import { Node } from "modules/state/project/ProjectTypes";
 import { memo } from "react";
 import ImageboxElement from "./ImageboxElement";
-import TextboxElement from "./TextboxElement";
 import MergeboxElement from "./MergeboxElement";
 import ProseMirrorTextBox from "./ProseMirrorTextBox";
 
