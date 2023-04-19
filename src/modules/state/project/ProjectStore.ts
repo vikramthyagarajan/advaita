@@ -7,6 +7,7 @@ import {
   ImageboxNode,
   Node,
   NodeType,
+  RootNode,
   SubNode,
   SubNodeType,
   TextNode,
@@ -207,8 +208,8 @@ export default class ProjectStore {
     return this.registry.root;
   }
 
-  public get rootNodes(): Node[] {
-    return ([] as Node[])
+  public get rootNodes(): RootNode[] {
+    return ([] as RootNode[])
       .concat(this.registry.textboxes)
       .concat(this.registry.mergeboxes)
       .concat(this.registry.imageboxes);

@@ -92,7 +92,8 @@ export interface PreviewNode {
 }
 
 export type SubNode = TextNode | ImageNode;
-export type Node = TextboxNode | ImageboxNode | SubNode | MergeboxNode;
+export type RootNode = TextboxNode | ImageboxNode | MergeboxNode;
+export type Node = RootNode | SubNode;
 
 export type AllEventTypes =
   | FocusEvent<HTMLDivElement>
