@@ -17,9 +17,9 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
     Reducer<
       {
         isVisible: boolean;
-        selection: { left: number; top: number; bottom: number };
+        selection: { top: number; bottom: number };
       },
-      { type: string; left?: number; top?: number; bottom?: number }
+      { type: string; top?: number; bottom?: number }
     >
   >(
     (state, action) => {
@@ -29,7 +29,6 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
             ...state,
             isVisible: true,
             selection: {
-              left: action.left || 0,
               top: action.top || 0,
               bottom: action.bottom || 0,
             },
@@ -39,7 +38,7 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
           return {
             ...state,
             isVisible: false,
-            selection: { left: 0, top: 0, bottom: 0 },
+            selection: { top: 0, bottom: 0 },
           };
         }
         default: {
@@ -50,15 +49,12 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
     {
       isVisible: false,
       selection: {
-        left: 0,
         top: 0,
         bottom: 0,
       },
     }
   );
-
   useEditorEffect((view) => {
-    // if (view?.state.selection.empty) return;
     const topCoordinates = view?.coordsAtPos(view.state.selection.anchor);
     const bottomCoordinates = view?.coordsAtPos(view.state.selection.head);
     if (!topCoordinates || !bottomCoordinates || view?.state.selection.empty) {
@@ -67,28 +63,27 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
       }
       return;
     }
-    const textNode = AppStore.project.getNode(node.id) as TextboxNode;
-    const left = textNode.position.width + 10;
-    const top =
-      topCoordinates.top + AppStore.canvas.screen.y - textNode.position.top;
-    const bottom =
-      textNode.position.top +
-      textNode.position.height -
-      (bottomCoordinates.bottom + AppStore.canvas.screen.y);
-    // setSelection({});
-    // console.log("check pos", topCoordinates, bottomCoordinates);
     if (
-      selection.left !== left ||
-      selection.top !== top ||
-      selection.bottom !== bottom
+      topCoordinates.top !== selection.top ||
+      bottomCoordinates.bottom !== selection.bottom
     )
       dispatch({
         type: "setSelection",
-        left,
-        top,
-        bottom,
+        top: topCoordinates.top,
+        bottom: bottomCoordinates.bottom,
       });
   });
+
+  const scale = AppStore.canvas.scale;
+  const unscaledScreen = AppStore.canvas.screen;
+  const screen = unscaledScreen;
+  const textNodePosition = node.position;
+  const left = textNodePosition.width + 10;
+  const top = selection.top / scale.y + screen.y - textNodePosition.top;
+  const bottom =
+    textNodePosition.top +
+    textNodePosition.height -
+    (selection.bottom / scale.y + screen.y);
 
   if (!isVisible) return <div></div>;
 
@@ -97,9 +92,9 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
       className="absolute pl-1 border-l-2 border-l-slate-300 border-solid flex items-center"
       style={{
         visibility: isVisible ? "visible" : "hidden",
-        left: selection.left,
-        top: selection.top,
-        bottom: selection.bottom,
+        left,
+        top,
+        bottom,
       }}
     >
       <div className="p-1 bg-slate-200">
