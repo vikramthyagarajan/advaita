@@ -81,7 +81,8 @@ const pointerUpListener = (event: PointerEvent) => {
       AppStore.project.rootNodes
         .filter((n) => n.id !== node.id)
         .filter((n, i) => i === 0)
-        .map((n) =>
+        .map(
+          (n) => {}
           // AppStore.project.setNode(n.id, {
           //   connections: [...(n.connections || []), { id: node.id }],
           // })
