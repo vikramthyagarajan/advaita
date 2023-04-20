@@ -23,6 +23,9 @@
   h6 {
     @apply text-lg;
   }
+  li {
+    @apply list-disc;
+  }
 }
 
 @tailwind components;

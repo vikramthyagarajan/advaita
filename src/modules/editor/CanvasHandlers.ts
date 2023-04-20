@@ -78,6 +78,14 @@ const pointerUpListener = (event: PointerEvent) => {
       pointerState.id
     ) as TextboxNode | null;
     if (node) {
+      AppStore.project.rootNodes
+        .filter((n) => n.id !== node.id)
+        .filter((n, i) => i === 0)
+        .map((n) =>
+          // AppStore.project.setNode(n.id, {
+          //   connections: [...(n.connections || []), { id: node.id }],
+          // })
+        );
       createNewDocumentQuery(node.title || "", getAuthorId() || "unknown", node)
         .then((response) => {
           console.log("Got creation response", response);
