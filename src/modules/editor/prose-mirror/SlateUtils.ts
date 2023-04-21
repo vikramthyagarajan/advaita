@@ -50,3 +50,22 @@ export const onCommentAdd = ({
   });
   addCommentQuery(node.child, { text, author, createdAt, id });
 };
+
+// export const getUserSelectionDiff = () => {
+//   export const getUserSelectionDiff = (
+//     startRange: Point,
+//     endRange: Point,
+//     slate: Descendant[]
+//   ) => {
+//     const range = [startRange.path[0], endRange.path[0]];
+//     const preNodes = slate.slice(0, range[0]);
+//     const nodes: Descendant[] = slate.slice(range[0], range[1] + 1);
+//     const postNodes = slate.slice(range[1] + 1);
+//     const diff = toMd(nodes);
+//     return {
+//       diff,
+//       original: `${toMd(preNodes)}<!---->${toMd(postNodes)}`,
+//     };
+//   };
+
+// }
