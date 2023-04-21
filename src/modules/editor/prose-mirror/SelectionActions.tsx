@@ -4,40 +4,55 @@ import {
   saveDocumentQuery,
 } from "modules/core/network-utils";
 import { generateId } from "modules/core/project-utils";
+import { placeBoxNearbyQuadtree } from "modules/playground/placement/placement-utils";
 import AppStore from "modules/state/AppStore";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { Reducer, useReducer } from "react";
 import { MessageSquare } from "react-feather";
 
-// const onFork = () => {
-//     const node = AppStore.project.getNode(nodeId) as TextboxNode;
-//     if (!selection || !node) return;
-//     const position = { ...node.position };
-//     position.left += position.width + position.width / 2;
-//     position.top -= position.height / 2;
+const onFork = (nodeId: string) => {
+  const node = AppStore.project.getNode(nodeId) as TextboxNode;
+  const editorState = AppStore.editors.getEditorState(nodeId);
+  if (!editorState || !node) return;
 
-//     const range = [selection.anchor.path[0], selection.focus.path[0]];
-//     const { original, diff } = getUserSelectionDiff(
-//       selection.anchor,
-//       selection.focus,
-//       children
-//     );
-//     const id = generateId();
-//     const connections = [...(node.connections || []), { id }];
-//     AppStore.project.setNode(node.id, {
-//       connections,
-//     });
-//     AppStore.project.addTextbox(id, { position });
-//     AppStore.project.setNode(id, {
-//       parent: node.id,
-//       text: node.text,
-//       selection: range,
-//     });
-//     const forkedNode = AppStore.project.getNode(id);
-//     const originalNode = AppStore.project.getNode(node.id);
-//     saveDocumentQuery(node.id, originalNode);
-//     forkDocumentQuery({ id: nodeId, diff, original, forkedNode });
-//   };
+  const boundingBox = {
+    left: node.position.left - 2000,
+    top: node.position.top - 2000,
+    width: node.position.width + 4000,
+    height: node.position.height + 4000,
+  };
+  const newPosition = placeBoxNearbyQuadtree(
+    node.position,
+    AppStore.project.rootNodes,
+    boundingBox,
+    20
+  );
+  if (!newPosition) return;
+  const position = { ...newPosition };
+
+  // editorState.selection.
+  // const range = [selection.anchor.path[0], selection.focus.path[0]];
+  // const { original, diff } = getUserSelectionDiff(
+  //   selection.anchor,
+  //   selection.focus,
+  //   children
+  // );
+  const id = generateId();
+  const connections = [...(node.connections || []), { id }];
+  AppStore.project.setNode(node.id, {
+    connections,
+  });
+  AppStore.project.addTextbox(id, { position });
+  AppStore.project.setNode(id, {
+    parent: node.id,
+    text: node.text,
+    // selection: range,
+  });
+  // const forkedNode = AppStore.project.getNode(id);
+  // const originalNode = AppStore.project.getNode(node.id);
+  // saveDocumentQuery(node.id, originalNode);
+  // forkDocumentQuery({ id: nodeId, diff, original, forkedNode });
+};
 
 const SelectionActions = ({ node }: { node: TextboxNode }) => {
   const [{ isVisible, selection }, dispatch] = useReducer<
@@ -126,7 +141,11 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
     >
       <div className="p-1 bg-slate-200">
         <div>
-          <MessageSquare onClick={() => {}}></MessageSquare>
+          <MessageSquare
+            onClick={() => {
+              onFork(node.id);
+            }}
+          ></MessageSquare>
         </div>
       </div>
     </div>

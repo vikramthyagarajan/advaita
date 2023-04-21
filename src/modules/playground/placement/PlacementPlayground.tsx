@@ -39,7 +39,12 @@ const usePlacementTester = () => {
       const rootNodes = AppStore.project.rootNodes;
       try {
         const id = generateId();
-        const box = placeBoxNearbyQuadtree(position, rootNodes);
+        const box = placeBoxNearbyQuadtree(position, rootNodes, {
+          left: 0,
+          top: 0,
+          width: 2000,
+          height: 2000,
+        });
         console.log("placed", box);
         if (box) {
           AppStore.project.addTextbox(id, { position: box });

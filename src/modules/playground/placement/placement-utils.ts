@@ -1,3 +1,4 @@
+import { CanvasPosition } from "modules/core/foundation";
 import { generateRandomNumberBetween } from "modules/core/math-utils";
 import { Node, RootNode } from "modules/state/project/ProjectTypes";
 
@@ -167,10 +168,11 @@ class Quadtree extends Box {
 }
 
 export const placeBoxNearbyQuadtree = (
-  position: { left: number; top: number; width: number; height: number },
+  position: CanvasPosition,
   nodes: RootNode[],
+  boundingBox: CanvasPosition,
   padding: number = 0
-) => {
+): { left: number; top: number; width: number; height: number } | null => {
   const original = new Box(
     position.left,
     position.top,
@@ -187,7 +189,14 @@ export const placeBoxNearbyQuadtree = (
       )
   );
 
-  const quadTree = new Quadtree(0, 0, 2000, 2000, 20, 4);
+  const quadTree = new Quadtree(
+    boundingBox.left,
+    boundingBox.top,
+    boundingBox.width,
+    boundingBox.height,
+    20,
+    4
+  );
   for (const existingBox of boxes) {
     quadTree.insert(existingBox);
   }
@@ -197,8 +206,14 @@ export const placeBoxNearbyQuadtree = (
     box: { left: number; top: number; height: number; width: number };
   }[] = [];
   for (let i = 0; i < 10; i++) {
-    const randomX = generateRandomNumberBetween(1000, 2000 - position.width);
-    const randomY = generateRandomNumberBetween(1000, 2000 - position.height);
+    const randomX = generateRandomNumberBetween(
+      boundingBox.left,
+      boundingBox.left + boundingBox.width
+    );
+    const randomY = generateRandomNumberBetween(
+      boundingBox.top,
+      boundingBox.top + boundingBox.height
+    );
 
     const option = new Box(randomX, randomY, position.width, position.height);
     const overlaps = quadTree.query(option, []);
@@ -217,9 +232,10 @@ export const placeBoxNearbyQuadtree = (
       });
     }
   }
-  return scores.sort((a, b) => {
+  const closestBox = scores.sort((a, b) => {
     return b.score - a.score;
-  })[scores.length - 1].box;
+  })[scores.length - 1];
+  return closestBox?.box || null;
 };
 
 const findNonOverlappingLocation = (

@@ -3,7 +3,7 @@ import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { exampleSetup } from "prosemirror-example-setup";
 import { defaultMarkdownParser, schema } from "prosemirror-markdown";
 import { EditorState } from "prosemirror-state";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useTextEditorState = (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
@@ -13,7 +13,9 @@ export const useTextEditorState = (id: string) => {
       plugins: exampleSetup({ schema }),
     })
   );
-  AppStore.editors.addEditor(id, editorState, setEditorState);
+  useEffect(() => {
+    AppStore.editors.addEditor(id, editorState, setEditorState);
+  }, []);
 
   return editorState;
 };
