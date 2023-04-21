@@ -1,24 +1,19 @@
 import { useEffect, useState } from "react";
-import { EditorState, TextSelection } from "prosemirror-state";
+import { TextSelection } from "prosemirror-state";
 import { ProseMirror } from "@nytimes/react-prosemirror";
 import {
-  schema,
   defaultMarkdownParser,
   defaultMarkdownSerializer,
 } from "prosemirror-markdown";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
-import { exampleSetup } from "prosemirror-example-setup";
 import AppStore from "modules/state/AppStore";
 import SelectionActions from "./SelectionActions";
+import { useTextEditorState } from "./useTextEditorState";
 
 const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
-  const [editorState, setEditorState] = useState(
-    EditorState.create({
-      doc: defaultMarkdownParser.parse(node.text) || undefined,
-      plugins: exampleSetup({ schema }),
-    })
-  );
+  const editorState = useTextEditorState(node.id);
+
   useEffect(() => {
     const tr = editorState.tr;
     tr.setSelection(
@@ -26,16 +21,16 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
     );
     const textNode = defaultMarkdownParser.parse(node.text);
     if (textNode) tr.replaceSelectionWith(textNode);
-    setEditorState((s) => s.apply(tr));
+    AppStore.editors.updateEditorState(node.id, tr);
   }, [node.text]);
 
   return (
     <ProseMirror
       mount={mount}
       state={editorState}
-      dispatchTransaction={(tr) => {
-        setEditorState((s) => s.apply(tr));
-      }}
+      dispatchTransaction={(tr) =>
+        AppStore.editors.updateEditorState(node.id, tr)
+      }
     >
       <SelectionActions node={node} />
       <div
