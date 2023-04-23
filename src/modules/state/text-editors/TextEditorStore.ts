@@ -32,6 +32,10 @@ export default class TextEditorStore {
       return;
     }
 
-    editor.setState((s) => s.apply(tr));
+    editor.setState((s) => {
+      const newState = s.apply(tr);
+      this.editors.set(id, { ...editor, state: newState });
+      return newState;
+    });
   }
 }

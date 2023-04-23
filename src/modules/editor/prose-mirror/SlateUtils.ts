@@ -5,6 +5,9 @@ import {
   addCommentQuery,
   fetchDocumentCommentsQuery,
 } from "modules/core/network-utils";
+import { EditorState } from "prosemirror-state";
+import { Fragment, Slice } from "prosemirror-model";
+import { defaultMarkdownSerializer, schema } from "prosemirror-markdown";
 
 export const onMergeDocument = async (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
@@ -49,6 +52,27 @@ export const onCommentAdd = ({
     comments: [...node.comments, { id, text, author, createdAt, comments: [] }],
   });
   addCommentQuery(node.child, { text, author, createdAt, id });
+};
+
+export const getUserSelectionDiff = (editorState: EditorState) => {
+  const selection = editorState.selection;
+  const doc = editorState.doc;
+
+  const startOfFirstNode = selection.$from.posAtIndex(0);
+  const endOfLastNode = selection.$to.posAtIndex(1);
+  const lastCharacter = doc.content.size - (doc.lastChild?.nodeSize || 0);
+
+  const commentSlice = new Slice(Fragment.from(schema.text("<!---->")), 0, 0);
+  console.log("awesomesauce", doc.copy(doc.content));
+  const originalDoc = doc
+    .copy(doc.content)
+    .replace(startOfFirstNode, endOfLastNode, commentSlice);
+  const diffDoc = doc.cut(startOfFirstNode, endOfLastNode);
+
+  const diff = defaultMarkdownSerializer.serialize(diffDoc);
+  const original = defaultMarkdownSerializer.serialize(originalDoc);
+
+  return { original, diff, selection: [startOfFirstNode, endOfLastNode] };
 };
 
 // export const getUserSelectionDiff = () => {

@@ -9,6 +9,7 @@ import AppStore from "modules/state/AppStore";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { Reducer, useReducer } from "react";
 import { MessageSquare } from "react-feather";
+import { getUserSelectionDiff } from "./SlateUtils";
 
 const onFork = (nodeId: string) => {
   const node = AppStore.project.getNode(nodeId) as TextboxNode;
@@ -30,13 +31,9 @@ const onFork = (nodeId: string) => {
   if (!newPosition) return;
   const position = { ...newPosition };
 
-  // editorState.selection.
-  // const range = [selection.anchor.path[0], selection.focus.path[0]];
-  // const { original, diff } = getUserSelectionDiff(
-  //   selection.anchor,
-  //   selection.focus,
-  //   children
-  // );
+  getUserSelectionDiff(editorState);
+  const { original, diff, selection } = getUserSelectionDiff(editorState);
+  console.log("checking diff", original, diff);
   const id = generateId();
   const connections = [...(node.connections || []), { id }];
   AppStore.project.setNode(node.id, {
@@ -45,7 +42,7 @@ const onFork = (nodeId: string) => {
   AppStore.project.addTextbox(id, { position });
   AppStore.project.setNode(id, {
     parent: node.id,
-    text: node.text,
+    text: diff,
     // selection: range,
   });
   // const forkedNode = AppStore.project.getNode(id);
