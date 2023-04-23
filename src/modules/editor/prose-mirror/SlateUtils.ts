@@ -71,25 +71,18 @@ export const getUserSelectionDiff = (editorState: EditorState) => {
 
   const diff = defaultMarkdownSerializer.serialize(diffDoc);
   const original = defaultMarkdownSerializer.serialize(originalDoc);
+  const preText = defaultMarkdownSerializer.serialize(
+    doc.cut(0, startOfFirstNode)
+  );
+  const postText = defaultMarkdownSerializer.serialize(
+    doc.cut(endOfLastNode, lastCharacter)
+  );
 
-  return { original, diff, selection: [startOfFirstNode, endOfLastNode] };
+  return {
+    original,
+    diff,
+    selection: [startOfFirstNode, endOfLastNode],
+    preText,
+    postText,
+  };
 };
-
-// export const getUserSelectionDiff = () => {
-//   export const getUserSelectionDiff = (
-//     startRange: Point,
-//     endRange: Point,
-//     slate: Descendant[]
-//   ) => {
-//     const range = [startRange.path[0], endRange.path[0]];
-//     const preNodes = slate.slice(0, range[0]);
-//     const nodes: Descendant[] = slate.slice(range[0], range[1] + 1);
-//     const postNodes = slate.slice(range[1] + 1);
-//     const diff = toMd(nodes);
-//     return {
-//       diff,
-//       original: `${toMd(preNodes)}<!---->${toMd(postNodes)}`,
-//     };
-//   };
-
-// }

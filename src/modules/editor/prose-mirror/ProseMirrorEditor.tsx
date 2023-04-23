@@ -9,9 +9,12 @@ import { TextboxNode } from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import SelectionActions from "./SelectionActions";
 import { useTextEditorState } from "./useTextEditorState";
+import Markdown from "markdown-to-jsx";
 
 const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
+  const preText = node.preText;
+  const postText = node.postText;
   const editorState = useTextEditorState(node.id);
 
   useEffect(() => {
@@ -25,22 +28,44 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   }, [node.text]);
 
   return (
-    <ProseMirror
-      mount={mount}
-      state={editorState}
-      dispatchTransaction={(tr) =>
-        AppStore.editors.updateEditorState(node.id, tr)
-      }
-    >
-      <SelectionActions node={node} />
-      <div
-        ref={setMount}
-        onBlur={() => {
-          const text = defaultMarkdownSerializer.serialize(editorState.doc);
-          AppStore.project.setNode(node.id, { text });
-        }}
-      />
-    </ProseMirror>
+    <>
+      {preText ? (
+        <div
+          className="text-gray-300"
+          style={{
+            padding: "4px 8px 4px 14px",
+          }}
+        >
+          <Markdown>{preText}</Markdown>
+        </div>
+      ) : null}
+      <ProseMirror
+        mount={mount}
+        state={editorState}
+        dispatchTransaction={(tr) =>
+          AppStore.editors.updateEditorState(node.id, tr)
+        }
+      >
+        <SelectionActions node={node} />
+        <div
+          ref={setMount}
+          onBlur={() => {
+            const text = defaultMarkdownSerializer.serialize(editorState.doc);
+            AppStore.project.setNode(node.id, { text });
+          }}
+        />
+      </ProseMirror>
+      {postText ? (
+        <div
+          className="text-gray-300"
+          style={{
+            padding: "4px 8px 4px 14px",
+          }}
+        >
+          <Markdown>{postText}</Markdown>
+        </div>
+      ) : null}
+    </>
   );
 };
 

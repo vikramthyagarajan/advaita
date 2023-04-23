@@ -31,8 +31,8 @@ const onFork = (nodeId: string) => {
   if (!newPosition) return;
   const position = { ...newPosition };
 
-  getUserSelectionDiff(editorState);
-  const { original, diff, selection } = getUserSelectionDiff(editorState);
+  const { original, diff, selection, preText, postText } =
+    getUserSelectionDiff(editorState);
   console.log("checking diff", original, diff);
   const id = generateId();
   const connections = [...(node.connections || []), { id }];
@@ -43,7 +43,9 @@ const onFork = (nodeId: string) => {
   AppStore.project.setNode(id, {
     parent: node.id,
     text: diff,
-    // selection: range,
+    preText,
+    postText,
+    selection: selection as [number, number],
   });
   // const forkedNode = AppStore.project.getNode(id);
   // const originalNode = AppStore.project.getNode(node.id);
