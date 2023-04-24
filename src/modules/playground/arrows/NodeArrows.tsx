@@ -36,12 +36,18 @@ const NodeArrows = (props: NodeArrowsProps) => {
     top: screen.y,
   });
   const { height, width } = AppStore.canvas.container;
+  const { x, y } = AppStore.canvas.scale;
 
   return (
     <div>
       {paths.map(({ path }, index) => {
         return (
-          <NodeArrow key={index} path={path} height={height} width={width} />
+          <NodeArrow
+            key={index}
+            path={path}
+            height={height / y}
+            width={width / x}
+          />
         );
       })}
     </div>
