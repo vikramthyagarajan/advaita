@@ -40,7 +40,7 @@ const TextboxElement = ({
         id={node.id}
         data-id={node.id}
         className={clsx(
-          "flex flex-col border-2 rounded-lg w-full h-full select-none p-2",
+          "flex flex-col border-2 rounded-lg w-full h-full select-none p-2 z-10",
           {
             "shadow-lg": selected,
           }
@@ -48,13 +48,13 @@ const TextboxElement = ({
       >
         {node.text ? <TextElement node={node} cacheKey={cacheKey} /> : null}
       </div>
-      {node.connections
+      {/* {node.connections
         ? node.connections.map((connection, index) => {
             return (
               <Xarrow key={index} start={node.id} end={connection.id}></Xarrow>
             );
           })
-        : null}
+        : null} */}
     </BoxNode>
   );
 };

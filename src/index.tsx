@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Editor from "./modules/editor/Editor";
-import { Center, ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import PlacementPlayground from "modules/playground/placement/PlacementPlayground";
+import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/playground/placement",
     element: <PlacementPlayground />,
+  },
+  {
+    path: "/playground/arrows",
+    element: <ArrowsPlayground />,
   },
 ]);
 

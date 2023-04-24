@@ -4,6 +4,7 @@ import CanvasStore from "modules/state/canvas/CanvasStore";
 import { getUiState } from "modules/state/ui/UiStore";
 import { memo } from "react";
 import ProjectNode from "./nodes/ProjectNode";
+import NodeArrows from "modules/playground/arrows/NodeArrows";
 
 const ImagePreview = memo(
   ({
@@ -60,6 +61,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
         ></ProjectNode>
       ))}
       <ImagePreview frame={frame} pointerX={x} pointerY={y} />
+      <NodeArrows />
     </div>
   );
 };

@@ -101,7 +101,7 @@ export default class CanvasStore {
     canvasData.shouldRender = value;
   }
 
-  private static get container() {
+  public static get container() {
     return canvasData.container;
   }
 

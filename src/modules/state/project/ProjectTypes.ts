@@ -54,6 +54,8 @@ export interface TextboxNode extends GenericNode {
   vertical: VerticalAlign;
   text: string;
   selection?: [number, number];
+  preText?: string;
+  postText?: string;
   children: { type: SubNodeType; id: string }[];
 }
 
