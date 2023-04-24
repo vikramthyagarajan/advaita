@@ -36,10 +36,6 @@ const NodeArrows = (props: NodeArrowsProps) => {
     top: screen.y,
   });
   const { height, width } = AppStore.canvas.container;
-  //@ts-ignore
-  window.paths = paths;
-  //@ts-ignore
-  window.nodes = nodes;
 
   return (
     <div>

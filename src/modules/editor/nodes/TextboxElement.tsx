@@ -47,13 +47,6 @@ const TextboxElement = ({
       >
         {node.text ? <TextElement node={node} cacheKey={cacheKey} /> : null}
       </div>
-      {/* {node.connections
-        ? node.connections.map((connection, index) => {
-            return (
-              <Xarrow key={index} start={node.id} end={connection.id}></Xarrow>
-            );
-          })
-        : null} */}
     </BoxNode>
   );
 };

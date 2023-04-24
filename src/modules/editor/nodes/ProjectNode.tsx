@@ -3,7 +3,7 @@ import { Node } from "modules/state/project/ProjectTypes";
 import { memo } from "react";
 import ImageboxElement from "./ImageboxElement";
 import MergeboxElement from "./MergeboxElement";
-import ProseMirrorTextBox from "./ProseMirrorTextBox";
+import TextboxElement from "./TextboxElement";
 
 const ProjectNode = ({
   node,
@@ -18,7 +18,7 @@ const ProjectNode = ({
 }) => {
   if (node.type === "textbox") {
     return (
-      <ProseMirrorTextBox
+      <TextboxElement
         node={node}
         selected={selected}
         cacheKey={cacheKey}
