@@ -12,7 +12,7 @@ let pointerState = {
   y: 0,
 };
 
-const wheelListener = (updateArrows: () => void, e: WheelEvent) => {
+const wheelListener = (e: WheelEvent) => {
   e.preventDefault();
   e.stopPropagation();
   const friction = 1;
@@ -24,9 +24,8 @@ const wheelListener = (updateArrows: () => void, e: WheelEvent) => {
   } else {
     AppStore.canvas.zoomCamera(deltaX, deltaY);
   }
-  updateArrows();
 };
-const pointerMoveListener = (updateArrows: () => void, event: PointerEvent) => {
+const pointerMoveListener = (event: PointerEvent) => {
   const { widget } = getUiState();
   const screen = AppStore.canvas.screen;
   const scale = AppStore.canvas.scale;
@@ -45,7 +44,6 @@ const pointerMoveListener = (updateArrows: () => void, event: PointerEvent) => {
         height: globalStart.y - pointerState.y,
       },
     });
-    updateArrows();
   }
 };
 
@@ -101,37 +99,21 @@ const pointerUpListener = (event: PointerEvent) => {
   pointerState.y = 0;
 };
 
-export const useCanvasHandlers = (
-  ref: RefObject<HTMLDivElement>,
-  updateArrows: () => void
-) => {
+export const useCanvasHandlers = (ref: RefObject<HTMLDivElement>) => {
   useEffect(() => {
     if (ref.current) {
-      ref.current.addEventListener(
-        "wheel",
-        wheelListener.bind(null, updateArrows),
-        { passive: false }
-      );
+      ref.current.addEventListener("wheel", wheelListener, { passive: false });
       ref.current.addEventListener("pointerdown", pointerDownListener);
       ref.current.addEventListener("pointerup", pointerUpListener);
-      ref.current.addEventListener(
-        "pointermove",
-        pointerMoveListener.bind(null, updateArrows)
-      );
+      ref.current.addEventListener("pointermove", pointerMoveListener);
     }
 
     return () => {
       if (ref.current) {
-        ref.current.removeEventListener(
-          "wheel",
-          wheelListener.bind(null, updateArrows)
-        );
+        ref.current.removeEventListener("wheel", wheelListener);
         ref.current.removeEventListener("pointerdown", pointerDownListener);
         ref.current.removeEventListener("pointerup", pointerUpListener);
-        ref.current.removeEventListener(
-          "pointermove",
-          pointerMoveListener.bind(null, updateArrows)
-        );
+        ref.current.removeEventListener("pointermove", pointerMoveListener);
       }
     };
   }, [ref]);

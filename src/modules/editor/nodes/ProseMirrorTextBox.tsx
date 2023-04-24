@@ -4,7 +4,6 @@ import { memo, useRef } from "react";
 import { BoxNode } from "./BoxNode";
 import BoxActions from "./BoxActions";
 import clsx from "clsx";
-import Xarrow from "react-xarrows";
 import ProseMirrorEditor from "../prose-mirror/ProseMirrorEditor";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {

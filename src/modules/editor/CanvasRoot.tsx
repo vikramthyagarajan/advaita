@@ -14,9 +14,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
-import AppStore from "modules/state/AppStore";
-import Fixtures from "modules/state/fixtures/Fixtures";
-import { useXarrow } from "react-xarrows";
 
 export interface CanvasRootProps {
   frame: string;
@@ -24,14 +21,13 @@ export interface CanvasRootProps {
 
 const CanvasRoot = ({ frame }: { frame: string }) => {
   const canvas = useRef<HTMLDivElement>(null);
-  const updateArrows = useXarrow();
   const [width, height] = useSize(canvas);
   useEffect(() => {
     if (width === 0 || height === 0) return;
     CanvasStore.initialize(width, height);
     // AppStore.project.___loadState(Fixtures.MemeTemplate);
   }, [width, height]);
-  useCanvasHandlers(canvas, updateArrows);
+  useCanvasHandlers(canvas);
   const { widget } = getUiState();
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -49,7 +45,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   return (
     <DndContext
       onDragStart={onDragStart}
-      onDragMove={(event) => onDragMove(event, updateArrows)}
+      onDragMove={(event) => onDragMove(event)}
       onDragEnd={onDragEnd}
       collisionDetection={pointerWithin}
       sensors={sensors}
