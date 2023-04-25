@@ -7,8 +7,10 @@ import clsx from "clsx";
 import ProseMirrorEditor from "../prose-mirror/ProseMirrorEditor";
 import { TextboxMenu } from "../prose-mirror/TextboxMenu";
 import Markdown from "markdown-to-jsx";
+import useResizeObserver from "use-resize-observer";
 import AppStore from "modules/state/AppStore";
 import { defaultMarkdownSerializer } from "prosemirror-markdown";
+import { syncNodeWithEditorValue } from "../prose-mirror/SlateUtils";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   return (
@@ -30,6 +32,15 @@ const TextboxElement = ({
   cacheKey: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const { ref: containerRef } = useResizeObserver<HTMLDivElement>({
+    onResize: ({ width, height }) => {
+      if (height && height >= node.position.height - 20) {
+        AppStore.project.setNode(node.id, {
+          position: { ...node.position, height: height + 50 },
+        });
+      }
+    },
+  });
   return (
     <BoxNode
       id={node.id}
@@ -49,21 +60,23 @@ const TextboxElement = ({
           }
         )}
       >
-        {node.preText ? (
-          <div className="text-gray-300 pb-5">
-            <Markdown>{node.preText}</Markdown>
-          </div>
-        ) : null}
-        {node.text ? (
-          <div>
-            <TextElement node={node} cacheKey={cacheKey} />
-          </div>
-        ) : null}
-        {node.postText ? (
-          <div className="text-gray-300 pt-5">
-            <Markdown>{node.postText}</Markdown>
-          </div>
-        ) : null}
+        <div ref={containerRef}>
+          {node.preText ? (
+            <div className="text-gray-300 pb-5">
+              <Markdown>{node.preText}</Markdown>
+            </div>
+          ) : null}
+          {node.text ? (
+            <div>
+              <TextElement node={node} cacheKey={cacheKey} />
+            </div>
+          ) : null}
+          {node.postText ? (
+            <div className="text-gray-300 pt-5">
+              <Markdown>{node.postText}</Markdown>
+            </div>
+          ) : null}
+        </div>
       </div>
     </BoxNode>
   );
