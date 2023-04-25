@@ -79,11 +79,13 @@ export default class ProjectStore {
       position,
       comments,
       diff,
+      connections,
     }: {
       parent: string;
       child: string;
       position: CanvasPosition;
       comments: Comment[];
+      connections: { id: string }[];
       diff: string;
     }
   ) {
@@ -95,6 +97,7 @@ export default class ProjectStore {
       comments: comments || [],
       cacheKey: "",
       diff,
+      connections,
       child,
       parent,
     });

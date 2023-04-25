@@ -1,22 +1,15 @@
 import { useEffect, useState } from "react";
 import { TextSelection } from "prosemirror-state";
 import { ProseMirror } from "@nytimes/react-prosemirror";
-import {
-  defaultMarkdownParser,
-  defaultMarkdownSerializer,
-} from "prosemirror-markdown";
+import { defaultMarkdownParser } from "prosemirror-markdown";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import SelectionActions from "./SelectionActions";
 import { useTextEditorState } from "./useTextEditorState";
-import Markdown from "markdown-to-jsx";
-import { TextboxMenu } from "./TextboxMenu";
 import { syncNodeWithEditorValue } from "./SlateUtils";
 
 const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
-  const preText = node.preText;
-  const postText = node.postText;
   const editorState = useTextEditorState(node.id);
 
   useEffect(() => {
@@ -38,7 +31,6 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
           AppStore.editors.updateEditorState(node.id, tr)
         }
       >
-        <TextboxMenu nodeId={node.id} />
         <SelectionActions node={node} />
         <div
           ref={setMount}

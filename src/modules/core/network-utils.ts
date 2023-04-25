@@ -198,6 +198,7 @@ export const initializeSockets = async () => {
         parent: parent.id,
         position,
         diff,
+        connections: [],
         comments: comments.map((c) => ({
           id: c.uuid,
           text: c.body,

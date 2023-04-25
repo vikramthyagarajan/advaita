@@ -1,4 +1,8 @@
-import { MergeboxNode, TextboxNode } from "modules/state/project/ProjectTypes";
+import {
+  Comment,
+  MergeboxNode,
+  TextboxNode,
+} from "modules/state/project/ProjectTypes";
 import AppStore from "modules/state/AppStore";
 import { generateId } from "modules/core/project-utils";
 import {
@@ -8,19 +12,33 @@ import {
 import { EditorState } from "prosemirror-state";
 import { Fragment, Slice } from "prosemirror-model";
 import { defaultMarkdownSerializer, schema } from "prosemirror-markdown";
+import { placeBoxNearbyQuadtree } from "modules/playground/placement/placement-utils";
 
 export const onMergeDocument = async (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
   const parent = AppStore.project.getNode(node.parent || "") as TextboxNode;
   if (!node || !parent) return;
-  const { comments, diff } = await fetchDocumentCommentsQuery(node.id);
+  syncNodeWithEditorValue(id);
+  syncNodeWithEditorValue(parent.id);
+  // const { comments, diff } = await fetchDocumentCommentsQuery(node.id);
+  const comments: any[] = [];
+  const diff = "";
   const mergeId = generateId();
-  const position = {
-    width: parent.position.width * 2,
-    height: parent.position.height * 1.5,
-    top: parent.position.top - parent.position.height * 2,
-    left: parent.position.left - parent.position.width,
+
+  const boundingBox = {
+    left: parent.position.left - 2000,
+    top: parent.position.top - 2000,
+    width: parent.position.width + 4000,
+    height: parent.position.height + 4000,
   };
+  const newPosition = placeBoxNearbyQuadtree(
+    node.position,
+    AppStore.project.rootNodes,
+    boundingBox,
+    20
+  );
+  if (!newPosition) return;
+  const position = { ...newPosition };
   AppStore.project.addMergeBox(mergeId, {
     child: node.id,
     parent: parent.id,
@@ -32,6 +50,10 @@ export const onMergeDocument = async (id: string) => {
       author: c.author,
       createdAt: c.createdAt,
     })),
+    connections: [{ id: parent.id }],
+  });
+  AppStore.project.setNode(node.id, {
+    connections: [...(node.connections || []), { id: mergeId }],
   });
 };
 

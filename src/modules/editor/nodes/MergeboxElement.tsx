@@ -152,12 +152,12 @@ const MergeboxElement = ({
           }
         )}
       >
-        <DiffViewer
+        {/* <DiffViewer
           oldValue={parentNode.text}
           newValue={childNode.text}
           splitView={true}
           renderContent={renderDiff}
-        ></DiffViewer>
+        ></DiffViewer> */}
         <CommentSection nodeId={node.id} />
       </div>
     </BoxNode>
