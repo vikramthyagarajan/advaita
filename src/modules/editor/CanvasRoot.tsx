@@ -14,8 +14,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
-import AppStore from "modules/state/AppStore";
-import Fixtures from "modules/state/fixtures/Fixtures";
 
 export interface CanvasRootProps {
   frame: string;
@@ -47,7 +45,7 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   return (
     <DndContext
       onDragStart={onDragStart}
-      onDragMove={onDragMove}
+      onDragMove={(event) => onDragMove(event)}
       onDragEnd={onDragEnd}
       collisionDetection={pointerWithin}
       sensors={sensors}

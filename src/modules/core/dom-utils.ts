@@ -34,3 +34,7 @@ export const moveCaretToPoint = (
     selection.addRange(newRange);
   }
 };
+
+export const stopEventBubbling = (event: Event) => {
+  event.stopPropagation();
+};

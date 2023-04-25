@@ -5,15 +5,18 @@ export type SubNodeType = "text" | "image" | "video" | "preview";
 export type NodeType =
   | "textbox"
   | "imagebox"
+  | "mergebox"
   | "videobox"
   | "graphics"
   | SubNodeType;
 
 export interface GenericNode {
   type: NodeType;
+  title?: string;
   id: string;
   cacheKey: string;
   parent?: string;
+  connections?: { id: string }[];
   children?: { id: string; type: NodeType }[];
 }
 
@@ -49,6 +52,10 @@ export interface TextboxNode extends GenericNode {
   position: CanvasPosition;
   align: Align;
   vertical: VerticalAlign;
+  text: string;
+  selection?: [number, number];
+  preText?: string;
+  postText?: string;
   children: { type: SubNodeType; id: string }[];
 }
 
@@ -64,13 +71,31 @@ export interface ImageboxNode extends GenericNode {
   children: { type: NodeType; id: string }[];
 }
 
+export interface Comment {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: number;
+  comments?: Comment[];
+}
+
+export interface MergeboxNode extends GenericNode {
+  type: "mergebox";
+  child: string;
+  parent: string;
+  diff: string;
+  position: CanvasPosition;
+  comments: Comment[];
+}
+
 export interface PreviewNode {
   type: "preview";
   id: string;
 }
 
 export type SubNode = TextNode | ImageNode;
-export type Node = TextboxNode | ImageboxNode | SubNode;
+export type RootNode = TextboxNode | ImageboxNode | MergeboxNode;
+export type Node = RootNode | SubNode;
 
 export type AllEventTypes =
   | FocusEvent<HTMLDivElement>

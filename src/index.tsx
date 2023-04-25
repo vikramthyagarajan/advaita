@@ -2,15 +2,35 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Editor from "./modules/editor/Editor";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
+import PlacementPlayground from "modules/playground/placement/PlacementPlayground";
+import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
+import { Analytics } from "@vercel/analytics/react";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Editor />,
+  },
+  {
+    path: "/playground/placement",
+    element: <PlacementPlayground />,
+  },
+  {
+    path: "/playground/arrows",
+    element: <ArrowsPlayground />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <Editor />
-  </React.StrictMode>
+  <div>
+    <RouterProvider router={router} />
+    <Analytics />
+  </div>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -27,3 +27,7 @@ export const isCloseEnough = (
 ) => {
   return num2 > num1 - precision && num2 < num1 + precision;
 };
+
+export const generateRandomNumberBetween = (min: number, max: number) => {
+  return min + Math.round(Math.random() * (max - min));
+};

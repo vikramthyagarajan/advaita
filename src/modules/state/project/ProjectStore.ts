@@ -3,9 +3,11 @@ import { generateId } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
 import {
+  Comment,
   ImageboxNode,
   Node,
   NodeType,
+  RootNode,
   SubNode,
   SubNodeType,
   TextNode,
@@ -14,7 +16,7 @@ import {
 export default class ProjectStore {
   private _registry = new ProjectRegistry();
 
-  private get registry() {
+  public get registry() {
     return this._registry;
   }
 
@@ -69,6 +71,39 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
+  public addMergeBox(
+    id: string,
+    {
+      parent,
+      child,
+      position,
+      comments,
+      diff,
+      connections,
+    }: {
+      parent: string;
+      child: string;
+      position: CanvasPosition;
+      comments: Comment[];
+      connections: { id: string }[];
+      diff: string;
+    }
+  ) {
+    this.registry.addNode({
+      id,
+      position,
+      type: "mergebox",
+      children: [],
+      comments: comments || [],
+      cacheKey: "",
+      diff,
+      connections,
+      child,
+      parent,
+    });
+    AppStore.canvas.shouldRender = true;
+  }
+
   public addTextbox(id: string, { position }: { position: CanvasPosition }) {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
@@ -76,11 +111,13 @@ export default class ProjectStore {
       this.registry.addNode({
         id,
         position,
+        title: generateId(),
         type: "textbox",
         children: [],
         cacheKey: "",
         align: "center",
         vertical: "center",
+        text: "",
       });
     }
     AppStore.canvas.shouldRender = true;
@@ -114,6 +151,11 @@ export default class ProjectStore {
 
   public setNode(id: string, node: Partial<Node>) {
     this.registry.patchNode(id, node);
+    AppStore.canvas.shouldRender = true;
+  }
+
+  public loadProject(nodes: Node[]) {
+    nodes.map((node) => this.registry.addNode(node));
     AppStore.canvas.shouldRender = true;
   }
 
@@ -169,9 +211,10 @@ export default class ProjectStore {
     return this.registry.root;
   }
 
-  public get rootNodes(): Node[] {
-    return ([] as Node[])
+  public get rootNodes(): RootNode[] {
+    return ([] as RootNode[])
       .concat(this.registry.textboxes)
+      .concat(this.registry.mergeboxes)
       .concat(this.registry.imageboxes);
   }
 }
