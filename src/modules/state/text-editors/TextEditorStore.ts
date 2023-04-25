@@ -4,12 +4,21 @@ import { Dispatch, SetStateAction } from "react";
 export default class TextEditorStore {
   private editors: Map<
     string,
-    { state: EditorState; setState: Dispatch<SetStateAction<EditorState>> }
+    {
+      state: EditorState;
+      setState: Dispatch<SetStateAction<EditorState>>;
+      view?: HTMLDivElement;
+    }
   > = new Map();
 
   getEditorState(id: string) {
     const editor = this.editors.get(id);
     return editor?.state;
+  }
+
+  getEditorView(id: string) {
+    const editor = this.editors.get(id);
+    return editor?.view;
   }
 
   addEditor(

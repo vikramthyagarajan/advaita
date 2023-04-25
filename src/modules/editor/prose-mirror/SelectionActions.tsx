@@ -9,13 +9,15 @@ import AppStore from "modules/state/AppStore";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import { Reducer, useReducer } from "react";
 import { MessageSquare } from "react-feather";
-import { getUserSelectionDiff } from "./SlateUtils";
+import { getUserSelectionDiff, syncNodeWithEditorValue } from "./SlateUtils";
+import { stopEventBubbling } from "modules/core/dom-utils";
 
 const onFork = (nodeId: string) => {
   const node = AppStore.project.getNode(nodeId) as TextboxNode;
   const editorState = AppStore.editors.getEditorState(nodeId);
   if (!editorState || !node) return;
 
+  syncNodeWithEditorValue(nodeId);
   const boundingBox = {
     left: node.position.left - 2000,
     top: node.position.top - 2000,
@@ -130,7 +132,7 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
 
   return (
     <div
-      className="absolute pl-1 border-l-2 border-l-slate-300 border-solid flex items-center"
+      className="absolute pl-1 border-l-2 border-l-slate-300 border-solid flex items-center z-20"
       style={{
         visibility: isVisible ? "visible" : "hidden",
         left,
@@ -138,10 +140,18 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
         bottom,
       }}
     >
-      <div className="p-1 bg-slate-200">
+      <div
+        className="p-1 bg-slate-200"
+        onBlur={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         <div>
           <MessageSquare
-            onClick={() => {
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               onFork(node.id);
             }}
           ></MessageSquare>

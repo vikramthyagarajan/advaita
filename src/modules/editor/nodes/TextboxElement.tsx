@@ -5,6 +5,10 @@ import { BoxNode } from "./BoxNode";
 import BoxActions from "./BoxActions";
 import clsx from "clsx";
 import ProseMirrorEditor from "../prose-mirror/ProseMirrorEditor";
+import { TextboxMenu } from "../prose-mirror/TextboxMenu";
+import Markdown from "markdown-to-jsx";
+import AppStore from "modules/state/AppStore";
+import { defaultMarkdownSerializer } from "prosemirror-markdown";
 
 const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
   return (
@@ -45,7 +49,21 @@ const TextboxElement = ({
           }
         )}
       >
-        {node.text ? <TextElement node={node} cacheKey={cacheKey} /> : null}
+        {node.preText ? (
+          <div className="text-gray-300 pb-5">
+            <Markdown>{node.preText}</Markdown>
+          </div>
+        ) : null}
+        {node.text ? (
+          <div>
+            <TextElement node={node} cacheKey={cacheKey} />
+          </div>
+        ) : null}
+        {node.postText ? (
+          <div className="text-gray-300 pt-5">
+            <Markdown>{node.postText}</Markdown>
+          </div>
+        ) : null}
       </div>
     </BoxNode>
   );

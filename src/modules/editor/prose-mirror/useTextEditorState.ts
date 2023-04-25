@@ -10,7 +10,7 @@ export const useTextEditorState = (id: string) => {
   const [editorState, setEditorState] = useState(
     EditorState.create({
       doc: defaultMarkdownParser.parse(node.text) || undefined,
-      plugins: exampleSetup({ schema }),
+      plugins: exampleSetup({ schema, menuBar: true }),
     })
   );
   useEffect(() => {

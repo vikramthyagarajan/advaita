@@ -58,12 +58,13 @@ export const getUserSelectionDiff = (editorState: EditorState) => {
   const selection = editorState.selection;
   const doc = editorState.doc;
 
+  // selection.$from.nodeBefore;
   const startOfFirstNode = selection.$from.posAtIndex(0);
   const endOfLastNode = selection.$to.posAtIndex(1);
-  const lastCharacter = doc.content.size - (doc.lastChild?.nodeSize || 0);
+  const lastCharacter = doc.resolve(doc.content.size).pos;
+  // doc.content.size - (doc.lastChild?.nodeSize || 0);
 
   const commentSlice = new Slice(Fragment.from(schema.text("<!---->")), 0, 0);
-  console.log("awesomesauce", doc.copy(doc.content));
   const originalDoc = doc
     .copy(doc.content)
     .replace(startOfFirstNode, endOfLastNode, commentSlice);
@@ -72,10 +73,19 @@ export const getUserSelectionDiff = (editorState: EditorState) => {
   const diff = defaultMarkdownSerializer.serialize(diffDoc);
   const original = defaultMarkdownSerializer.serialize(originalDoc);
   const preText = defaultMarkdownSerializer.serialize(
-    doc.cut(0, startOfFirstNode)
+    doc.cut(0, startOfFirstNode - 1)
   );
   const postText = defaultMarkdownSerializer.serialize(
     doc.cut(endOfLastNode, lastCharacter)
+  );
+  console.log(
+    "awesomesauce",
+    preText,
+    postText,
+    startOfFirstNode,
+    endOfLastNode,
+    lastCharacter,
+    doc.cut(0, startOfFirstNode)
   );
 
   return {
@@ -85,4 +95,11 @@ export const getUserSelectionDiff = (editorState: EditorState) => {
     preText,
     postText,
   };
+};
+
+export const syncNodeWithEditorValue = (nodeId: string) => {
+  const editorState = AppStore.editors.getEditorState(nodeId);
+  if (!editorState) return;
+  const text = defaultMarkdownSerializer.serialize(editorState.doc);
+  AppStore.project.setNode(nodeId, { text });
 };

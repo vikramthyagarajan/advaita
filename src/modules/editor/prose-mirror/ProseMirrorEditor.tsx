@@ -10,6 +10,8 @@ import AppStore from "modules/state/AppStore";
 import SelectionActions from "./SelectionActions";
 import { useTextEditorState } from "./useTextEditorState";
 import Markdown from "markdown-to-jsx";
+import { TextboxMenu } from "./TextboxMenu";
+import { syncNodeWithEditorValue } from "./SlateUtils";
 
 const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
@@ -29,16 +31,6 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
 
   return (
     <>
-      {preText ? (
-        <div
-          className="text-gray-300"
-          style={{
-            padding: "4px 8px 4px 14px",
-          }}
-        >
-          <Markdown>{preText}</Markdown>
-        </div>
-      ) : null}
       <ProseMirror
         mount={mount}
         state={editorState}
@@ -46,25 +38,15 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
           AppStore.editors.updateEditorState(node.id, tr)
         }
       >
+        <TextboxMenu nodeId={node.id} />
         <SelectionActions node={node} />
         <div
           ref={setMount}
           onBlur={() => {
-            const text = defaultMarkdownSerializer.serialize(editorState.doc);
-            AppStore.project.setNode(node.id, { text });
+            syncNodeWithEditorValue(node.id);
           }}
         />
       </ProseMirror>
-      {postText ? (
-        <div
-          className="text-gray-300"
-          style={{
-            padding: "4px 8px 4px 14px",
-          }}
-        >
-          <Markdown>{postText}</Markdown>
-        </div>
-      ) : null}
     </>
   );
 };
