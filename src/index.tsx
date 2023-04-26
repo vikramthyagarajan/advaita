@@ -27,7 +27,7 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <div>
+  <div className="w-full h-full">
     <RouterProvider router={router} />
     <Analytics />
   </div>
