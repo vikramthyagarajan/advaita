@@ -7,11 +7,20 @@ import reportWebVitals from "./reportWebVitals";
 import PlacementPlayground from "modules/playground/placement/PlacementPlayground";
 import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
 import { Analytics } from "@vercel/analytics/react";
+import { Signin, Signup } from "modules/account/Account";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Editor />,
+  },
+  {
+    path: "/account/login",
+    element: <Signin />,
+  },
+  {
+    path: "/account/register",
+    element: <Signup />,
   },
   {
     path: "/playground/placement",

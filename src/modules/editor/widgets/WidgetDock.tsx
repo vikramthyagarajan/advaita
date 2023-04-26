@@ -1,3 +1,4 @@
+import React from "react";
 import clsx from "clsx";
 import { Widget } from "modules/state/ui/UiState";
 import { getUiDispatch } from "modules/state/ui/UiStore";
@@ -10,8 +11,6 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
   const widgets: { name: Widget; icon: Icon }[] = [
     { name: "pointer", icon: MousePointer },
     { name: "textbox", icon: PlusSquare },
-    { name: "image", icon: Image },
-    { name: "video", icon: Video },
   ];
   return (
     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-slate-100 px-4 py-2 rounded-t-lg">
