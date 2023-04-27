@@ -8,6 +8,7 @@
     "@dnd-kit/core": "^6.0.5",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@faker-js/faker": "^7.6.0",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.17",
     "@nytimes/react-prosemirror": "^0.2.1",

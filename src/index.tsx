@@ -9,10 +9,15 @@ import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
 import { Analytics } from "@vercel/analytics/react";
 import { Signin, Signup } from "modules/account/Account";
 import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
+import Dashboard from "modules/dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Dashboard />,
+  },
+  {
+    path: "/boards/:id",
     element: <Editor />,
   },
   {
