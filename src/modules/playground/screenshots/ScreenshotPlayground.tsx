@@ -20,6 +20,7 @@ const generateRandomPlaygroundData = () => {
   if (!box) return;
   const parentNode = AppStore.project.addTextbox(parentId, {
     position: { ...box },
+    text: "# Origin",
   });
   for (let i = 0; i < 5; i++) {
     const newId = generateId();
@@ -30,7 +31,7 @@ const generateRandomPlaygroundData = () => {
       20
     );
     if (!newBox) continue;
-    AppStore.project.addTextbox(newId, { position: newBox, text: "# Hello" });
+    AppStore.project.addTextbox(newId, { position: newBox, text: "## Child" });
     const parentNode = AppStore.project.getNode(parentId) as TextboxNode;
     AppStore.project.setNode(parentId, {
       connections: [...(parentNode.connections || []), { id: newId }],
@@ -47,7 +48,7 @@ const generateRandomPlaygroundData = () => {
       if (!newBox) return null;
       AppStore.project.addTextbox(newId, {
         position: newBox,
-        text: "### Welcome",
+        text: "### Others",
       });
       if (prev)
         AppStore.project.setNode(newId, { connections: [{ id: prev }] });
@@ -80,11 +81,11 @@ const ScreenshotPlayground = () => {
     if (width === 0 || height === 0) return;
     CanvasStore.initialize(width, height);
   }, [width, height]);
+  const [screenshotId, setScreenshotId] = useState(generateId());
   const [image, setImage] = useState("/signup-image.png");
-  const { screenshotId, takeScreenshot } = useScreenshotPlaygroundData();
+  useScreenshotPlaygroundData();
   const nodes = AppStore.project.rootNodes;
   const onScreenshot = (image) => {
-    console.log("setting image", image);
     setImage(image);
   };
   if (nodes.length === 0) return <div></div>;
@@ -102,7 +103,13 @@ const ScreenshotPlayground = () => {
             <img src={image} className="w-[800px] h-[600px] object-cover"></img>
           </div>
           <div className="h-full flex items-center justify-center">
-            <button className="p-20 outline-none bg-slate-500 rounded-md">
+            <button
+              className="p-20 outline-none bg-slate-500 rounded-md"
+              onClick={() => {
+                generateRandomPlaygroundData();
+                setScreenshotId(generateId());
+              }}
+            >
               Randomize
             </button>
           </div>
@@ -110,7 +117,7 @@ const ScreenshotPlayground = () => {
         <ProjectScrenshot
           width={800}
           height={600}
-          nodes={nodes}
+          screenshotId={screenshotId}
           onScreenshot={onScreenshot}
         />
       </div>

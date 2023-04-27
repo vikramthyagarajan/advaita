@@ -1,45 +1,81 @@
-import CanvasStore from "modules/state/canvas/CanvasStore";
-import { RootNode } from "modules/state/project/ProjectTypes";
 import NodeArrows from "../arrows/NodeArrows";
 import ProjectNode from "modules/editor/nodes/ProjectNode";
 import { getPositionOfWholeBoard } from "./screenshot-utils";
 import { useScreenshot } from "use-react-screenshot";
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import AppStore from "modules/state/AppStore";
+import clsx from "clsx";
 
 export interface ProjectScrenshotProps {
-  nodes: RootNode[];
+  screenshotId: string;
   width: number;
   height: number;
   onScreenshot: (img: string) => void;
 }
 
+interface ProjectScreenshotLifecycleProps {
+  screenshotId: string;
+  width: number;
+  height: number;
+  onScreenshot: (img: string) => void;
+  ref: RefObject<HTMLDivElement>;
+}
+
+const useProjectScreenshotLifecycle = ({
+  screenshotId,
+  width,
+  height,
+  ref,
+  onScreenshot,
+}: ProjectScreenshotLifecycleProps) => {
+  const [visible, setVisible] = useState(false);
+  const [image, takeScreenshot] = useScreenshot();
+  useLayoutEffect(() => {
+    if (visible) takeScreenshot(ref.current);
+  }, [visible]);
+
+  useEffect(() => {
+    setVisible(true);
+  }, [screenshotId, width, height]);
+
+  useEffect(() => {
+    if (image) {
+      onScreenshot(image);
+      setVisible(false);
+    }
+  }, [image]);
+
+  return {
+    visible,
+  };
+};
+
 const ProjectScrenshot = ({
-  nodes,
   width,
   height,
   onScreenshot,
+  screenshotId,
 }: ProjectScrenshotProps) => {
+  const nodes = AppStore.project.rootNodes;
   const ref = useRef<HTMLDivElement>(null);
   const screen = getPositionOfWholeBoard(nodes);
   const scale = { x: width / screen.width, y: height / screen.height };
-  console.log("screen", screen);
-  const [image, takeScreenshot] = useScreenshot();
-
-  useEffect(() => {
-    if (ref.current) {
-      takeScreenshot(ref.current);
-    }
-  }, [ref.current]);
-
-  useEffect(() => {
-    if (image) onScreenshot(image);
-  }, [image]);
+  const { visible } = useProjectScreenshotLifecycle({
+    width,
+    height,
+    onScreenshot,
+    screenshotId,
+    ref,
+  });
 
   return (
     <div
       ref={ref}
-      className="fixed left-5 top-500"
-      style={{ height: `${height}px`, width: `${width}px` }}
+      className={clsx("fixed left-5 bg-slate-200", {
+        hidden: !visible,
+        block: visible,
+      })}
+      style={{ height: `${height}px`, width: `${width}px`, top: "200vh" }}
     >
       <div
         className="h-full w-full"
