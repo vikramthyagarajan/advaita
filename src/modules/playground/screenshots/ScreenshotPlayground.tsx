@@ -10,6 +10,7 @@ import { generateId } from "modules/core/project-utils";
 import { placeBoxNearbyQuadtree } from "../placement/placement-utils";
 import { TextboxNode } from "modules/state/project/ProjectTypes";
 import ProjectScrenshot from "./ProjectScreenshot";
+import { uploadToCloudinary } from "modules/core/network-utils";
 
 const generateRandomPlaygroundData = () => {
   AppStore.project.resetWithFork();
@@ -87,6 +88,7 @@ const ScreenshotPlayground = () => {
   const nodes = AppStore.project.rootNodes;
   const onScreenshot = (image) => {
     setImage(image);
+    uploadToCloudinary(screenshotId, image);
   };
   if (nodes.length === 0) return <div></div>;
 
@@ -100,11 +102,11 @@ const ScreenshotPlayground = () => {
       >
         <div className="h-full w-full grid grid-cols-[3fr_1fr]">
           <div className="h-full flex items-center justify-center">
-            <img src={image} className="w-[800px] h-[600px] object-cover"></img>
+            <img src={image} className="w-[800px] h-[800px] object-cover"></img>
           </div>
           <div className="h-full flex items-center justify-center">
             <button
-              className="p-20 outline-none bg-slate-500 rounded-md"
+              className="py-5 px-20 outline-none bg-slate-800 rounded-md text-white"
               onClick={() => {
                 generateRandomPlaygroundData();
                 setScreenshotId(generateId());
@@ -116,7 +118,7 @@ const ScreenshotPlayground = () => {
         </div>
         <ProjectScrenshot
           width={800}
-          height={600}
+          height={800}
           screenshotId={screenshotId}
           onScreenshot={onScreenshot}
         />

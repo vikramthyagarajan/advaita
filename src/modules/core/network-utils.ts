@@ -9,6 +9,9 @@ import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 
 const backendUrl = "http://192.168.29.215:3000";
+const cloudinaryCloudName = "diglgjher";
+const cloudinaryPresetName = "thumbnails";
+const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
 
 export const fetchAllDocumentsQuery = () => {
   return axios
@@ -228,4 +231,12 @@ export const initializeSockets = async () => {
   // window.onbeforeunload = () => {
   //   clearInterval(interval);
   // };
+};
+
+export const uploadToCloudinary = async (id: string, image: string) => {
+  return await axios.post(cloudinaryUrl, {
+    file: image,
+    upload_preset: cloudinaryPresetName,
+    public_id: id,
+  });
 };
