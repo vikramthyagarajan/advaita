@@ -10,11 +10,13 @@ const ProjectNode = ({
   selected,
   cacheKey,
   screen,
+  viewOnly,
 }: {
   node: Node;
   selected: boolean;
   cacheKey: string;
   screen: ScreenPosition;
+  viewOnly?: boolean;
 }) => {
   if (node.type === "textbox") {
     return (
@@ -23,6 +25,7 @@ const ProjectNode = ({
         selected={selected}
         cacheKey={cacheKey}
         screen={screen}
+        viewOnly={viewOnly}
       />
     );
   } else if (node.type === "mergebox") {

@@ -12,12 +12,26 @@ import AppStore from "modules/state/AppStore";
 import { defaultMarkdownSerializer } from "prosemirror-markdown";
 import { syncNodeWithEditorValue } from "../prose-mirror/SlateUtils";
 
-const TextElement = ({ node }: { node: TextboxNode; cacheKey: string }) => {
-  return (
-    <div className="h-full w-full">
-      <ProseMirrorEditor node={node}></ProseMirrorEditor>
-    </div>
-  );
+const TextElement = ({
+  node,
+  viewOnly,
+}: {
+  node: TextboxNode;
+  cacheKey: string;
+  viewOnly?: boolean;
+}) => {
+  if (viewOnly)
+    return (
+      <div className="h-full w-full">
+        <Markdown>{node.text}</Markdown>
+      </div>
+    );
+  else
+    return (
+      <div className="h-full w-full">
+        <ProseMirrorEditor node={node}></ProseMirrorEditor>
+      </div>
+    );
 };
 
 const TextboxElement = ({
@@ -25,11 +39,13 @@ const TextboxElement = ({
   selected,
   cacheKey,
   screen,
+  viewOnly,
 }: {
   node: TextboxNode;
   screen: ScreenPosition;
   selected: boolean;
   cacheKey: string;
+  viewOnly?: boolean;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { ref: containerRef } = useResizeObserver<HTMLDivElement>({
@@ -68,7 +84,11 @@ const TextboxElement = ({
           ) : null}
           {node.text ? (
             <div>
-              <TextElement node={node} cacheKey={cacheKey} />
+              <TextElement
+                node={node}
+                cacheKey={cacheKey}
+                viewOnly={viewOnly}
+              />
             </div>
           ) : null}
           {node.postText ? (
