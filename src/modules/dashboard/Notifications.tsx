@@ -75,7 +75,7 @@ const ForkNotification = (n: Notification) => {
       <div className="flex flex-col">
         <div>
           <span className="font-semibold">{n.author}</span> wants to make
-          changes on <span className="font-semibold">{n.boardName}</span>
+          changes to <span className="font-semibold">{n.boardName}</span>
         </div>
         <div className="bg-slate-100 flex items-end gap-1">
           <div className="border-l-2 h-10 border-slate-500"></div>
