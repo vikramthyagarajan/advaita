@@ -104,7 +104,10 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public addTextbox(id: string, { position }: { position: CanvasPosition }) {
+  public addTextbox(
+    id: string,
+    { position, text }: { position: CanvasPosition; text?: string }
+  ) {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
@@ -117,7 +120,7 @@ export default class ProjectStore {
         cacheKey: "",
         align: "center",
         vertical: "center",
-        text: "",
+        text: text || "",
       });
     }
     AppStore.canvas.shouldRender = true;

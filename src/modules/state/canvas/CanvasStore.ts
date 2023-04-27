@@ -86,6 +86,13 @@ export default class CanvasStore {
     const angle = CAMERA_ANGLE;
     return cameraToScreenCoordinates(x, y, z, angle, aspect);
   }
+
+  // TODO:- Temporary function until screen returns CanvasPosition
+  public static get screenPosition() {
+    const screen = this.screen;
+    return { ...screen, left: screen.x, top: screen.y };
+  }
+
   public static get camera() {
     return this.data.camera;
   }

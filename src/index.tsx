@@ -8,6 +8,7 @@ import PlacementPlayground from "modules/playground/placement/PlacementPlaygroun
 import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
 import { Analytics } from "@vercel/analytics/react";
 import { Signin, Signup } from "modules/account/Account";
+import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/playground/arrows",
     element: <ArrowsPlayground />,
+  },
+  {
+    path: "/playground/screenshot",
+    element: <ScreenshotPlayground />,
   },
 ]);
 
