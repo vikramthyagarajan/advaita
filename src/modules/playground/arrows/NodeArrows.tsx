@@ -1,7 +1,13 @@
 import AppStore from "modules/state/AppStore";
 import { getArrowPathsBetweenVisibleNodes } from "./arrow-utils";
+import { CanvasPosition } from "modules/core/foundation";
+import { RootNode } from "modules/state/project/ProjectTypes";
 
-export interface NodeArrowsProps {}
+export interface NodeArrowsProps {
+  screen: CanvasPosition;
+  container: { width: number; height: number };
+  nodes: RootNode[];
+}
 
 export interface NodeArrowProps {
   path: string;
@@ -24,19 +30,18 @@ const NodeArrow = ({ height, width, path }: NodeArrowProps) => {
   );
 };
 
-const NodeArrows = (props: NodeArrowsProps) => {
+const NodeArrows = ({ nodes, screen, container }: NodeArrowsProps) => {
   // fetch the connections that need to be drawn
   // for each connection, figure out the path
   // draw the paths
-  const nodes = AppStore.project.rootNodes;
-  const screen = AppStore.canvas.screen;
   const paths = getArrowPathsBetweenVisibleNodes(nodes, {
     ...screen,
-    left: screen.x,
-    top: screen.y,
   });
-  const { height, width } = AppStore.canvas.container;
-  const { x, y } = AppStore.canvas.scale;
+  const { height, width } = container;
+  const { x, y } = {
+    x: container.width / screen.width,
+    y: container.height / screen.height,
+  };
 
   return (
     <div>

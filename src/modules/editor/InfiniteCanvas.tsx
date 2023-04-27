@@ -38,9 +38,10 @@ const ImagePreview = memo(
 
 const InfiniteCanvas = ({ frame }: { frame: string }) => {
   const scale = CanvasStore.scale;
-  const screen = CanvasStore.screen;
+  const screen = CanvasStore.screenPosition;
   const nodes = AppStore.project.rootNodes;
   const { selectedNode: selected } = getUiState();
+  const container = AppStore.canvas.container;
   const { x, y } = AppStore.canvas.pointer;
 
   return (
@@ -61,7 +62,7 @@ const InfiniteCanvas = ({ frame }: { frame: string }) => {
         ></ProjectNode>
       ))}
       <ImagePreview frame={frame} pointerX={x} pointerY={y} />
-      <NodeArrows />
+      <NodeArrows nodes={nodes} screen={screen} container={container} />
     </div>
   );
 };
