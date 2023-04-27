@@ -5,8 +5,12 @@ export const generateId = () => {
   return v4();
 };
 
-export const generateName = () => {
+export const generateProjectName = () => {
   return faker.company.bs();
+};
+
+export const generateName = () => {
+  return faker.name.fullName();
 };
 
 export const getAuthorId = () => {

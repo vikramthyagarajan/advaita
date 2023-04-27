@@ -1,5 +1,6 @@
 import { generateId, generateName } from "modules/core/project-utils";
 import { Edit2 } from "react-feather";
+import Notifications from "./Notifications";
 
 type Board = {
   name: string;
@@ -32,7 +33,9 @@ const Board = ({ board }: BoardProps) => {
       <img src={board.image} className="w-[200px] h-[200px] rounded-t-md"></img>
       <div className="flex bg-white px-2 py-4 rounded-b-md items-center gap-2">
         <Edit2 fontSize={14}></Edit2>
-        <div className="text-xs capitalize text-ellipsis">{board.name}</div>
+        <div className="text-xs capitalize text-ellipsis font-[200]">
+          {board.name}
+        </div>
       </div>
     </div>
   );
@@ -46,7 +49,7 @@ const Boards = ({ boards }: BoardsProps) => {
   return (
     <div className=" flex flex-wrap gap-5 p-5">
       {boards.map((b) => (
-        <Board board={b} />
+        <Board key={b.id} board={b} />
       ))}
     </div>
   );
@@ -62,22 +65,27 @@ const Dashboard = (props: DashboardProps) => {
         <div className="grid grid-cols-[2fr_1fr]">
           <div className="p-5 flex flex-col gap-5">
             <div className="rounded-3xl bg-white py-5">
-              <div className="mx-5 mb-2 font-bold text-2xl">Your Boards</div>
-              <div className="border border-slate-300"></div>
+              <div className="mx-5 mb-2 font-semibold text-2xl">
+                Your Boards
+              </div>
+              <div className="border-[0.5px] border-slate-300"></div>
               <Boards boards={ownBoards} />
             </div>
             <div className="rounded-3xl bg-white py-5">
-              <div className="mx-5 mb-2 font-bold text-2xl">
+              <div className="mx-5 mb-2 font-semibold text-2xl">
                 Boards You've Viewed
               </div>
-              <div className="border border-slate-300"></div>
+              <div className="border-[0.5px] border-slate-300"></div>
               <Boards boards={otherBoards} />
             </div>
           </div>
           <div className="p-5">
             <div className="rounded-3xl bg-white py-5">
-              <div className="mx-5 mb-2 font-bold text-2xl">Notifications</div>
-              <div className="border border-slate-300"></div>
+              <div className="mx-5 mb-2 font-semibold text-2xl">
+                Notifications
+              </div>
+              <div className="border-[0.5px] border-slate-300 mb-5"></div>
+              <Notifications />
             </div>
           </div>
         </div>
