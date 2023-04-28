@@ -38,9 +38,10 @@ const CommentNotification = (n: Notification) => {
           <span className="font-semibold">{n.author}</span> replied to you on{" "}
           <span className="font-semibold">{n.boardName}</span>
         </div>
-        <div className="bg-slate-100 flex items-end gap-1">
-          <div className="border-l-2 h-10 border-slate-500"></div>
-          <div className="">This seems like a better way to put it</div>
+        <div className="bg-slate-100 flex items-end pl-1 border-l-2 border-slate-500">
+          <div className="mt-5 mb-1">
+            This seems like a better way to put it
+          </div>
         </div>
       </div>
     </>
@@ -77,9 +78,8 @@ const ForkNotification = (n: Notification) => {
           <span className="font-semibold">{n.author}</span> wants to make
           changes to <span className="font-semibold">{n.boardName}</span>
         </div>
-        <div className="bg-slate-100 flex items-end gap-1">
-          <div className="border-l-2 h-10 border-slate-500"></div>
-          <div className="">This is where it gets interesting</div>
+        <div className="bg-slate-100 flex items-end pl-1 border-l-2 border-slate-500">
+          <div className="mt-5 mb-1">This is where it gets interesting</div>
         </div>
       </div>
     </>
@@ -114,7 +114,7 @@ const NotificationType = (n: Notification) => {
 
 const NotificationView = ({ notification }: NotificationProps) => {
   return (
-    <div className="flex items-center p-5 gap-5">
+    <div className="flex items-start p-5 gap-5">
       <NotificationType {...notification} />
     </div>
   );

@@ -47,7 +47,7 @@ export const useArrowsPlaygroundData = () => {
       null
     );
     setTimeout(() => {
-      AppStore.canvas.zoomCamera(0, 20);
+      AppStore.canvas.zoomCamera(0, 50);
     }, 1000);
   }, []);
 };

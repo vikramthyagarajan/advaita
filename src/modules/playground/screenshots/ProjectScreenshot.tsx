@@ -71,7 +71,7 @@ const ProjectScrenshot = ({
   return (
     <div
       ref={ref}
-      className={clsx("fixed left-5 bg-slate-100", {
+      className={clsx("fixed left-5 bg-slate-400", {
         hidden: !visible,
         block: visible,
       })}

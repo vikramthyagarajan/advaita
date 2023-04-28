@@ -13,7 +13,7 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
     { name: "textbox", icon: PlusSquare },
   ];
   return (
-    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-slate-100 px-4 py-2 rounded-t-lg">
+    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-slate-200 px-4 py-2 rounded-t-lg">
       <input
         ref={inputRef}
         type="file"
@@ -38,7 +38,7 @@ export const WidgetDock = ({ selectedWidget }: { selectedWidget: Widget }) => {
           <div
             key={widget.name}
             className={clsx("p-2 rounded-md cursor-pointer", {
-              "bg-slate-300": widget.name === selectedWidget,
+              "bg-slate-400": widget.name === selectedWidget,
             })}
             onClick={() => {
               if (widget.name === "image" || widget.name === "video") {

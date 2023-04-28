@@ -14,6 +14,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
+import EditorHeader from "./EditorHeader";
 
 export interface CanvasRootProps {
   frame: string;
@@ -50,10 +51,11 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
       collisionDetection={pointerWithin}
       sensors={sensors}
     >
-      <div className="w-full h-full relative">
+      <div className="w-full h-full relative flex flex-col">
+        <EditorHeader />
         <div
           className={clsx(
-            "w-full h-full relative overflow-hidden overscroll-none",
+            "relative overflow-hidden overscroll-none bg-slate-100 flex-1",
             {
               "cursor-crosshair": widget !== "pointer",
             }

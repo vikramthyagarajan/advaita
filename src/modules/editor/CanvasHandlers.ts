@@ -25,12 +25,17 @@ const wheelListener = (e: WheelEvent) => {
     AppStore.canvas.zoomCamera(deltaX, deltaY);
   }
 };
-const pointerMoveListener = (event: PointerEvent) => {
+const pointerMoveListener = (
+  ref: RefObject<HTMLDivElement>,
+  event: PointerEvent
+) => {
   const { widget } = getUiState();
   const screen = AppStore.canvas.screen;
   const scale = AppStore.canvas.scale;
-  AppStore.canvas.movePointer(event.clientX, event.clientY);
-  const localStart = { x: event.clientX, y: event.clientY };
+  const clientX = event.clientX;
+  const clientY = event.clientY - (ref.current?.offsetTop || 0);
+  AppStore.canvas.movePointer(clientX, clientY);
+  const localStart = { x: clientX, y: clientY };
   const globalStart = {
     x: localStart.x / scale.x + screen.x,
     y: localStart.y / scale.y + screen.y,
@@ -105,7 +110,10 @@ export const useCanvasHandlers = (ref: RefObject<HTMLDivElement>) => {
       ref.current.addEventListener("wheel", wheelListener, { passive: false });
       ref.current.addEventListener("pointerdown", pointerDownListener);
       ref.current.addEventListener("pointerup", pointerUpListener);
-      ref.current.addEventListener("pointermove", pointerMoveListener);
+      ref.current.addEventListener(
+        "pointermove",
+        pointerMoveListener.bind(null, ref)
+      );
     }
 
     return () => {
@@ -113,7 +121,10 @@ export const useCanvasHandlers = (ref: RefObject<HTMLDivElement>) => {
         ref.current.removeEventListener("wheel", wheelListener);
         ref.current.removeEventListener("pointerdown", pointerDownListener);
         ref.current.removeEventListener("pointerup", pointerUpListener);
-        ref.current.removeEventListener("pointermove", pointerMoveListener);
+        ref.current.removeEventListener(
+          "pointermove",
+          pointerMoveListener.bind(null, ref)
+        );
       }
     };
   }, [ref]);
