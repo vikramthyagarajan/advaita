@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/",
       "destination": "https://mission-mislead-357676.framer.app/landing"
     },
     { "source": "/(.*)", "destination": "/index.html" }
