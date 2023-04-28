@@ -13,7 +13,7 @@ import Dashboard from "modules/dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/dashboard",
     element: <Dashboard />,
   },
   {

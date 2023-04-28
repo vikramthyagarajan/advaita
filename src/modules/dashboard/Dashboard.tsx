@@ -62,8 +62,10 @@ const Boards = ({ boards }: BoardsProps) => {
 
 export interface DashboardProps {}
 const Dashboard = (props: DashboardProps) => {
-  const ownBoards = generateFakeData();
-  const otherBoards = generateFakeData();
+  const ownBoards = [];
+  // generateFakeData();
+  const otherBoards = [];
+  // generateFakeData();
   return (
     <div className="h-full w-full bg-slate-200 overflow-hidden flex">
       <div className="overflow-scroll">
