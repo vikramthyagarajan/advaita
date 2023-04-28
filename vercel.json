@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/",
-      "destination": "https://mission-mislead-357676.framer.app/landing"
-    },
-    {
       "source": "/landing",
       "destination": "https://mission-mislead-357676.framer.app/landing"
     },
