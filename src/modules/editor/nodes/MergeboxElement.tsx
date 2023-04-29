@@ -11,6 +11,7 @@ import { Check, CornerDownLeft } from "react-feather";
 import { onCommentAdd } from "../prose-mirror/SlateUtils";
 import { getAuthorId } from "modules/core/project-utils";
 import { acceptMergeDocumentQuery } from "modules/core/network-utils";
+import { faker } from "@faker-js/faker";
 
 const MergeActions = ({ id }: { id: string }) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
@@ -43,30 +44,33 @@ const MergeActions = ({ id }: { id: string }) => {
 };
 
 const renderDiff = (markdown: string) => {
-  return <Markdown>{markdown}</Markdown>;
+  return <div>{markdown}</div>;
+  // return <Markdown>{markdown}</Markdown>;
 };
 
-const Comment = ({
-  commentId,
-  text,
-  author,
-}: {
-  commentId: string;
-  text: string;
-  author: string;
-}) => {
-  return (
-    <div className="my-3 flex gap-2">
-      <div className="w-[50px] h-[50px]">
-        <img
-          src={`https://robohash.org/${author}`}
-          className="w-full h-full rounded-full"
-        />
+const Comment = memo(
+  ({
+    commentId,
+    text,
+    author,
+  }: {
+    commentId: string;
+    text: string;
+    author: string;
+  }) => {
+    return (
+      <div className="my-3 flex gap-2">
+        <div className="w-[50px] h-[50px]">
+          <img
+            src={faker.image.avatar()}
+            className="w-full h-full rounded-full"
+          />
+        </div>
+        <div>{text}</div>
       </div>
-      <div>{text}</div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 const CommentInput = ({ nodeId }: { nodeId: string }) => {
   const [value, setValue] = useState("");
@@ -133,6 +137,9 @@ const MergeboxElement = ({
   const childNode = AppStore.project.getNode(node.child) as TextboxNode;
 
   if (!parentNode || !childNode) return <div></div>;
+  const oldText = parentNode.text;
+  const newText =
+    childNode.preText + "\n" + childNode.text + "\n" + childNode.postText;
 
   return (
     <BoxNode
@@ -152,12 +159,12 @@ const MergeboxElement = ({
           }
         )}
       >
-        {/* <DiffViewer
-          oldValue={parentNode.text}
-          newValue={childNode.text}
+        <DiffViewer
+          oldValue={oldText}
+          newValue={newText}
           splitView={true}
           renderContent={renderDiff}
-        ></DiffViewer> */}
+        ></DiffViewer>
         <CommentSection nodeId={node.id} />
       </div>
     </BoxNode>

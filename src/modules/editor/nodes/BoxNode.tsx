@@ -35,22 +35,22 @@ export const BoxNode = ({
       <div
         className="absolute top-0 left-0 bg-transparent z-50 cursor-ns-resize touch-none"
         style={{ width: `${position.width - 16}px`, height: "2px", left: 8 }}
-        // {...handlers.edges.top()}
+        {...handlers.edges.top()}
       ></div>
       <div
         className="absolute top-0 left-0 bg-transparent z-50 cursor-ew-resize touch-none"
         style={{ width: "2px", height: `${position.height - 16}px`, top: 8 }}
-        // {...handlers.edges.left()}
+        {...handlers.edges.left()}
       ></div>
       <div
         className="absolute bottom-0 left-0 bg-transparent z-50 cursor-ns-resize touch-none"
         style={{ width: `${position.width - 16}px`, height: "2px", left: 8 }}
-        // {...handlers.edges.bottom()}
+        {...handlers.edges.bottom()}
       ></div>
       <div
         className="absolute top-0 right-0 bg-transparent z-50 cursor-ew-resize touch-none"
         style={{ width: "2px", height: `${position.height - 16}px`, top: 8 }}
-        // {...handlers.edges.right()}
+        {...handlers.edges.right()}
       ></div>
       {/* corners */}
       <div

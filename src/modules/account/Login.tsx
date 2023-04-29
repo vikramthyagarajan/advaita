@@ -1,6 +1,11 @@
 import { Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className="h-full w-full flex flex-col justify-center gap-5 p-8">
       <h1>Login</h1>
@@ -16,7 +21,10 @@ const Login = () => {
         Start Writing
       </button>
       <div className="text-sm mx-auto">
-        New here? <span className="underline font-semibold">Register</span>
+        New here?{" "}
+        <Link to="/account/register" className="underline font-semibold">
+          Register
+        </Link>
       </div>
     </div>
   );

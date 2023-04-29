@@ -233,6 +233,46 @@ export const initializeSockets = async () => {
   // };
 };
 
+export const registerUserQuery = async ({
+  id,
+  name,
+  email,
+  avatar,
+  password,
+}: {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  password: string;
+}) => {
+  return await axios.post(backendUrl + "/users.json", {
+    user: {
+      // uuid: id,
+      // name,
+      email,
+      // avatar,
+      password,
+      password_confirmation: password,
+    },
+  });
+};
+
+export const loginUserQuery = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  return await axios.post(backendUrl + "/users/sign_in", {
+    user: {
+      email,
+      password,
+    },
+  });
+};
+
 export const uploadToCloudinary = async (id: string, image: string) => {
   return await axios.post(cloudinaryUrl, {
     file: image,
