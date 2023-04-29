@@ -3,12 +3,14 @@ import { Button, TextField } from "@mui/material";
 import { registerUserQuery } from "modules/core/network-utils";
 import { generateId } from "modules/core/project-utils";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   return (
     <div className="h-full w-full flex flex-col justify-center gap-5 p-8">
@@ -36,14 +38,17 @@ const Register = () => {
       <button
         className="mt-8 py-3 bg-[#222222] text-white font-bold rounded-md disabled:bg-slate-300"
         disabled={name === "" || password === "" || email === ""}
-        onClick={() => {
-          registerUserQuery({
+        onClick={async () => {
+          const user = await registerUserQuery({
             id: generateId(),
             name,
             email,
             password,
             avatar: faker.image.avatar(),
           });
+          localStorage.setItem("user", JSON.stringify(user));
+          const navigateTo = searchParams.get("then") || "/";
+          navigate(navigateTo);
         }}
       >
         Create account

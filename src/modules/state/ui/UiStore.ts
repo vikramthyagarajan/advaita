@@ -18,6 +18,9 @@ const UiReducer = (state: UiState, action: UiActions) => {
     case "urlPreviewUpdated":
       state = { ...state, urlPreview: action.url };
       break;
+
+    case "userUpdated":
+      state = { ...state, user: action.user };
   }
   return state;
 };

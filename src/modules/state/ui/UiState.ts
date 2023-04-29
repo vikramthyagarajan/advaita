@@ -1,9 +1,17 @@
 export type Widget = "pointer" | "textbox" | "image" | "video";
+
+export type User = {
+  name: string;
+  avatar: string;
+  uuid: string;
+};
+
 export interface UiState {
   widget: Widget;
   selectedNode: string | null;
   selectedChild: string | null;
   urlPreview: string | null;
+  user: User | null;
 }
 
 export const getInitialUiState = (): UiState => {
@@ -12,8 +20,14 @@ export const getInitialUiState = (): UiState => {
     selectedNode: null,
     selectedChild: null,
     urlPreview: null,
+    user: null,
   };
 };
+
+interface UserUpdated {
+  type: "userUpdated";
+  user: User;
+}
 
 interface UiInitialized {
   type: "uiInitialized";
@@ -39,4 +53,5 @@ export type UiActions =
   | UiInitialized
   | WidgetUpdated
   | NodeSelected
+  | UserUpdated
   | UrlPreviewUpdated;

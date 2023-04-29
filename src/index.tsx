@@ -2,7 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Editor from "./modules/editor/Editor";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import PlacementPlayground from "modules/playground/placement/PlacementPlayground";
 import ArrowsPlayground from "modules/playground/arrows/ArrowsPlayground";
@@ -10,15 +14,28 @@ import { Analytics } from "@vercel/analytics/react";
 import { Signin, Signup } from "modules/account/Account";
 import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
 import Dashboard from "modules/dashboard/Dashboard";
+import { getUser } from "modules/core/project-utils";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Dashboard />,
+    loader: () => {
+      const user = getUser();
+      if (!user) return redirect("/account/register?then=/");
+      return { user };
+    },
   },
   {
-    path: "/boards/:id",
+    path: "/boards/:boardId",
     element: <Editor />,
+    loader: ({ params }) => {
+      const user = getUser();
+      if (!user)
+        return redirect(`/account/register?then=/boards/${params.boardId}`);
+
+      return { user };
+    },
   },
   {
     path: "/account/login",
@@ -28,18 +45,18 @@ const router = createBrowserRouter([
     path: "/account/register",
     element: <Signup />,
   },
-  {
-    path: "/playground/placement",
-    element: <PlacementPlayground />,
-  },
-  {
-    path: "/playground/arrows",
-    element: <ArrowsPlayground />,
-  },
-  {
-    path: "/playground/screenshot",
-    element: <ScreenshotPlayground />,
-  },
+  // {
+  //   path: "/playground/placement",
+  //   element: <PlacementPlayground />,
+  // },
+  // {
+  //   path: "/playground/arrows",
+  //   element: <ArrowsPlayground />,
+  // },
+  // {
+  //   path: "/playground/screenshot",
+  //   element: <ScreenshotPlayground />,
+  // },
 ]);
 
 const root = ReactDOM.createRoot(

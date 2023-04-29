@@ -7,8 +7,9 @@ import {
 import { generateId, getAuthorId } from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
+import { redirect } from "react-router-dom";
 
-const backendUrl = "http://api.advaita.co";
+const backendUrl = "http://localhost:4000";
 const cloudinaryCloudName = "diglgjher";
 const cloudinaryPresetName = "thumbnails";
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
@@ -248,10 +249,10 @@ export const registerUserQuery = async ({
 }) => {
   return await axios.post(backendUrl + "/users.json", {
     user: {
-      // uuid: id,
-      // name,
+      uuid: id,
+      name,
       email,
-      // avatar,
+      avatar,
       password,
       password_confirmation: password,
     },
@@ -265,7 +266,7 @@ export const loginUserQuery = async ({
   email: string;
   password: string;
 }) => {
-  return await axios.post(backendUrl + "/users/sign_in", {
+  return await axios.post(backendUrl + "/users/sign_in.json", {
     user: {
       email,
       password,
