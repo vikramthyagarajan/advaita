@@ -4,9 +4,15 @@ import {
   MergeboxNode,
   TextboxNode,
 } from "modules/state/project/ProjectTypes";
-import { generateId, getAuthorId } from "./project-utils";
+import {
+  generateId,
+  generateName,
+  generateProjectName,
+  getAuthorId,
+} from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
+import { faker } from "@faker-js/faker";
 
 const backendUrl = "https://api.advaita.co";
 // const backendUrl = "http://localhost:4000";
@@ -335,5 +341,13 @@ export const fetchAllBoardsQuery = async () => {
 export const getBoardQuery = async (id: string) => {
   return await axios.get(backendUrl + `/boards/${id}.json`, {
     withCredentials: true,
+  });
+};
+
+export const getDocumentVersionsQuery = async (id: string) => {
+  // return await axios.get(backendUrl + `/documents/${id}/versions.json`);
+  return [1, 2, 3, 4, 5].map(() => {
+    return `## ${generateProjectName()} \n${faker.lorem.paragraph()}
+    `;
   });
 };

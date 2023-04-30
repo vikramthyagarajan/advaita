@@ -6,7 +6,7 @@ import CanvasRoot from "./CanvasRoot";
 import { ElementInspector } from "./inspector/ElementInspector";
 import WidgetDock from "./widgets/WidgetDock";
 import { initializeSockets } from "modules/core/network-utils";
-import { useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import { Board, User } from "modules/core/NetworkTypes";
 
 const Editor = () => {
@@ -43,6 +43,7 @@ const Editor = () => {
         cacheKey={cacheKey}
         selectedChild={selectedChild}
       />
+      <Outlet />
     </div>
   );
 };

@@ -15,7 +15,12 @@ import { Signin, Signup } from "modules/account/Account";
 import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
 import Dashboard from "modules/dashboard/Dashboard";
 import { getUser } from "modules/core/project-utils";
-import { fetchAllBoardsQuery, getBoardQuery } from "modules/core/network-utils";
+import {
+  fetchAllBoardsQuery,
+  getBoardQuery,
+  getDocumentVersionsQuery,
+} from "modules/core/network-utils";
+import DocumentVersions from "modules/editor/DocumentVersions";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +45,18 @@ const router = createBrowserRouter([
       const board = await getBoardQuery(params.boardId || "");
       return { user, board: board.data };
     },
+    children: [
+      {
+        path: "/boards/:boardId/versions/:documentId",
+        element: <DocumentVersions />,
+        loader: async ({ params }) => {
+          const documents = await getDocumentVersionsQuery(
+            params.documentId || ""
+          );
+          return { documents };
+        },
+      },
+    ],
   },
   {
     path: "/account/login",
