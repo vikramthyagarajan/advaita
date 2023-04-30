@@ -25,11 +25,11 @@ const DashboardHeader = ({ avatar }: DashboardHeaderProps) => {
         <div className="flex-1 flex justify-end ml-auto items-center">
           <button
             className="bg-slate-800 text-white flex rounded-md px-2 py-1 mr-5"
-            onClick={() => {
+            onClick={async () => {
               AppStore.project.clearRegistry();
               const root = AppStore.project.___fetchState();
               const id = generateId();
-              createBoardQuery(id, generateProjectName(), root);
+              await createBoardQuery(id, generateProjectName(), root);
               navigate(`/boards/${id}`);
             }}
           >
