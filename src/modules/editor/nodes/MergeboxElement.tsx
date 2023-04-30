@@ -36,6 +36,7 @@ const MergeActions = ({ id }: { id: string }) => {
               child.text +
               "\n" +
               (child.postText ? "\n" + child.postText : "");
+            console.log("full text", newText, parent, child);
             AppStore.project.setNode(parent.id, { text: newText });
             // const newNode = {
             //   ...document.metadata.node,
