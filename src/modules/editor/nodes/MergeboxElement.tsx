@@ -31,10 +31,16 @@ const MergeActions = ({ id }: { id: string }) => {
             AppStore.project.removeNode(node.id);
             // AppStore.project.removeNode(parent.id);
             // setTimeout(() => {
-            const newNode = {
-              ...document.metadata.node,
-            };
-            AppStore.project.registry.addNode({ ...newNode });
+            const newText =
+              (child.preText ? child.preText + "\n" : "") +
+              child.text +
+              "\n" +
+              (child.postText ? "\n" + child.postText : "");
+            AppStore.project.setNode(parent.id, { text: newText });
+            // const newNode = {
+            //   ...document.metadata.node,
+            // };
+            // AppStore.project.registry.addNode({ ...newNode });
             // }, 1000);
           }}
         ></Check>
