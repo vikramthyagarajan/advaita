@@ -49,10 +49,16 @@ const onFork = (nodeId: string) => {
     postText,
     selection: selection as [number, number],
   });
-  // const forkedNode = AppStore.project.getNode(id);
-  // const originalNode = AppStore.project.getNode(node.id);
+  const forkedNode = AppStore.project.getNode(id) as TextboxNode;
+  const originalNode = AppStore.project.getNode(node.id);
   // saveDocumentQuery(node.id, originalNode);
-  // forkDocumentQuery({ id: nodeId, diff, original, forkedNode });
+  forkDocumentQuery({
+    id: nodeId,
+    diff,
+    original,
+    author: forkedNode.author,
+    forkedNode,
+  });
 };
 
 const SelectionActions = ({ node }: { node: TextboxNode }) => {
