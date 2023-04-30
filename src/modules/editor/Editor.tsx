@@ -5,13 +5,9 @@ import { useEffect, useRef } from "react";
 import CanvasRoot from "./CanvasRoot";
 import { ElementInspector } from "./inspector/ElementInspector";
 import WidgetDock from "./widgets/WidgetDock";
-import {
-  fetchAllDocumentsQuery,
-  initializeSockets,
-} from "modules/core/network-utils";
+import { initializeSockets } from "modules/core/network-utils";
 import { useLoaderData } from "react-router-dom";
 import { Board, User } from "modules/core/NetworkTypes";
-import { saveBoard } from "modules/core/project-utils";
 
 const Editor = () => {
   const { user, board } = useLoaderData() as {

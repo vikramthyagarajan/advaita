@@ -7,10 +7,14 @@ import { useEffect, useState } from "react";
 
 export const useTextEditorState = (id: string) => {
   const node = AppStore.project.getNode(id) as TextboxNode;
+  const user = AppStore.project.user;
   const [editorState, setEditorState] = useState(
     EditorState.create({
       doc: defaultMarkdownParser.parse(node.text) || undefined,
-      plugins: exampleSetup({ schema, menuBar: true }),
+      plugins: exampleSetup({
+        schema,
+        menuBar: node.author === (user?.uuid || ""),
+      }),
     })
   );
   useEffect(() => {

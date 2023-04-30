@@ -16,6 +16,7 @@ export interface GenericNode {
   id: string;
   cacheKey: string;
   parent?: string;
+  author: string;
   connections?: { id: string }[];
   children?: { id: string; type: NodeType }[];
 }

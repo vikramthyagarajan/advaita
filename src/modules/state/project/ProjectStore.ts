@@ -102,6 +102,7 @@ export default class ProjectStore {
       cacheKey: "",
       diff,
       connections,
+      author: this.author?.uuid || "",
       child,
       parent,
     });
@@ -125,10 +126,11 @@ export default class ProjectStore {
         cacheKey: "",
         align: "center",
         vertical: "center",
+        author: this.author?.uuid || "",
         text: text || "",
       });
+      saveBoard();
     }
-    saveBoard();
     AppStore.canvas.shouldRender = true;
   }
 
@@ -148,6 +150,7 @@ export default class ProjectStore {
       underline: false,
       size: 16,
       style: "none",
+      author: this.author?.uuid || "",
       editOnCreate,
     }) as TextNode;
     this.registry.addNodeChild(
