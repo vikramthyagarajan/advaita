@@ -28,13 +28,15 @@ const MergeActions = ({ id }: { id: string }) => {
               JSON.stringify(AppStore.project.getNode(node.child))
             ) as TextboxNode;
             const { document } = await acceptMergeDocumentQuery(child.id);
-            // AppStore.project.removeNode(node.id);
+            const newText =
+              child.preText + "\n" + child.text + "\n" + child.postText;
+            AppStore.project.removeNode(node.id);
             // AppStore.project.removeNode(parent.id);
             // setTimeout(() => {
-            //   const newNode = {
-            //     ...document.metadata.node,
-            //   };
-            //   AppStore.project.registry.addNode({ ...newNode });
+            const newNode = {
+              ...document.metadata.node,
+            };
+            AppStore.project.setNode(parent.id, { text: newText });
             // }, 1000);
           }}
         ></Check>
