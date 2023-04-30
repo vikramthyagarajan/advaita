@@ -18,14 +18,17 @@ const getConnectionsInView = (nodes: RootNode[], screen: CanvasPosition) => {
               (n) => n.id === connection.id
             ) as RootNode;
             return [
-              { id: node.id, position: node.position },
-              { id: connection.id, position: childNode.position },
+              { id: node.id, position: node?.position },
+              { id: connection.id, position: childNode?.position },
             ] as [ConnectionNode, ConnectionNode];
           }),
         ]);
       }
       return acc;
     }, [])
+    .filter(([connection1, connection2]) => {
+      return connection1.position && connection2.position;
+    })
     .filter(([connection1, connection2]) => {
       return (
         inBounds(connection1.position, screen) ||
