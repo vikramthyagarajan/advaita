@@ -31,13 +31,6 @@ const Editor = () => {
       AppStore.project.user = user;
     }
     initializeSockets();
-    const interval = setInterval(() => {
-      saveBoard();
-    }, 15000);
-
-    return () => {
-      clearInterval(interval);
-    };
   }, []);
   const rootRef = useRef<HTMLDivElement>(null);
   const frame = useRenderLoop(60);

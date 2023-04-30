@@ -1,5 +1,5 @@
 import { CanvasPosition } from "modules/core/foundation";
-import { generateId } from "modules/core/project-utils";
+import { generateId, saveBoard } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
 import {
@@ -31,6 +31,7 @@ export default class ProjectStore {
     const node = this.registry.getNode(id);
     if (!node || !("position" in node)) return;
     this.registry.patchNodePosition(id, { ...node.position, ...position });
+    saveBoard();
     AppStore.canvas.shouldRender = true;
   }
 
@@ -104,6 +105,7 @@ export default class ProjectStore {
       child,
       parent,
     });
+    saveBoard();
     AppStore.canvas.shouldRender = true;
   }
 
@@ -126,6 +128,7 @@ export default class ProjectStore {
         text: text || "",
       });
     }
+    saveBoard();
     AppStore.canvas.shouldRender = true;
   }
 
@@ -158,6 +161,7 @@ export default class ProjectStore {
   public setNode(id: string, node: Partial<Node>) {
     this.registry.patchNode(id, node);
     AppStore.canvas.shouldRender = true;
+    saveBoard();
   }
 
   public loadProject(nodes: Node[]) {
