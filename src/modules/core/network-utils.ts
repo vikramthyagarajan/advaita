@@ -60,8 +60,13 @@ export const createNewDocumentQuery = async (
 };
 
 export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
+  const newText =
+    (node.preText ? node.preText + "\n" : "") +
+    node.text +
+    "\n" +
+    (node.postText ? "\n" + node.postText : "");
   const response = await axios.patch(`${backendUrl}/documents/${id}.json`, {
-    body: node.text,
+    body: newText,
     data: {
       node,
     },
