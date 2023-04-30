@@ -7,9 +7,8 @@ import {
 import { generateId, getAuthorId } from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
-import { redirect } from "react-router-dom";
 
-const backendUrl = "http://localhost:4000";
+const backendUrl = "http://api.advaita.co";
 const cloudinaryCloudName = "diglgjher";
 const cloudinaryPresetName = "thumbnails";
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
