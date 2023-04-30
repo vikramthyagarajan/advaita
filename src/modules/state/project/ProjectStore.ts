@@ -12,8 +12,11 @@ import {
   SubNodeType,
   TextNode,
 } from "./ProjectTypes";
+import { Board, User } from "modules/core/NetworkTypes";
 
 export default class ProjectStore {
+  public board: Board | null = null;
+  private author: User | null = null;
   private _registry = new ProjectRegistry();
 
   public get registry() {
@@ -216,6 +219,18 @@ export default class ProjectStore {
 
   public clearRegistry() {
     this.registry.clearRegistry();
+  }
+
+  public get user() {
+    return this.author as User;
+  }
+
+  public set user(u: User) {
+    this.author = u;
+  }
+
+  public get boardId() {
+    return this.registry.boardId;
   }
 
   public get rootNodes(): RootNode[] {

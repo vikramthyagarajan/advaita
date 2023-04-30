@@ -178,6 +178,10 @@ export class ProjectRegistry {
     return copyJSON({ ...this._shadowRoot });
   }
 
+  public get boardId() {
+    return this.id;
+  }
+
   get textboxes() {
     return Object.values(this.root.textboxes || {});
   }

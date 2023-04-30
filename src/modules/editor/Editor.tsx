@@ -11,13 +11,33 @@ import {
 } from "modules/core/network-utils";
 import { useLoaderData } from "react-router-dom";
 import { Board, User } from "modules/core/NetworkTypes";
+import { saveBoard } from "modules/core/project-utils";
 
 const Editor = () => {
-  const { user, board } = useLoaderData() as { user: User; board: Board };
+  const { user, board } = useLoaderData() as {
+    user: { data: User };
+    board: { data: Board };
+  };
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
   useEffect(() => {
-    if (board) AppStore.project.___loadState(board.uuid, board.data);
+    if (board && board.data) {
+      AppStore.project.board = board.data;
+      AppStore.project.___loadState(
+        board.data.uuid,
+        JSON.parse(JSON.stringify(board.data.data))
+      );
+    }
+    if (user && user.data) {
+      AppStore.project.user = user.data;
+    }
     initializeSockets();
+    // const interval = setInterval(() => {
+    //   saveBoard();
+    // }, 15000);
+
+    return () => {
+      // clearInterval(interval);
+    };
   }, []);
   const rootRef = useRef<HTMLDivElement>(null);
   const frame = useRenderLoop(60);

@@ -1,8 +1,14 @@
 import { faker } from "@faker-js/faker";
+import AppStore from "modules/state/AppStore";
 import { memo } from "react";
+import { Save } from "react-feather";
 
-const EditorHeader = () => {
-  const avatar = faker.image.avatar();
+export type EditorHeaderProps = {
+  avatar: string;
+  projectName: string;
+};
+
+const EditorHeader = ({ avatar, projectName }: EditorHeaderProps) => {
   return (
     <div className="h-10 w-full bg-white border-b-[0.5px] border-slate-200">
       <div className="flex h-full w-full">
@@ -11,7 +17,7 @@ const EditorHeader = () => {
           <div className="font-bold text-lg">Advaita</div>
         </div>
         <div className="flex-1 flex justify-center items-center">
-          {/* <div className="font-bold text-lg">Advaita</div> */}
+          <div className="font-bold text-lg capitalize">{projectName}</div>
         </div>
         <div className="flex-1 flex justify-end ml-auto items-center">
           <img

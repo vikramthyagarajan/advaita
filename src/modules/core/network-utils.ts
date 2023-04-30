@@ -306,6 +306,20 @@ export const createBoardQuery = async (id: string, name: string, root: any) => {
   );
 };
 
+export const saveBoardQuery = async (id: string, root: any) => {
+  return await axios.post(
+    backendUrl + `/boards/${id}.json`,
+    {
+      board: {
+        data: root,
+      },
+    },
+    {
+      withCredentials: true,
+    }
+  );
+};
+
 export const getBoardQuery = async (id: string) => {
   return await axios.get(backendUrl + `/boards/${id}.json`, {
     withCredentials: true,

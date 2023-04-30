@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/core";
 import { onDragEnd, onDragMove, onDragStart } from "./nodes/DragHandlers";
 import EditorHeader from "./EditorHeader";
+import AppStore from "modules/state/AppStore";
 
 export interface CanvasRootProps {
   frame: string;
@@ -26,9 +27,10 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
   useEffect(() => {
     if (width === 0 || height === 0) return;
     CanvasStore.initialize(width, height);
-    // AppStore.project.___loadState(Fixtures.MemeTemplate);
   }, [width, height]);
   useCanvasHandlers(canvas);
+  const user = AppStore.project.user;
+  const board = AppStore.project.board;
   const { widget } = getUiState();
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -52,7 +54,10 @@ const CanvasRoot = ({ frame }: { frame: string }) => {
       sensors={sensors}
     >
       <div className="w-full h-full relative flex flex-col">
-        <EditorHeader />
+        <EditorHeader
+          avatar={user?.avatar || ""}
+          projectName={board?.name || ""}
+        />
         <div
           className={clsx(
             "relative overflow-hidden overscroll-none bg-slate-100 flex-1",
