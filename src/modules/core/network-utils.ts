@@ -172,20 +172,20 @@ export const initializeSockets = async () => {
   });
 
   channel.bind("update-document", (data) => {
-    const document = data;
-    console.log("got document to update", document);
-    const node = AppStore.project.getNode(document.uuid) as TextboxNode;
-    if (
-      document.data.node.author === getAuthorId ||
-      (node && document.data.node.text === node.text)
-    )
-      return;
-    AppStore.project.removeNode(document.uuid);
-    setTimeout(() => {
-      AppStore.project.registry.addNode({
-        ...document.data.node,
-      });
-    }, 500);
+    // const document = data;
+    // console.log("got document to update", document);
+    // const node = AppStore.project.getNode(document.uuid) as TextboxNode;
+    // if (
+    //   document.data.node.author === getAuthorId ||
+    //   (node && document.data.node.text === node.text)
+    // )
+    //   return;
+    // AppStore.project.removeNode(document.uuid);
+    // setTimeout(() => {
+    //   AppStore.project.registry.addNode({
+    //     ...document.data.node,
+    //   });
+    // }, 500);
   });
 
   channel.bind("update-board", async (board) => {
