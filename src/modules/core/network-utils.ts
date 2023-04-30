@@ -8,7 +8,8 @@ import { generateId, getAuthorId } from "./project-utils";
 import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 
-const backendUrl = "http://api.advaita.co";
+const backendUrl = "https://api.advaita.co";
+// const backendUrl = "http://localhost:4000";
 const cloudinaryCloudName = "diglgjher";
 const cloudinaryPresetName = "thumbnails";
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
@@ -317,6 +318,12 @@ export const saveBoardQuery = async (id: string, root: any) => {
       withCredentials: true,
     }
   );
+};
+
+export const fetchAllBoardsQuery = async () => {
+  return await axios.get(backendUrl + "/boards.json", {
+    withCredentials: true,
+  });
 };
 
 export const getBoardQuery = async (id: string) => {
