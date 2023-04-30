@@ -247,16 +247,20 @@ export const registerUserQuery = async ({
   avatar: string;
   password: string;
 }) => {
-  return await axios.post(backendUrl + "/users.json", {
-    user: {
-      uuid: id,
-      name,
-      email,
-      avatar,
-      password,
-      password_confirmation: password,
+  return await axios.post(
+    backendUrl + "/users.json",
+    {
+      user: {
+        uuid: id,
+        name,
+        email,
+        avatar,
+        password,
+        password_confirmation: password,
+      },
     },
-  });
+    { withCredentials: true }
+  );
 };
 
 export const loginUserQuery = async ({
@@ -266,12 +270,16 @@ export const loginUserQuery = async ({
   email: string;
   password: string;
 }) => {
-  return await axios.post(backendUrl + "/users/sign_in.json", {
-    user: {
-      email,
-      password,
+  return await axios.post(
+    backendUrl + "/users/sign_in.json",
+    {
+      user: {
+        email,
+        password,
+      },
     },
-  });
+    { withCredentials: true }
+  );
 };
 
 export const uploadToCloudinary = async (id: string, image: string) => {
@@ -279,5 +287,27 @@ export const uploadToCloudinary = async (id: string, image: string) => {
     file: image,
     upload_preset: cloudinaryPresetName,
     public_id: id,
+  });
+};
+
+export const createBoardQuery = async (id: string, name: string, root: any) => {
+  return await axios.post(
+    backendUrl + "/boards.json",
+    {
+      board: {
+        name,
+        uuid: id,
+        data: root,
+      },
+    },
+    {
+      withCredentials: true,
+    }
+  );
+};
+
+export const getBoardQuery = async (id: string) => {
+  return await axios.get(backendUrl + `/boards/${id}.json`, {
+    withCredentials: true,
   });
 };

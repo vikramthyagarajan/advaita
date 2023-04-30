@@ -1,7 +1,13 @@
 import { faker } from "@faker-js/faker";
+import { createBoardQuery } from "modules/core/network-utils";
+import { generateId, generateProjectName } from "modules/core/project-utils";
+import AppStore from "modules/state/AppStore";
+import { Plus } from "react-feather";
+import { useNavigate } from "react-router-dom";
 
 const DashboardHeader = () => {
   const avatar = faker.image.avatar();
+  const navigate = useNavigate();
   return (
     <div className="h-10 w-full bg-white border-b-[0.5px] border-slate-200">
       <div className="flex h-full w-full">
@@ -13,6 +19,19 @@ const DashboardHeader = () => {
           {/* <div className="font-bold text-lg">Advaita</div> */}
         </div>
         <div className="flex-1 flex justify-end ml-auto items-center">
+          <button
+            className="bg-slate-800 text-white flex rounded-md px-2 py-1 mr-5"
+            onClick={() => {
+              AppStore.project.clearRegistry();
+              const root = AppStore.project.___fetchState();
+              const id = generateId();
+              createBoardQuery(id, generateProjectName(), root);
+              navigate(`/boards/${id}`);
+            }}
+          >
+            <Plus className="mr-1"></Plus>
+            <span>Create Board</span>
+          </button>
           <img
             src={avatar}
             className="h-8 w-8 mr-5 rounded-full border border-slate-500"

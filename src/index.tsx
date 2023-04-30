@@ -15,6 +15,7 @@ import { Signin, Signup } from "modules/account/Account";
 import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
 import Dashboard from "modules/dashboard/Dashboard";
 import { getUser } from "modules/core/project-utils";
+import { getBoardQuery } from "modules/core/network-utils";
 
 const router = createBrowserRouter([
   {
@@ -29,12 +30,13 @@ const router = createBrowserRouter([
   {
     path: "/boards/:boardId",
     element: <Editor />,
-    loader: ({ params }) => {
+    loader: async ({ params }) => {
       const user = getUser();
       if (!user)
         return redirect(`/account/register?then=/boards/${params.boardId}`);
 
-      return { user };
+      const board = await getBoardQuery(params.boardId || "");
+      return { user, board };
     },
   },
   {

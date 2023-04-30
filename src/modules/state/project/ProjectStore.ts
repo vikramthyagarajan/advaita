@@ -162,8 +162,8 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public ___loadState(root: any) {
-    return this.registry.___loadRegistry(root as ProjectRoot);
+  public ___loadState(id: string, root: any) {
+    return this.registry.___loadRegistry(id, root as ProjectRoot);
   }
 
   public ___fetchState() {
@@ -212,6 +212,10 @@ export default class ProjectStore {
 
   public get root() {
     return this.registry.root;
+  }
+
+  public clearRegistry() {
+    this.registry.clearRegistry();
   }
 
   public get rootNodes(): RootNode[] {

@@ -10,6 +10,7 @@ import {
   TextboxNode,
   TextNode,
 } from "./ProjectTypes";
+import { generateId } from "modules/core/project-utils";
 
 export interface ProjectRoot {
   textboxes: {
@@ -32,23 +33,21 @@ export interface ProjectRoot {
   };
 }
 
+const getEmptyProjectRoot = () => {
+  return {
+    textboxes: {},
+    mergeboxes: {},
+    imageboxes: {},
+    texts: {},
+    images: {},
+    videos: {},
+  };
+};
+
 export class ProjectRegistry {
-  private _shadowRoot: ProjectRoot = {
-    textboxes: {},
-    mergeboxes: {},
-    imageboxes: {},
-    texts: {},
-    images: {},
-    videos: {},
-  };
-  private _root: ProjectRoot = {
-    textboxes: {},
-    mergeboxes: {},
-    imageboxes: {},
-    texts: {},
-    images: {},
-    videos: {},
-  };
+  private id: string | null = null;
+  private _shadowRoot: ProjectRoot = getEmptyProjectRoot();
+  private _root: ProjectRoot = getEmptyProjectRoot();
 
   public get root() {
     return this._shadowRoot;
@@ -164,31 +163,37 @@ export class ProjectRegistry {
     // this._root = copyJSON(this._shadowRoot);
   }
 
-  public ___loadRegistry(root: ProjectRoot) {
+  public clearRegistry() {
+    this._shadowRoot = getEmptyProjectRoot();
+    this._root = getEmptyProjectRoot();
+  }
+
+  public ___loadRegistry(id: string, root: ProjectRoot) {
+    this.id = id;
     this._shadowRoot = copyJSON(root);
     this._root = copyJSON(root);
   }
 
   public ___fetchRoot() {
-    return copyJSON(this._shadowRoot);
+    return copyJSON({ ...this._shadowRoot });
   }
 
   get textboxes() {
-    return Object.values(this.root.textboxes);
+    return Object.values(this.root.textboxes || {});
   }
   get mergeboxes() {
-    return Object.values(this.root.mergeboxes);
+    return Object.values(this.root.mergeboxes || {});
   }
   get imageboxes() {
-    return Object.values(this.root.imageboxes);
+    return Object.values(this.root.imageboxes || {});
   }
   get texts() {
-    return Object.values(this.root.texts);
+    return Object.values(this.root.texts || {});
   }
   get images() {
-    return Object.values(this.root.images);
+    return Object.values(this.root.images || {});
   }
   get videos() {
-    return Object.values(this.root.videos);
+    return Object.values(this.root.videos || {});
   }
 }

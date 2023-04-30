@@ -9,14 +9,14 @@ import {
   fetchAllDocumentsQuery,
   initializeSockets,
 } from "modules/core/network-utils";
+import { useLoaderData } from "react-router-dom";
+import { Board, User } from "modules/core/NetworkTypes";
 
 const Editor = () => {
+  const { user, board } = useLoaderData() as { user: User; board: Board };
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
   useEffect(() => {
-    console.log("fetching documents");
-    fetchAllDocumentsQuery().then((nodes) => {
-      AppStore.project.loadProject(nodes);
-    });
+    if (board) AppStore.project.___loadState(board.uuid, board.data);
     initializeSockets();
   }, []);
   const rootRef = useRef<HTMLDivElement>(null);
