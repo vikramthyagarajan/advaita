@@ -67,13 +67,16 @@ const Boards = ({ boards }: BoardsProps) => {
 
 export interface DashboardProps {}
 const Dashboard = (props: DashboardProps) => {
-  const { user } = useLoaderData() as { user: User };
+  const { user, boards } = useLoaderData() as {
+    user: User;
+    boards: { mine: Board[]; visited: Board[] };
+  };
   useEffect(() => {
     const user = getUser();
     if (user) AppStore.project.user = user;
   }, []);
-  const ownBoards = [];
-  const otherBoards = [];
+  const ownBoards = boards.mine;
+  const otherBoards = boards.visited;
 
   return (
     <div className="h-full w-full bg-slate-200 overflow-hidden flex">
