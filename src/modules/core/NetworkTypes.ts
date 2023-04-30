@@ -7,6 +7,7 @@ export type Board = {
 };
 
 export type User = {
+  uuid: string;
   name: string;
   email: string;
   avatar: string;

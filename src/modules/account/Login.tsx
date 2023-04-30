@@ -34,7 +34,7 @@ const Login = () => {
             email,
             password,
           });
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user.data));
           const navigateTo = searchParams.get("then") || "/";
           navigate(navigateTo);
         }}

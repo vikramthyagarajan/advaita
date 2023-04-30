@@ -46,7 +46,7 @@ const Register = () => {
             password,
             avatar: faker.image.avatar(),
           });
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user.data));
           const navigateTo = searchParams.get("then") || "/";
           navigate(navigateTo);
         }}

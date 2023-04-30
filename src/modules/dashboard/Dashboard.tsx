@@ -2,10 +2,15 @@ import {
   generateId,
   generateName,
   generateProjectName,
+  getUser,
 } from "modules/core/project-utils";
 import { Edit2 } from "react-feather";
 import Notifications from "./Notifications";
 import DashboardHeader from "./DashboardHeader";
+import AppStore from "modules/state/AppStore";
+import { useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
+import { User } from "modules/core/NetworkTypes";
 
 type Board = {
   name: string;
@@ -62,14 +67,18 @@ const Boards = ({ boards }: BoardsProps) => {
 
 export interface DashboardProps {}
 const Dashboard = (props: DashboardProps) => {
+  const { user } = useLoaderData() as { user: User };
+  useEffect(() => {
+    const user = getUser();
+    if (user) AppStore.project.user = user;
+  }, []);
   const ownBoards = [];
-  // generateFakeData();
   const otherBoards = [];
-  // generateFakeData();
+
   return (
     <div className="h-full w-full bg-slate-200 overflow-hidden flex">
       <div className="overflow-scroll">
-        <DashboardHeader />
+        <DashboardHeader avatar={user?.avatar || ""} />
         <div className="grid grid-cols-[2fr_1fr]">
           <div className="p-5 flex flex-col gap-5">
             <div className="rounded-3xl bg-white py-5">

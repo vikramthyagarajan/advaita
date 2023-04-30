@@ -2,11 +2,15 @@ import { faker } from "@faker-js/faker";
 import { createBoardQuery } from "modules/core/network-utils";
 import { generateId, generateProjectName } from "modules/core/project-utils";
 import AppStore from "modules/state/AppStore";
+import { memo } from "react";
 import { Plus } from "react-feather";
 import { useNavigate } from "react-router-dom";
 
-const DashboardHeader = () => {
-  const avatar = faker.image.avatar();
+export type DashboardHeaderProps = {
+  avatar: string;
+};
+
+const DashboardHeader = ({ avatar }: DashboardHeaderProps) => {
   const navigate = useNavigate();
   return (
     <div className="h-10 w-full bg-white border-b-[0.5px] border-slate-200">
@@ -42,4 +46,4 @@ const DashboardHeader = () => {
   );
 };
 
-export default DashboardHeader;
+export default memo(DashboardHeader);

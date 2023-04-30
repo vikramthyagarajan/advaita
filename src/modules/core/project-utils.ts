@@ -1,8 +1,8 @@
 import { v4 } from "uuid";
 import { faker } from "@faker-js/faker";
-import { User } from "modules/state/ui/UiState";
 import { saveBoardQuery } from "./network-utils";
 import AppStore from "modules/state/AppStore";
+import { User } from "./NetworkTypes";
 
 export const generateId = () => {
   return v4();

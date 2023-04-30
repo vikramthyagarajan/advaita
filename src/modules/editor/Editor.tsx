@@ -15,28 +15,28 @@ import { saveBoard } from "modules/core/project-utils";
 
 const Editor = () => {
   const { user, board } = useLoaderData() as {
-    user: { data: User };
-    board: { data: Board };
+    user: User;
+    board: Board;
   };
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
   useEffect(() => {
-    if (board && board.data) {
-      AppStore.project.board = board.data;
+    if (board) {
+      AppStore.project.board = board;
       AppStore.project.___loadState(
-        board.data.uuid,
-        JSON.parse(JSON.stringify(board.data.data))
+        board.uuid,
+        JSON.parse(JSON.stringify(board.data))
       );
     }
-    if (user && user.data) {
-      AppStore.project.user = user.data;
+    if (user) {
+      AppStore.project.user = user;
     }
     initializeSockets();
-    // const interval = setInterval(() => {
-    //   saveBoard();
-    // }, 15000);
+    const interval = setInterval(() => {
+      saveBoard();
+    }, 15000);
 
     return () => {
-      // clearInterval(interval);
+      clearInterval(interval);
     };
   }, []);
   const rootRef = useRef<HTMLDivElement>(null);

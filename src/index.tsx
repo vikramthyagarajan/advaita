@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         return redirect(`/account/register?then=/boards/${params.boardId}`);
 
       const board = await getBoardQuery(params.boardId || "");
-      return { user, board };
+      return { user, board: board.data };
     },
   },
   {
