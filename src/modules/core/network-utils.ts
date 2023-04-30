@@ -306,7 +306,7 @@ export const createBoardQuery = async (id: string, name: string, root: any) => {
 };
 
 export const saveBoardQuery = async (id: string, root: any) => {
-  return await axios.post(
+  return await axios.put(
     backendUrl + `/boards/${id}.json`,
     {
       board: {
