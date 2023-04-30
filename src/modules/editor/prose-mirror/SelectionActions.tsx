@@ -98,6 +98,7 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
     }
   );
   useEditorEffect((view) => {
+    const offsetTop = 40;
     const topCoordinates = view?.coordsAtPos(view.state.selection.anchor);
     const bottomCoordinates = view?.coordsAtPos(view.state.selection.head);
     if (!topCoordinates || !bottomCoordinates || view?.state.selection.empty) {
@@ -106,14 +107,13 @@ const SelectionActions = ({ node }: { node: TextboxNode }) => {
       }
       return;
     }
-    if (
-      topCoordinates.top !== selection.top ||
-      bottomCoordinates.bottom !== selection.bottom
-    )
+    const topValue = topCoordinates.top - offsetTop;
+    const bottomValue = bottomCoordinates.bottom - offsetTop;
+    if (topValue !== selection.top || bottomValue !== selection.bottom)
       dispatch({
         type: "setSelection",
-        top: topCoordinates.top,
-        bottom: bottomCoordinates.bottom,
+        top: topValue,
+        bottom: bottomValue,
       });
   });
 
