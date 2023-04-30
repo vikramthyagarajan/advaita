@@ -177,6 +177,12 @@ export const initializeSockets = async () => {
     }, 500);
   });
 
+  channel.bind("update-board", async (board) => {
+    const id = board.uuid;
+    const root = board.data;
+    AppStore.project.___loadState(id, root);
+  });
+
   channel.bind("create-comment", async (data) => {
     const comment = data;
     const documentId = comment.document_uuid;

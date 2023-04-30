@@ -15,16 +15,18 @@ import { Signin, Signup } from "modules/account/Account";
 import ScreenshotPlayground from "modules/playground/screenshots/ScreenshotPlayground";
 import Dashboard from "modules/dashboard/Dashboard";
 import { getUser } from "modules/core/project-utils";
-import { getBoardQuery } from "modules/core/network-utils";
+import { fetchAllBoardsQuery, getBoardQuery } from "modules/core/network-utils";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Dashboard />,
-    loader: () => {
+    loader: async () => {
       const user = getUser();
       if (!user) return redirect("/account/register?then=/");
-      return { user };
+
+      const boards = await fetchAllBoardsQuery();
+      return { user, boards: boards.data };
     },
   },
   {
