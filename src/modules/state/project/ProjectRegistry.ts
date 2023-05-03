@@ -12,12 +12,6 @@ export interface ProjectRoot {
   mergeboxes: {
     [id: string]: MergeboxNode;
   };
-  images: {
-    [id: string]: Node;
-  };
-  videos: {
-    [id: string]: Node;
-  };
 }
 
 const getEmptyProjectRoot = () => {
@@ -41,35 +35,39 @@ const provider = new WebsocketProvider(
   // "boards",
   doc
 );
-const map = doc.getMap<Map<TextboxNode> | Map<MergeboxNode>>("board1");
-const textboxes = new Map<TextboxNode>();
-const mergeboxes = new Map<MergeboxNode>();
-map.set("textboxes", textboxes);
-map.set("mergeboxes", mergeboxes);
 
 export class ProjectRegistry {
   private id: string | null = null;
-  private _shadowRoot: ProjectRoot = getEmptyProjectRoot();
-  private _root: ProjectRoot = getEmptyProjectRoot();
+  private _shadowRoot: Map<Map<TextboxNode> | Map<MergeboxNode>> =
+    doc.getMap("testing");
+  private _origin: ProjectRoot | null = null;
+
+  private get textboxes() {
+    return this.root.get("textboxes") as Map<TextboxNode>;
+  }
+
+  private get mergeboxes() {
+    return this.root.get("mergeboxes") as Map<MergeboxNode>;
+  }
+
+  public addNode(node: Node) {
+    if (node.type === "textbox") this.textboxes.set(node.id, node);
+    else if (node.type === "mergebox") this.mergeboxes.set(node.id, node);
+    return node;
+  }
 
   public get root() {
     return this._shadowRoot;
   }
 
   public get origin() {
-    return this._root;
-  }
-
-  public addNode(node: Node) {
-    if (node.type === "textbox") textboxes.set(node.id, node);
-    else if (node.type === "mergebox") this.root.mergeboxes[node.id] = node;
-    return node;
+    return this._origin;
   }
 
   public patchNodePosition(id: string, position: CanvasPosition) {
     const node = this.getNode(id) as TextboxNode | null;
     if (node && "position" in node) {
-      textboxes.set(id, { ...node, position });
+      this.textboxes.set(id, { ...node, position });
       this.touch(id);
     }
   }
@@ -83,93 +81,84 @@ export class ProjectRegistry {
     }
   }
 
-  public addNodeChild(
-    id: string,
-    child: { id: string; type: NodeType },
-    at?: number
-  ) {
-    const node = this.getNode(id);
-    const index = at === undefined ? node.children?.length || 0 : at;
-    if (node.children) {
-      node.children.splice(index, 0, { id: child.id, type: child.type });
-    } else node.children = [{ id: child.id, type: child.type }];
-  }
-
-  patchNodeText(id: string, text: string) {
-    const node = this.root.texts[id];
-    if (node) node.text = text;
-    this.touch(id);
-  }
-
-  removeChildNode(parent: string, id: string) {
-    const node = this.getNode(parent);
-    if (node.children) {
-      const index = node.children.findIndex((child) => child.id === id);
-      if (index === -1) return;
-      node.children.splice(index, 1);
-    }
-    this.touch(parent);
-  }
-
   removeNode(id: string) {
-    delete this.root.textboxes[id];
-    delete this.root.mergeboxes[id];
+    this.textboxes.delete(id);
+    this.mergeboxes.delete(id);
   }
 
   patchNode(id: string, node: Partial<Node>) {
     const original = this.getNode(id);
-    Object.assign(original, node);
+    if (!original) return;
+    const newNode = Object.assign({}, original, node);
+    if (original.type === "textbox")
+      this.textboxes.set(id, newNode as TextboxNode);
+    else if (original.type === "mergebox")
+      this.mergeboxes.set(id, newNode as MergeboxNode);
     this.touch(id);
   }
 
-  patchEditOnCreate(id: string, value: boolean) {
-    const node = this.getNode(id) as TextNode | null;
-    if (node) node.editOnCreate = value;
-    this.touch(id);
+  public getNode(id: string): Node | undefined {
+    return this.textboxes?.get(id) || this.mergeboxes?.get(id);
   }
 
-  public getNode(id: string): Node {
-    return map.get("textboxes")?.get(id) || this.root.mergeboxes[id];
-  }
-
-  public getOriginNode(id: string): Node {
-    return this.origin.textboxes[id] || this.origin.mergeboxes[id];
+  public getOriginNode(id: string): Node | undefined {
+    if (this.origin)
+      return this.origin.textboxes[id] || this.origin.mergeboxes[id];
   }
 
   public fork() {
-    this._root = copyJSON(this._shadowRoot);
+    this._origin = this.___fetchRoot();
   }
 
   public resetWithFork() {
-    this._shadowRoot = copyJSON(this._root);
+    const project = this.origin;
+    if (!project) return;
+    const newTextboxes = new Map<TextboxNode>();
+    const newMergeboxes = new Map<MergeboxNode>();
+    Object.values(project.textboxes).map((node) =>
+      newTextboxes.set(node.id, node)
+    );
+    Object.values(project.mergeboxes).map((node) =>
+      newMergeboxes.set(node.id, node)
+    );
+    this.root.set("textboxes", newTextboxes);
+    this.root.set("mergeboxes", newMergeboxes);
   }
 
   public commit() {
-    // this._root = copyJSON(this._shadowRoot);
-  }
-
-  public clearRegistry() {
-    this._shadowRoot = getEmptyProjectRoot();
-    this._root = getEmptyProjectRoot();
+    this._origin = this.___fetchRoot();
   }
 
   public ___loadRegistry(id: string, root: ProjectRoot) {
     this.id = id;
-    this._shadowRoot = copyJSON(root);
-    this._root = copyJSON(root);
+    this._shadowRoot = doc.getMap<Map<TextboxNode> | Map<MergeboxNode>>(
+      `board-${id}`
+    );
+    const textboxes = new Map<TextboxNode>();
+    const mergeboxes = new Map<MergeboxNode>();
+    this.root.set("textboxes", textboxes);
+    this.root.set("mergeboxes", mergeboxes);
   }
 
-  public ___fetchRoot() {
-    return copyJSON({ ...this._shadowRoot });
+  public ___fetchRoot(): ProjectRoot {
+    return ["textboxes", "mergeboxes"].reduce(
+      (result, field) => {
+        this.root.get(field)?.forEach((value) => {
+          result[field][value.id] = value;
+        });
+        return result;
+      },
+      { textboxes: {}, mergeboxes: {} }
+    );
   }
 
   public get boardId() {
     return this.id;
   }
 
-  get textboxes() {
+  get allTextboxes() {
     let boxes: TextboxNode[] = [];
-    const it = map.get("textboxes")?.values();
+    const it = this.textboxes?.values();
     if (!it) return [];
     let result = it.next();
     while (!result.done) {
@@ -177,9 +166,16 @@ export class ProjectRegistry {
       result = it.next();
     }
     return boxes;
-    // return Object.values(this.root.textboxes || {});
   }
-  get mergeboxes() {
-    return Object.values(this.root.mergeboxes || {});
+  get allMergeboxes() {
+    let boxes: MergeboxNode[] = [];
+    const it = this.mergeboxes?.values();
+    if (!it) return [];
+    let result = it.next();
+    while (!result.done) {
+      boxes.push(result.value);
+      result = it.next();
+    }
+    return boxes;
   }
 }

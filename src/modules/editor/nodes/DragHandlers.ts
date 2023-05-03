@@ -1,7 +1,6 @@
 import { DragEndEvent, DragMoveEvent, DragStartEvent } from "@dnd-kit/core";
 import { CanvasPosition } from "modules/core/foundation";
 import AppStore from "modules/state/AppStore";
-import { SubNode } from "modules/state/project/ProjectTypes";
 
 export const onDragStart = (event: DragStartEvent) => {
   const { active } = event;

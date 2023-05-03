@@ -97,33 +97,6 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public addTextToBox(
-    id: string,
-    text: string,
-    { at, editOnCreate }: { at?: number; editOnCreate?: boolean }
-  ) {
-    const sub = this.registry.addNode({
-      id: generateId(),
-      type: "text",
-      cacheKey: "",
-      parent: id,
-      text,
-      bold: false,
-      italic: false,
-      underline: false,
-      size: 16,
-      style: "none",
-      author: this.author?.uuid || "",
-      editOnCreate,
-    }) as TextNode;
-    this.registry.addNodeChild(
-      id,
-      sub,
-      at !== undefined ? at : this.registry.getNode(id).children?.length || 0
-    );
-    AppStore.canvas.shouldRender = true;
-  }
-
   public setNode(id: string, node: Partial<Node>) {
     this.registry.patchNode(id, node);
     AppStore.canvas.shouldRender = true;
@@ -143,24 +116,8 @@ export default class ProjectStore {
     return this.registry.___fetchRoot();
   }
 
-  public addNodeChild(
-    id: string,
-    child: { id: string; type: NodeType },
-    at?: number
-  ) {
-    this.registry.addNodeChild(id, child, at);
-  }
-
-  public removeChildNode(parent: string, id: string) {
-    this.registry.removeChildNode(parent, id);
-  }
-
   public removeNode(id: string) {
     this.registry.removeNode(id);
-  }
-
-  public setEditOnCreate(id: string, value: boolean) {
-    this.registry.patchEditOnCreate(id, value);
   }
 
   public fork() {
@@ -175,20 +132,8 @@ export default class ProjectStore {
     this.registry.commit();
   }
 
-  public get origin() {
-    return this.registry.origin;
-  }
-
   public getOriginNode(id: string) {
     return this.registry.getOriginNode(id);
-  }
-
-  public get root() {
-    return this.registry.root;
-  }
-
-  public clearRegistry() {
-    this.registry.clearRegistry();
   }
 
   public get user() {
@@ -205,7 +150,7 @@ export default class ProjectStore {
 
   public get rootNodes(): RootNode[] {
     return ([] as RootNode[])
-      .concat(this.registry.textboxes)
-      .concat(this.registry.mergeboxes);
+      .concat(this.registry.allTextboxes)
+      .concat(this.registry.allMergeboxes);
   }
 }
