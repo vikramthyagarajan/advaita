@@ -26,46 +26,6 @@ export default class ProjectStore {
     AppStore.canvas.shouldRender = true;
   }
 
-  public addImagebox(
-    id: string,
-    { url, position }: { url: string; position: CanvasPosition }
-  ) {
-    if (this.registry.getNode(id)) {
-      const node = this.registry.getNode(id) as ImageboxNode;
-      this.registry.patchNodePosition(id, position);
-      node.children.forEach((child) => {
-        this.registry.patchNodePosition(child.id, {
-          left: 0,
-          top: 0,
-          width: position.width,
-          height: position.height,
-        });
-      });
-    } else {
-      const childId = generateId();
-      const inner = this.registry.addNode({
-        id: childId,
-        position: {
-          left: 0,
-          top: 0,
-          width: position.width,
-          height: position.height,
-        },
-        type: "image",
-        url,
-        cacheKey: "",
-      });
-      this.registry.addNode({
-        id,
-        position,
-        type: "imagebox",
-        children: [{ id: inner.id, type: "image" }],
-        cacheKey: "",
-      });
-    }
-    AppStore.canvas.shouldRender = true;
-  }
-
   public addMergeBox(
     id: string,
     {

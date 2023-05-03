@@ -1,7 +1,6 @@
 import { ScreenPosition } from "modules/core/foundation";
 import { Node } from "modules/state/project/ProjectTypes";
 import { memo } from "react";
-import ImageboxElement from "./ImageboxElement";
 import MergeboxElement from "./MergeboxElement";
 import TextboxElement from "./TextboxElement";
 
@@ -31,15 +30,6 @@ const ProjectNode = ({
   } else if (node.type === "mergebox") {
     return (
       <MergeboxElement
-        node={node}
-        selected={selected}
-        cacheKey={cacheKey}
-        screen={screen}
-      />
-    );
-  } else if (node.type === "imagebox") {
-    return (
-      <ImageboxElement
         node={node}
         selected={selected}
         cacheKey={cacheKey}
