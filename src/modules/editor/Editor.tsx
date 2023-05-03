@@ -8,6 +8,7 @@ import WidgetDock from "./widgets/WidgetDock";
 import { initializeSockets } from "modules/core/network-utils";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { Board, User } from "modules/core/NetworkTypes";
+import ProjectScreenshot from "modules/playground/screenshots/ProjectScreenshot";
 
 const Editor = () => {
   const { user, board } = useLoaderData() as {
@@ -15,6 +16,7 @@ const Editor = () => {
     board: Board;
   };
   const { widget, selectedNode: selected, selectedChild } = useUiStore();
+  const { screenshotId, onScreenshot } = AppStore.data.getScreenshotData();
   useEffect(() => {
     if (board) {
       AppStore.project.board = board;
@@ -42,6 +44,12 @@ const Editor = () => {
         selectedNode={selected}
         cacheKey={cacheKey}
         selectedChild={selectedChild}
+      />
+      <ProjectScreenshot
+        screenshotId={screenshotId}
+        onScreenshot={onScreenshot}
+        width={800}
+        height={800}
       />
       <Outlet />
     </div>

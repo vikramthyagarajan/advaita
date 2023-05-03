@@ -50,7 +50,7 @@ const generateFakeData = (): Board[] => {
 
 const Board = ({ board }: BoardProps) => {
   const random = Math.round(Math.random() * 5);
-  const url = images[random];
+  const url = `https://res.cloudinary.com/diglgjher/image/upload/boards/${board.uuid}.png`; //images[random];
   return (
     <Link
       className="rounded-md border border-slate-400 w-[200px] cursor-pointer overflow-hidden shadow-sm"
