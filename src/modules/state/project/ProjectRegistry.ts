@@ -110,8 +110,7 @@ export class ProjectRegistry {
     this._origin = this.___fetchRoot();
   }
 
-  public resetWithFork() {
-    const project = this.origin;
+  private _convertProjectRootToShadow(project: ProjectRoot) {
     if (!project) return;
     const newTextboxes = new Map<TextboxNode>();
     const newMergeboxes = new Map<MergeboxNode>();
@@ -125,6 +124,10 @@ export class ProjectRegistry {
     this.root.set("mergeboxes", newMergeboxes);
   }
 
+  public resetWithFork() {
+    if (this.origin) this._convertProjectRootToShadow(this.origin);
+  }
+
   public commit() {
     this._origin = this.___fetchRoot();
   }
@@ -134,10 +137,7 @@ export class ProjectRegistry {
     this._shadowRoot = doc.getMap<Map<TextboxNode> | Map<MergeboxNode>>(
       `board-${id}`
     );
-    const textboxes = new Map<TextboxNode>();
-    const mergeboxes = new Map<MergeboxNode>();
-    this.root.set("textboxes", textboxes);
-    this.root.set("mergeboxes", mergeboxes);
+    this._convertProjectRootToShadow(root);
   }
 
   public ___fetchRoot(): ProjectRoot {
