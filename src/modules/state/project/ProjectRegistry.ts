@@ -1,16 +1,9 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { copyJSON } from "modules/core/function-utils";
-import {
-  ImageboxNode,
-  MergeboxNode,
-  Node,
-  NodeType,
-  SubNode,
-  SubNodeType,
-  TextboxNode,
-  TextNode,
-} from "./ProjectTypes";
+import { MergeboxNode, Node, NodeType, TextboxNode } from "./ProjectTypes";
 import { generateId } from "modules/core/project-utils";
+import { WebsocketProvider } from "y-websocket";
+import { Doc, Map } from "yjs";
 
 export interface ProjectRoot {
   textboxes: {
@@ -18,12 +11,6 @@ export interface ProjectRoot {
   };
   mergeboxes: {
     [id: string]: MergeboxNode;
-  };
-  imageboxes: {
-    [id: string]: ImageboxNode;
-  };
-  texts: {
-    [id: string]: TextNode;
   };
   images: {
     [id: string]: Node;
@@ -44,6 +31,22 @@ const getEmptyProjectRoot = () => {
   };
 };
 
+const doc = new Doc();
+const provider = new WebsocketProvider(
+  "ws://localhost:1234",
+  "advaita-boards",
+  // "wss://s8900.blr1.piesocket.com/v3/1?api_key=TLi7SBirMhpM6hE8BGFobgTwVxrONF8DVVXhYuEq&notify_self=1",
+  // "advaita-boards",
+  // "wss://ws-ap2.pusher.com:443/app/b6229e41fcc751d61ba8",
+  // "boards",
+  doc
+);
+const map = doc.getMap<Map<TextboxNode> | Map<MergeboxNode>>("board1");
+const textboxes = new Map<TextboxNode>();
+const mergeboxes = new Map<MergeboxNode>();
+map.set("textboxes", textboxes);
+map.set("mergeboxes", mergeboxes);
+
 export class ProjectRegistry {
   private id: string | null = null;
   private _shadowRoot: ProjectRoot = getEmptyProjectRoot();
@@ -58,18 +61,15 @@ export class ProjectRegistry {
   }
 
   public addNode(node: Node) {
-    if (node.type === "textbox") this.root.textboxes[node.id] = node;
+    if (node.type === "textbox") textboxes.set(node.id, node);
     else if (node.type === "mergebox") this.root.mergeboxes[node.id] = node;
-    else if (node.type === "text") this.root.texts[node.id] = node;
-    else if (node.type === "imagebox") this.root.imageboxes[node.id] = node;
-    else if (node.type === "image") this.root.images[node.id] = node;
     return node;
   }
 
   public patchNodePosition(id: string, position: CanvasPosition) {
-    const node = this.getNode(id);
-    if ("position" in node) {
-      node.position = position;
+    const node = this.getNode(id) as TextboxNode | null;
+    if (node && "position" in node) {
+      textboxes.set(id, { ...node, position });
       this.touch(id);
     }
   }
@@ -114,7 +114,6 @@ export class ProjectRegistry {
   removeNode(id: string) {
     delete this.root.textboxes[id];
     delete this.root.mergeboxes[id];
-    delete this.root.imageboxes[id];
   }
 
   patchNode(id: string, node: Partial<Node>) {
@@ -130,25 +129,11 @@ export class ProjectRegistry {
   }
 
   public getNode(id: string): Node {
-    return (
-      this.root.textboxes[id] ||
-      this.root.mergeboxes[id] ||
-      this.root.imageboxes[id] ||
-      this.root.texts[id] ||
-      this.root.images[id] ||
-      this.root.videos[id]
-    );
+    return map.get("textboxes")?.get(id) || this.root.mergeboxes[id];
   }
 
   public getOriginNode(id: string): Node {
-    return (
-      this.origin.textboxes[id] ||
-      this.origin.mergeboxes[id] ||
-      this.origin.imageboxes[id] ||
-      this.origin.texts[id] ||
-      this.origin.images[id] ||
-      this.origin.videos[id]
-    );
+    return this.origin.textboxes[id] || this.origin.mergeboxes[id];
   }
 
   public fork() {
@@ -183,21 +168,18 @@ export class ProjectRegistry {
   }
 
   get textboxes() {
-    return Object.values(this.root.textboxes || {});
+    let boxes: TextboxNode[] = [];
+    const it = map.get("textboxes")?.values();
+    if (!it) return [];
+    let result = it.next();
+    while (!result.done) {
+      boxes.push(result.value);
+      result = it.next();
+    }
+    return boxes;
+    // return Object.values(this.root.textboxes || {});
   }
   get mergeboxes() {
     return Object.values(this.root.mergeboxes || {});
-  }
-  get imageboxes() {
-    return Object.values(this.root.imageboxes || {});
-  }
-  get texts() {
-    return Object.values(this.root.texts || {});
-  }
-  get images() {
-    return Object.values(this.root.images || {});
-  }
-  get videos() {
-    return Object.values(this.root.videos || {});
   }
 }

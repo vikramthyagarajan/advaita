@@ -2,16 +2,7 @@ import { CanvasPosition } from "modules/core/foundation";
 import { generateId, saveBoard } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
-import {
-  Comment,
-  ImageboxNode,
-  Node,
-  NodeType,
-  RootNode,
-  SubNode,
-  SubNodeType,
-  TextNode,
-} from "./ProjectTypes";
+import { Comment, Node, NodeType, RootNode } from "./ProjectTypes";
 import { Board, User } from "modules/core/NetworkTypes";
 
 export default class ProjectStore {
@@ -117,6 +108,18 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
+      console.log("adding", {
+        id,
+        position,
+        title: generateId(),
+        type: "textbox",
+        children: [],
+        cacheKey: "",
+        align: "center",
+        vertical: "center",
+        author: this.author?.uuid || "",
+        text: text || "",
+      });
       this.registry.addNode({
         id,
         position,
@@ -243,7 +246,6 @@ export default class ProjectStore {
   public get rootNodes(): RootNode[] {
     return ([] as RootNode[])
       .concat(this.registry.textboxes)
-      .concat(this.registry.mergeboxes)
-      .concat(this.registry.imageboxes);
+      .concat(this.registry.mergeboxes);
   }
 }
