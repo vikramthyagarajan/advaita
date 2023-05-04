@@ -49,7 +49,7 @@ const onFork = (nodeId: string) => {
     postText,
     selection: selection as [number, number],
   });
-  AppStore.canvas.centerNodeOnScreen(id);
+  AppStore.canvas.centerMultipleNodesOnScreen([id, node.id]);
   const forkedNode = AppStore.project.getNode(id) as TextboxNode;
   const originalNode = AppStore.project.getNode(node.id);
   // saveDocumentQuery(node.id, originalNode);
