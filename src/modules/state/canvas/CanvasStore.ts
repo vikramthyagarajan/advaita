@@ -1,9 +1,12 @@
+import { CanvasPosition } from "modules/core/foundation";
 import {
   cameraToScreenCoordinates,
+  convertScreenPositionToCamera,
   scaleWithAnchorPoint,
 } from "../../core/camera-utils";
 import { CAMERA_ANGLE, RECT_H, RECT_W } from "../../core/constants";
 import { radians } from "../../core/math-utils";
+import AppStore from "../AppStore";
 
 export interface CanvasState {
   shouldRender: boolean;
@@ -197,5 +200,22 @@ export default class CanvasStore {
     const { x: left, y: top } = this.screen;
     this.data.pointer.x = left + deltaX / scale.x;
     this.data.pointer.y = top + deltaY / scale.y;
+  }
+
+  public static centerNodeOnScreen(id: string) {
+    const node = AppStore.project.getNode(id);
+    if (!node) return;
+    const { width, height } = this.screen;
+    const nodePosition = node.position;
+    const screenPosition: CanvasPosition = {
+      width,
+      height,
+      left: nodePosition.left - (width - nodePosition.width) / 2,
+      top: nodePosition.top - (height - nodePosition.height) / 2,
+    };
+    this.data.camera = convertScreenPositionToCamera(
+      screenPosition,
+      CAMERA_ANGLE
+    );
   }
 }

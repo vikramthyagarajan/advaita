@@ -1,3 +1,5 @@
+import { CanvasPosition } from "./foundation";
+
 export const cameraToScreenCoordinates = (
   x: number,
   y: number,
@@ -30,4 +32,17 @@ export const scaleWithAnchorPoint = (
     (anchorPointY * (scaleY2 - scaleY1) + scaleY1 * cameraY1) / scaleY2;
 
   return { x: cameraX2, y: cameraY2 };
+};
+
+// The position that is passed must respect the aspect ratio
+// Else the x,y positions of the camera will be off
+export const convertScreenPositionToCamera = (
+  position: CanvasPosition,
+  cameraAngle: number
+) => {
+  const z = position.width / (2 * Math.tan(cameraAngle));
+  const x = position.left + position.width / 2;
+  const y = position.top + position.height / 2;
+
+  return { x, y, z };
 };
