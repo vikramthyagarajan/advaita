@@ -7,6 +7,7 @@ import AppStore from "modules/state/AppStore";
 import SelectionActions from "./SelectionActions";
 import { useTextEditorState } from "./useTextEditorState";
 import { syncNodeWithEditorValue } from "./SlateUtils";
+import BlockActions from "./BlockActions";
 
 const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
   const [mount, setMount] = useState<HTMLDivElement | null>(null);
@@ -32,6 +33,7 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
         }
       >
         <SelectionActions node={node} />
+        <BlockActions node={node} />
         <div
           ref={setMount}
           onBlur={() => {
