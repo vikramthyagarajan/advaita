@@ -1528,6 +1528,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.7.tgz#ccab5c8f7dc557a52ca3288c10075c9ccd37fff7"
   integrity sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==
 
+"@rails/actioncable@^7.0.4-3":
+  version "7.0.4-3"
+  resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-7.0.4-3.tgz#f352f9b481294e135818275688ae0331f9bf3b31"
+  integrity sha512-sqf+G/8UfoFbA8n0FwJ1Ysl5lnwRnhluWpJW50ERYAIEqeNmeADIs9J1de6S4Wp7KwmyavwzT3OSgMd9rwZ6lw==
+
 "@react-hook/latest@^1.0.2":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@react-hook/latest/-/latest-1.0.3.tgz#c2d1d0b0af8b69ec6e2b3a2412ba0768ac82db80"
@@ -1819,6 +1824,15 @@
     "@babel/plugin-transform-react-jsx-source" "^7.19.6"
     magic-string "^0.27.0"
     react-refresh "^0.14.0"
+
+"@y-rb/actioncable@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@y-rb/actioncable/-/actioncable-0.1.5.tgz#af3e7bd39bcdf9053515e90955030b9bfe878e4a"
+  integrity sha512-uNb4KFrQpE1rxukLIOde/yfHYcr+7hUn2NEg1h1p8VU9vpqH9aq4s2Ite8mSSm9Re2ZFymp13j4yhwE52mdRUA==
+  dependencies:
+    lib0 "^0.2.58"
+    y-protocols "^1.0.5"
+    yjs "^13.5.44"
 
 "@zag-js/element-size@0.3.2":
   version "0.3.2"
@@ -3340,7 +3354,7 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lib0@^0.2.31, lib0@^0.2.42, lib0@^0.2.52, lib0@^0.2.74:
+lib0@^0.2.31, lib0@^0.2.42, lib0@^0.2.52, lib0@^0.2.58, lib0@^0.2.74:
   version "0.2.74"
   resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.74.tgz#7a4cc816a0420e76de85009423c8ab63655ff817"
   integrity sha512-roj9i46/JwG5ik5KNTkxP2IytlnrssAkD/OhlAVtE+GqectrdkfR+pttszVLrOzMDeXNs1MPt6yo66MUolWSiA==
@@ -4812,6 +4826,13 @@ yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2:
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
+
+yjs@^13.5.44:
+  version "13.6.1"
+  resolved "https://registry.yarnpkg.com/yjs/-/yjs-13.6.1.tgz#13c1b26b2215cd39ba7bf9ef8b570561d82fa98e"
+  integrity sha512-IyyHL+/v9N2S4YLSjGHMa0vMAfFxq8RDG5Nvb77raTTHJPweU3L/fRlqw6ElZvZUuHWnax3ufHR0Tx0ntfG63Q==
+  dependencies:
+    lib0 "^0.2.74"
 
 yjs@^13.6.0:
   version "13.6.0"

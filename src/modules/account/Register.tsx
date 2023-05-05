@@ -55,7 +55,10 @@ const Register = () => {
       </button>
       <div className="text-sm mx-auto">
         Already have an account?{" "}
-        <Link to="/account/login" className="underline font-semibold">
+        <Link
+          to={`/account/login?${searchParams.toString()}`}
+          className="underline font-semibold"
+        >
           Log in
         </Link>
       </div>

@@ -2,8 +2,17 @@ import { CanvasPosition } from "modules/core/foundation";
 import { copyJSON } from "modules/core/function-utils";
 import { MergeboxNode, Node, NodeType, TextboxNode } from "./ProjectTypes";
 import { generateId } from "modules/core/project-utils";
-import { WebsocketProvider } from "y-websocket";
 import { Doc, Map } from "yjs";
+import { WebsocketProvider } from "@y-rb/actioncable";
+import { createConsumer } from "@rails/actioncable";
+
+const doc = new Doc();
+const consumer = createConsumer("ws://localhost:4000/cable");
+
+//@ts-ignore
+const provider = new WebsocketProvider(doc, consumer, "SyncChannel", {
+  id: "1",
+});
 
 export interface ProjectRoot {
   textboxes: {
@@ -25,16 +34,16 @@ const getEmptyProjectRoot = () => {
   };
 };
 
-const doc = new Doc();
-const provider = new WebsocketProvider(
-  "ws://localhost:1234",
-  "advaita-boards",
-  // "wss://s8900.blr1.piesocket.com/v3/1?api_key=TLi7SBirMhpM6hE8BGFobgTwVxrONF8DVVXhYuEq&notify_self=1",
-  // "advaita-boards",
-  // "wss://ws-ap2.pusher.com:443/app/b6229e41fcc751d61ba8",
-  // "boards",
-  doc
-);
+// const doc = new Doc();
+// const provider = new WebsocketProvider(
+//   "ws://localhost:1234",
+//   "advaita-boards",
+//   // "wss://s8900.blr1.piesocket.com/v3/1?api_key=TLi7SBirMhpM6hE8BGFobgTwVxrONF8DVVXhYuEq&notify_self=1",
+//   // "advaita-boards",
+//   // "wss://ws-ap2.pusher.com:443/app/b6229e41fcc751d61ba8",
+//   // "boards",
+//   doc
+// );
 
 export class ProjectRegistry {
   private id: string | null = null;
