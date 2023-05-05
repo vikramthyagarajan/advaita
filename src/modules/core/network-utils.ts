@@ -195,49 +195,23 @@ export const initializeSockets = async () => {
   });
 
   channel.bind("create-comment", async (data) => {
-    const comment = data;
-    const documentId = comment.document_uuid;
-    const node = AppStore.project.registry.mergeboxes.find(
-      (m) => m.child === documentId
-    ) as MergeboxNode | null;
-    if (!node) {
-      const child = AppStore.project.getNode(documentId) as TextboxNode;
-      const parent = AppStore.project.getNode(
-        child.parent || ""
-      ) as TextboxNode;
-      if (!node || !parent || !child) return;
-      const { comments, diff } = await fetchDocumentCommentsQuery(child.id);
-      const mergeId = generateId();
-      const position = {
-        width: parent.position.width * 2,
-        height: parent.position.height * 1.5,
-        top: parent.position.top - parent.position.height * 2,
-        left: parent.position.left - parent.position.width,
-      };
-      AppStore.project.addMergeBox(mergeId, {
-        child: child.id,
-        parent: parent.id,
-        position,
-        diff,
-        connections: [],
-        comments: comments.map((c) => ({
-          id: c.uuid,
-          text: c.body,
-          author: c.author,
-          createdAt: c.createdAt,
-        })),
-      });
-    } else {
-      const { comments, diff } = await fetchDocumentCommentsQuery(node.child);
-      AppStore.project.setNode(node.id, {
-        comments: comments.map((c) => ({
-          id: c.uuid,
-          text: c.body,
-          author: c.author,
-          createdAt: c.createdAt,
-        })),
-      });
-    }
+    // const comment = data;
+    // const documentId = comment.document_uuid;
+    // const node = AppStore.project..find(
+    //   (m) => m.child === documentId
+    // ) as MergeboxNode | null;
+    // if (!node) {
+    // } else {
+    //   const { comments, diff } = await fetchDocumentCommentsQuery(node.child);
+    //   AppStore.project.setNode(node.id, {
+    //     comments: comments.map((c) => ({
+    //       id: c.uuid,
+    //       text: c.body,
+    //       author: c.author,
+    //       createdAt: c.createdAt,
+    //     })),
+    //   });
+    // }
   });
 
   // const poller = async () => {
