@@ -33,7 +33,7 @@ const ProseMirrorEditor = ({ node }: { node: TextboxNode }) => {
         }
       >
         <SelectionActions node={node} />
-        <BlockActions node={node} />
+        {/* <BlockActions node={node} /> */}
         <div
           ref={setMount}
           onBlur={() => {
