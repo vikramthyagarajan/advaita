@@ -2,16 +2,7 @@ import { CanvasPosition } from "modules/core/foundation";
 import { generateId, saveBoard } from "modules/core/project-utils";
 import AppStore from "../AppStore";
 import { ProjectRegistry, ProjectRoot } from "./ProjectRegistry";
-import {
-  Comment,
-  ImageboxNode,
-  Node,
-  NodeType,
-  RootNode,
-  SubNode,
-  SubNodeType,
-  TextNode,
-} from "./ProjectTypes";
+import { Comment, Node, NodeType, RootNode } from "./ProjectTypes";
 import { Board, User } from "modules/core/NetworkTypes";
 
 export default class ProjectStore {
@@ -32,46 +23,6 @@ export default class ProjectStore {
     if (!node || !("position" in node)) return;
     this.registry.patchNodePosition(id, { ...node.position, ...position });
     saveBoard();
-    AppStore.canvas.shouldRender = true;
-  }
-
-  public addImagebox(
-    id: string,
-    { url, position }: { url: string; position: CanvasPosition }
-  ) {
-    if (this.registry.getNode(id)) {
-      const node = this.registry.getNode(id) as ImageboxNode;
-      this.registry.patchNodePosition(id, position);
-      node.children.forEach((child) => {
-        this.registry.patchNodePosition(child.id, {
-          left: 0,
-          top: 0,
-          width: position.width,
-          height: position.height,
-        });
-      });
-    } else {
-      const childId = generateId();
-      const inner = this.registry.addNode({
-        id: childId,
-        position: {
-          left: 0,
-          top: 0,
-          width: position.width,
-          height: position.height,
-        },
-        type: "image",
-        url,
-        cacheKey: "",
-      });
-      this.registry.addNode({
-        id,
-        position,
-        type: "imagebox",
-        children: [{ id: inner.id, type: "image" }],
-        cacheKey: "",
-      });
-    }
     AppStore.canvas.shouldRender = true;
   }
 
@@ -117,6 +68,18 @@ export default class ProjectStore {
     if (this.registry.getNode(id)) {
       this.registry.patchNodePosition(id, position);
     } else {
+      console.log("adding", {
+        id,
+        position,
+        title: generateId(),
+        type: "textbox",
+        children: [],
+        cacheKey: "",
+        align: "center",
+        vertical: "center",
+        author: this.author?.uuid || "",
+        text: text || "",
+      });
       this.registry.addNode({
         id,
         position,
@@ -131,33 +94,6 @@ export default class ProjectStore {
       });
       saveBoard();
     }
-    AppStore.canvas.shouldRender = true;
-  }
-
-  public addTextToBox(
-    id: string,
-    text: string,
-    { at, editOnCreate }: { at?: number; editOnCreate?: boolean }
-  ) {
-    const sub = this.registry.addNode({
-      id: generateId(),
-      type: "text",
-      cacheKey: "",
-      parent: id,
-      text,
-      bold: false,
-      italic: false,
-      underline: false,
-      size: 16,
-      style: "none",
-      author: this.author?.uuid || "",
-      editOnCreate,
-    }) as TextNode;
-    this.registry.addNodeChild(
-      id,
-      sub,
-      at !== undefined ? at : this.registry.getNode(id).children?.length || 0
-    );
     AppStore.canvas.shouldRender = true;
   }
 
@@ -180,24 +116,8 @@ export default class ProjectStore {
     return this.registry.___fetchRoot();
   }
 
-  public addNodeChild(
-    id: string,
-    child: { id: string; type: NodeType },
-    at?: number
-  ) {
-    this.registry.addNodeChild(id, child, at);
-  }
-
-  public removeChildNode(parent: string, id: string) {
-    this.registry.removeChildNode(parent, id);
-  }
-
   public removeNode(id: string) {
     this.registry.removeNode(id);
-  }
-
-  public setEditOnCreate(id: string, value: boolean) {
-    this.registry.patchEditOnCreate(id, value);
   }
 
   public fork() {
@@ -212,20 +132,8 @@ export default class ProjectStore {
     this.registry.commit();
   }
 
-  public get origin() {
-    return this.registry.origin;
-  }
-
   public getOriginNode(id: string) {
     return this.registry.getOriginNode(id);
-  }
-
-  public get root() {
-    return this.registry.root;
-  }
-
-  public clearRegistry() {
-    this.registry.clearRegistry();
   }
 
   public get user() {
@@ -242,8 +150,7 @@ export default class ProjectStore {
 
   public get rootNodes(): RootNode[] {
     return ([] as RootNode[])
-      .concat(this.registry.textboxes)
-      .concat(this.registry.mergeboxes)
-      .concat(this.registry.imageboxes);
+      .concat(this.registry.allTextboxes)
+      .concat(this.registry.allMergeboxes);
   }
 }

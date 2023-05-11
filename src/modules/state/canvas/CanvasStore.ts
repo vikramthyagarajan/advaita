@@ -1,9 +1,12 @@
+import { CanvasPosition } from "modules/core/foundation";
 import {
   cameraToScreenCoordinates,
+  convertScreenPositionToCamera,
   scaleWithAnchorPoint,
 } from "../../core/camera-utils";
 import { CAMERA_ANGLE, RECT_H, RECT_W } from "../../core/constants";
 import { radians } from "../../core/math-utils";
+import AppStore from "../AppStore";
 
 export interface CanvasState {
   shouldRender: boolean;
@@ -197,5 +200,78 @@ export default class CanvasStore {
     const { x: left, y: top } = this.screen;
     this.data.pointer.x = left + deltaX / scale.x;
     this.data.pointer.y = top + deltaY / scale.y;
+  }
+
+  public static centerNodeOnScreen(id: string) {
+    const node = AppStore.project.getNode(id);
+    if (!node) return;
+    const { width, height } = this.screen;
+    const nodePosition = node.position;
+    const screenPosition: CanvasPosition = {
+      width,
+      height,
+      left: nodePosition.left - (width - nodePosition.width) / 2,
+      top: nodePosition.top - (height - nodePosition.height) / 2,
+    };
+    this.data.camera = convertScreenPositionToCamera(
+      screenPosition,
+      CAMERA_ANGLE
+    );
+  }
+
+  public static centerMultipleNodesOnScreen(
+    ids: string[],
+    padding: number = 50
+  ) {
+    const boundingBox = ids.reduce<{
+      left: number;
+      top: number;
+      right: number;
+      bottom: number;
+    }>(
+      (acc, nodeId) => {
+        const node = AppStore.project.getNode(nodeId);
+        if (!node) return acc;
+        const right = node.position.left + node.position.width;
+        const bottom = node.position.top + node.position.height;
+        if (acc.left >= node.position.left) acc.left = node.position.left;
+        if (acc.top >= node.position.top) acc.top = node.position.top;
+        if (acc.right <= right) acc.right = right;
+        if (acc.bottom <= bottom) acc.bottom = bottom;
+        return acc;
+      },
+      { left: Infinity, top: Infinity, right: 0, bottom: 0 }
+    );
+    const boundingPosition: CanvasPosition = {
+      left: boundingBox.left,
+      top: boundingBox.top,
+      width: boundingBox.right - boundingBox.left,
+      height: boundingBox.bottom - boundingBox.top,
+    };
+    let screenPosition: CanvasPosition;
+    if (boundingPosition.width > boundingPosition.height) {
+      const newWidth = boundingPosition.width + 2 * padding;
+      const newHeight = newWidth / this.aspect;
+      screenPosition = {
+        left: boundingPosition.left - padding,
+        width: newWidth,
+        height: newHeight,
+        top: boundingPosition.top - (newHeight - boundingPosition.height) / 2,
+      };
+    } else {
+      const newHeight = boundingPosition.height + 2 * padding;
+      const newWidth = this.aspect * newHeight;
+      screenPosition = {
+        top: boundingPosition.top - padding,
+        height: newHeight,
+        width: newWidth,
+        left: boundingPosition.left - (newWidth - boundingPosition.width) / 2,
+      };
+    }
+    const { x, y, z } = convertScreenPositionToCamera(
+      screenPosition,
+      CAMERA_ANGLE
+    );
+    this.data.camera = { x, y, z };
   }
 }

@@ -2,19 +2,26 @@ import NodeArrows from "../arrows/NodeArrows";
 import ProjectNode from "modules/editor/nodes/ProjectNode";
 import { getPositionOfWholeBoard } from "./screenshot-utils";
 import { useScreenshot } from "use-react-screenshot";
-import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  RefObject,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import AppStore from "modules/state/AppStore";
 import clsx from "clsx";
 
 export interface ProjectScrenshotProps {
-  screenshotId: string;
+  screenshotId: string | null;
   width: number;
   height: number;
   onScreenshot: (img: string) => void;
 }
 
 interface ProjectScreenshotLifecycleProps {
-  screenshotId: string;
+  screenshotId: string | null;
   width: number;
   height: number;
   onScreenshot: (img: string) => void;
@@ -35,7 +42,7 @@ const useProjectScreenshotLifecycle = ({
   }, [visible]);
 
   useEffect(() => {
-    setVisible(true);
+    if (screenshotId) setVisible(true);
   }, [screenshotId, width, height]);
 
   useEffect(() => {
@@ -104,4 +111,4 @@ const ProjectScrenshot = ({
   );
 };
 
-export default ProjectScrenshot;
+export default memo(ProjectScrenshot);

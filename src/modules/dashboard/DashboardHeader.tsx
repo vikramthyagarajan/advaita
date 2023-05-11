@@ -26,7 +26,6 @@ const DashboardHeader = ({ avatar }: DashboardHeaderProps) => {
           <button
             className="bg-slate-800 text-white flex rounded-md px-2 py-1 mr-5"
             onClick={async () => {
-              AppStore.project.clearRegistry();
               const root = AppStore.project.___fetchState();
               const id = generateId();
               await createBoardQuery(id, generateProjectName(), root);

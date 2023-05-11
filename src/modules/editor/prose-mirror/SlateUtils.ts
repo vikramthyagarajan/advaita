@@ -25,14 +25,21 @@ export const onMergeDocument = async (id: string) => {
   const diff = "";
   const mergeId = generateId();
 
+  const newWidth = parent.position.width * 2;
   const boundingBox = {
     left: parent.position.left - 2000,
     top: parent.position.top - 2000,
     width: parent.position.width + 4000,
     height: parent.position.height + 4000,
   };
+  const oldPosition = {
+    top: parent.position.top,
+    height: parent.position.height,
+    width: newWidth,
+    left: parent.position.left - (newWidth - parent.position.width) / 2,
+  };
   const newPosition = placeBoxNearbyQuadtree(
-    node.position,
+    oldPosition,
     AppStore.project.rootNodes,
     boundingBox,
     20
@@ -55,6 +62,7 @@ export const onMergeDocument = async (id: string) => {
   AppStore.project.setNode(node.id, {
     connections: [...(node.connections || []), { id: mergeId }],
   });
+  AppStore.canvas.centerMultipleNodesOnScreen([mergeId, node.id, parent.id]);
 };
 
 export const onCommentAdd = ({

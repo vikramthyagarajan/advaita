@@ -9,13 +9,14 @@ import Notifications from "./Notifications";
 import DashboardHeader from "./DashboardHeader";
 import AppStore from "modules/state/AppStore";
 import { useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { User } from "modules/core/NetworkTypes";
 
 type Board = {
   name: string;
   image: string;
   id: string;
+  uuid: string;
 };
 
 interface BoardProps {
@@ -43,14 +44,18 @@ const generateFakeData = (): Board[] => {
     id: generateId(),
     name: generateProjectName(),
     image: img,
+    uuid: generateId(),
   }));
 };
 
 const Board = ({ board }: BoardProps) => {
   const random = Math.round(Math.random() * 5);
-  const url = images[random];
+  const url = `https://res.cloudinary.com/diglgjher/image/upload/boards/${board.uuid}.png`; //images[random];
   return (
-    <div className="rounded-md border border-slate-400 w-[200px] cursor-pointer overflow-hidden shadow-sm">
+    <Link
+      className="rounded-md border border-slate-400 w-[200px] cursor-pointer overflow-hidden shadow-sm"
+      to={`/boards/${board.uuid}`}
+    >
       <img src={url} className="w-[200px] h-[200px]"></img>
       <div className="flex bg-white px-2 py-4 rounded-b-md items-start gap-1">
         <Edit2 width={20} height={20} className="mt-1 w-5 h-5"></Edit2>
@@ -58,7 +63,7 @@ const Board = ({ board }: BoardProps) => {
           {board.name}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

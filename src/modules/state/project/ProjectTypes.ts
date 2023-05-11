@@ -1,14 +1,7 @@
 import { CanvasPosition } from "modules/core/foundation";
 import { FocusEvent, KeyboardEvent, MouseEvent } from "react";
 
-export type SubNodeType = "text" | "image" | "video" | "preview";
-export type NodeType =
-  | "textbox"
-  | "imagebox"
-  | "mergebox"
-  | "videobox"
-  | "graphics"
-  | SubNodeType;
+export type NodeType = "textbox" | "mergebox";
 
 export interface GenericNode {
   type: NodeType;
@@ -24,29 +17,12 @@ export interface GenericNode {
 export type Align = "left" | "center" | "right";
 export type VerticalAlign = "top" | "center";
 
-interface TextFormatting {
-  bold: boolean;
-  italic: boolean;
-  underline: boolean;
-  size: number;
-}
-
 export type TextStyles =
   | "none"
   | "heading-1"
   | "heading-2"
   | "heading-3"
   | "heading-4";
-
-export interface TextNode extends GenericNode, TextFormatting {
-  type: "text";
-  cacheKey: string;
-  id: string;
-  text: string;
-  style: TextStyles;
-  parent: string;
-  editOnCreate?: boolean;
-}
 
 export interface TextboxNode extends GenericNode {
   type: "textbox";
@@ -57,19 +33,6 @@ export interface TextboxNode extends GenericNode {
   selection?: [number, number];
   preText?: string;
   postText?: string;
-  children: { type: SubNodeType; id: string }[];
-}
-
-export interface ImageNode extends GenericNode {
-  type: "image";
-  url: string;
-  position: CanvasPosition;
-}
-
-export interface ImageboxNode extends GenericNode {
-  type: "imagebox";
-  position: CanvasPosition;
-  children: { type: NodeType; id: string }[];
 }
 
 export interface Comment {
@@ -94,9 +57,8 @@ export interface PreviewNode {
   id: string;
 }
 
-export type SubNode = TextNode | ImageNode;
-export type RootNode = TextboxNode | ImageboxNode | MergeboxNode;
-export type Node = RootNode | SubNode;
+export type RootNode = TextboxNode | MergeboxNode;
+export type Node = RootNode;
 
 export type AllEventTypes =
   | FocusEvent<HTMLDivElement>
