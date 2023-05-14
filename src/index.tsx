@@ -21,6 +21,7 @@ import {
   getDocumentVersionsQuery,
 } from "modules/core/network-utils";
 import DocumentVersions from "modules/editor/DocumentVersions";
+import WriterPage from "modules/writer/WriterPage";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
         },
       },
     ],
+  },
+  {
+    path: "/documents/:docId",
+    element: <WriterPage />,
   },
   {
     path: "/account/login",
