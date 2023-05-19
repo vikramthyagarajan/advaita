@@ -18,7 +18,9 @@ import { getUser } from "modules/core/project-utils";
 import {
   fetchAllBoardsQuery,
   getBoardQuery,
+  getDraftQuery,
   getDocumentVersionsQuery,
+  fetchAllDocumentsQuery,
 } from "modules/core/network-utils";
 import DocumentVersions from "modules/editor/DocumentVersions";
 import WriterPage from "modules/writer/WriterPage";
@@ -32,7 +34,9 @@ const router = createBrowserRouter([
       if (!user) return redirect("/account/register?then=/");
 
       const boards = await fetchAllBoardsQuery();
-      return { user, boards: boards.data };
+      const documents = await fetchAllDocumentsQuery();
+      console.log("outer docks", documents, documents.data);
+      return { user, boards: boards.data, documents: documents.data };
     },
   },
   {
@@ -60,8 +64,16 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/documents/:docId",
+    path: "/drafts/:docId",
     element: <WriterPage />,
+    loader: async ({ params }) => {
+      const user = getUser();
+      if (!user)
+        return redirect(`/account/register?then=/drafts/${params.docId}`);
+
+      const draft = await getDraftQuery(params.docId || "");
+      return { user, draft: draft.data };
+    },
   },
   {
     path: "/account/login",

@@ -12,3 +12,9 @@ export type User = {
   email: string;
   avatar: string;
 };
+
+export type Document = {
+  uuid: string;
+  title: string;
+  body: string;
+};

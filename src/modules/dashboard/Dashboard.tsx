@@ -10,7 +10,7 @@ import DashboardHeader from "./DashboardHeader";
 import AppStore from "modules/state/AppStore";
 import { useEffect } from "react";
 import { Link, useLoaderData } from "react-router-dom";
-import { User } from "modules/core/NetworkTypes";
+import { Document, User } from "modules/core/NetworkTypes";
 
 type Board = {
   name: string;
@@ -81,11 +81,33 @@ const Boards = ({ boards }: BoardsProps) => {
   );
 };
 
+const DraftCards = ({ drafts }: { drafts: Document[] }) => {
+  return (
+    <div className=" flex flex-wrap gap-5 p-5">
+      {drafts.map((d) => (
+        <Link
+          className="rounded-md border border-slate-400 w-[200px] cursor-pointer overflow-hidden shadow-sm"
+          to={`/drafts/${d.uuid}`}
+        >
+          <div className="w-[200px] h-[200px] bg-slate-400"></div>
+          <div className="flex bg-white px-2 py-4 rounded-b-md items-start gap-1">
+            <Edit2 width={20} height={20} className="mt-1 w-5 h-5"></Edit2>
+            <div className="text-sm capitalize text-ellipsis font-[200] flex-1">
+              {d.title}
+            </div>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+};
+
 export interface DashboardProps {}
 const Dashboard = (props: DashboardProps) => {
-  const { user, boards } = useLoaderData() as {
+  const { user, boards, documents } = useLoaderData() as {
     user: User;
     boards: { mine: Board[]; visited: Board[] };
+    documents: Document[];
   };
   useEffect(() => {
     const user = getUser();
@@ -93,6 +115,7 @@ const Dashboard = (props: DashboardProps) => {
   }, []);
   const ownBoards = boards.mine;
   const otherBoards = boards.visited;
+  console.log("docss", documents);
 
   return (
     <div className="h-full w-full bg-slate-200 overflow-hidden flex">
@@ -109,10 +132,10 @@ const Dashboard = (props: DashboardProps) => {
             </div>
             <div className="rounded-3xl bg-white py-5">
               <div className="mx-5 mb-2 font-semibold text-2xl">
-                Boards You've Viewed
+                Your drafts
               </div>
               <div className="border-[0.5px] border-slate-300"></div>
-              <Boards boards={otherBoards} />
+              <DraftCards drafts={documents || []} />
             </div>
           </div>
           <div className="p-5">
