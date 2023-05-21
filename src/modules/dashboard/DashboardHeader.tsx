@@ -1,6 +1,13 @@
 import { faker } from "@faker-js/faker";
-import { createBoardQuery } from "modules/core/network-utils";
-import { generateId, generateProjectName } from "modules/core/project-utils";
+import {
+  createBoardQuery,
+  createNewDocumentQuery,
+} from "modules/core/network-utils";
+import {
+  generateId,
+  generateProjectName,
+  getAuthorId,
+} from "modules/core/project-utils";
 import AppStore from "modules/state/AppStore";
 import { memo } from "react";
 import { Plus } from "react-feather";
@@ -26,14 +33,17 @@ const DashboardHeader = ({ avatar }: DashboardHeaderProps) => {
           <button
             className="bg-slate-800 text-white flex rounded-md px-2 py-1 mr-5"
             onClick={async () => {
-              const root = AppStore.project.___fetchState();
               const id = generateId();
-              await createBoardQuery(id, generateProjectName(), root);
-              navigate(`/boards/${id}`);
+              await createNewDocumentQuery(
+                generateProjectName(),
+                getAuthorId() || "",
+                { id, text: faker.lorem.paragraph(2) }
+              );
+              navigate(`/drafts/${id}`);
             }}
           >
             <Plus className="mr-1"></Plus>
-            <span>Create Board</span>
+            <span>Create Draft</span>
           </button>
           <img
             src={avatar}

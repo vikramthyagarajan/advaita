@@ -14,30 +14,26 @@ import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 import { faker } from "@faker-js/faker";
 
-const backendUrl = "https://api.advaita.co";
-// const backendUrl = "http://localhost:4000";
+// const backendUrl = "https://api.advaita.co";
+const backendUrl = "http://localhost:4000";
 const cloudinaryCloudName = "diglgjher";
 const cloudinaryPresetName = "thumbnails";
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
 
 export const fetchAllDocumentsQuery = () => {
-  return axios
-    .get(`${backendUrl}/documents.json`)
-    .then((response) => {
-      const data = response.data;
-      return data.map((document) => {
-        return document.metadata.node;
-      });
-    })
-    .catch((e) => {
-      console.error("error during doc fetch", e);
-    });
+  return axios.get(`${backendUrl}/documents.json`, { withCredentials: true });
+};
+
+export const getDraftQuery = (id: string) => {
+  return axios.get(`${backendUrl}/documents/${id}/draft.json`, {
+    withCredentials: true,
+  });
 };
 
 export const createNewDocumentQuery = async (
   title: string,
   author: string,
-  node: TextboxNode
+  node: Partial<TextboxNode>
 ) => {
   return axios.post(
     `${backendUrl}/documents.json`,
@@ -57,6 +53,14 @@ export const createNewDocumentQuery = async (
       },
     }
   );
+};
+
+export const saveDocumentBodyQuery = async (id: string, body: string) => {
+  const response = await axios.patch(`${backendUrl}/documents/${id}.json`, {
+    body,
+    data: {},
+  });
+  return;
 };
 
 export const saveDocumentQuery = async (id: string, node: TextboxNode) => {
