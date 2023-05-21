@@ -11,7 +11,7 @@ const TextEditor = ({ body, setBody }: TextEditorProps) => {
   const editorRef = useRef<any>();
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    const timeoutId = setInterval(() => {
       if (editorRef.current) {
         const body = editorRef.current.getContent();
         setBody(body);
@@ -19,7 +19,7 @@ const TextEditor = ({ body, setBody }: TextEditorProps) => {
     }, 10000);
 
     return () => {
-      clearTimeout(timeoutId);
+      clearInterval(timeoutId);
     };
   }, []);
 

@@ -6,6 +6,7 @@ import {
   saveDocumentQuery,
 } from "modules/core/network-utils";
 import { Document } from "modules/core/NetworkTypes";
+import ReviewBlock from "./ReviewBlock";
 
 export type EditorHeaderProps = {
   // avatar: string;
@@ -50,11 +51,20 @@ export const WriterPage = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex flex-col">
       <EditorHeader projectName={document.title} />
       <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-        <div className="w-[80%] h-full p-10">
-          <TextEditor body={body} setBody={setDocumentBody} />
+        <div className="w-[80%] h-full p-5">
+          <TextEditor body={document.body} setBody={setDocumentBody} />
+        </div>
+        <div className="h-full w-[400px] border-l-[0.5px] border-slate-300">
+          {parent ? (
+            <ReviewBlock
+              documentId={document.uuid}
+              document={body}
+              parent={parent.body}
+            />
+          ) : null}
         </div>
       </div>
     </div>
