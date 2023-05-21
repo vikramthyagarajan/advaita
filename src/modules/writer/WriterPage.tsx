@@ -7,6 +7,7 @@ import {
 } from "modules/core/network-utils";
 import { Document } from "modules/core/NetworkTypes";
 import ReviewBlock from "./ReviewBlock";
+import PRBlock from "./PRBlock";
 
 export type EditorHeaderProps = {
   // avatar: string;
@@ -64,7 +65,9 @@ export const WriterPage = () => {
               document={body}
               parent={parent.body}
             />
-          ) : null}
+          ) : (
+            <PRBlock documentId={document.uuid} />
+          )}
         </div>
       </div>
     </div>

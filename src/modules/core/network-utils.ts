@@ -14,8 +14,8 @@ import AppStore from "modules/state/AppStore";
 import Pusher from "pusher-js";
 import { faker } from "@faker-js/faker";
 
-const backendUrl = "https://api.advaita.co";
-// const backendUrl = "http://localhost:4000";
+// const backendUrl = "https://api.advaita.co";
+const backendUrl = "http://localhost:4000";
 const cloudinaryCloudName = "diglgjher";
 const cloudinaryPresetName = "thumbnails";
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
@@ -26,6 +26,12 @@ export const fetchAllDocumentsQuery = () => {
 
 export const getDraftQuery = (id: string) => {
   return axios.get(`${backendUrl}/documents/${id}/draft.json`, {
+    withCredentials: true,
+  });
+};
+
+export const fetchPRQuery = <T>(id: string) => {
+  return axios.get<T>(`${backendUrl}/documents/${id}/prs.json`, {
     withCredentials: true,
   });
 };

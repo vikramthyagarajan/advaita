@@ -18,3 +18,17 @@ export type Document = {
   title: string;
   body: string;
 };
+
+export type Comment = {
+  uuid: string;
+  body: string;
+};
+
+export type DocumentWithComments = {
+  comments: Comment[];
+} & Document;
+
+export type PRQuery = {
+  document: Document;
+  children: DocumentWithComments[];
+};
